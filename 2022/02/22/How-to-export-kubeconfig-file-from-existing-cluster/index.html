@@ -17,7 +17,7 @@
 <meta property="og:image" content="https://tsunejui.github.io/docs/note/kubeconfig/ku.png">
 <meta property="og:image" content="https://tsunejui.github.io/docs/note/kubeconfig/check.png">
 <meta property="article:published_time" content="2022-02-22T02:52:03.000Z">
-<meta property="article:modified_time" content="2022-05-06T00:49:31.324Z">
+<meta property="article:modified_time" content="2022-05-06T00:54:32.628Z">
 <meta property="article:author" content="Rex Wu">
 <meta property="article:tag" content="note">
 <meta name="twitter:card" content="summary">
@@ -114,12 +114,12 @@
 <h2 id="Experimental-Process"><a href="#Experimental-Process" class="headerlink" title="Experimental Process"></a>Experimental Process</h2><p>First, let me begin by explaining what is <code>kubeconfig</code>, please take a look this <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">article</a>. <strong>首先，讓我先解釋一下什麼是<code>kubeconfig</code>，請看這篇<a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/concepts/configuration/organize-cluster-access-kubeconfig">文章</a></strong></p>
 <p>If you already have a cluster, and you can use kubectl to interact with the cluster, then you probably have a file named config in the $HOME&#x2F;.kube directory. <strong>如果您已經有一個 k8s cluster，並且可以使用 kubectl ，那麼您可能在 $HOME&#x2F;.kube 中有一個名為 config 的文件。</strong></p>
 <ol>
-<li><p>run the following command in order to access the k8s API <strong>運行以下命令以訪問 k8s API</strong></p>
-<blockquote>
+<li>run the following command in order to access the k8s API <strong>運行以下命令以訪問 k8s API</strong></li>
+</ol>
 <p>check this 👉 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/extend-kubernetes/http-proxy-access-api/">https://kubernetes.io/docs/tasks/extend-kubernetes/http-proxy-access-api/</a></p>
-</blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl proxy --address=&#x27;0.0.0.0&#x27; --port=8080 --accept-hosts=&#x27;^*$&#x27;</span><br></pre></td></tr></table></figure>
-</li>
+
+<ol start="2">
 <li><p>copy the file <code>$HOME/.kube/config</code> from k8s machine. <strong>從k8s機器上複製 <code>$HOME/.kube/config</code> 檔案</strong></p>
 </li>
 <li><p>paste the content of config file <code>$HOME/.kube/config</code> in client machine. <strong>貼上至你的 client 機器 <code>$HOME/.kube/config</code></strong><br><img src="/docs/note/kubeconfig/ku.png"></p>
@@ -133,7 +133,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://tsunejui.github.io/2022/02/22/How-to-export-kubeconfig-file-from-existing-cluster/" data-id="cl2tq3orj0001mska2c4829t6" data-title="How to export kubeconfig file from existing cluster? 如何匯出kubeconfig file 從你的cluster" class="article-share-link">Share</a>
+      <a data-url="https://tsunejui.github.io/2022/02/22/How-to-export-kubeconfig-file-from-existing-cluster/" data-id="cl2tq602p0000sxka7g5vaxpv" data-title="How to export kubeconfig file from existing cluster? 如何匯出kubeconfig file 從你的cluster" class="article-share-link">Share</a>
       
       
       
