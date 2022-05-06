@@ -99,30 +99,36 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>工作環境上我們會需要從其他電腦存取k8s API, 已便使用kubectl等工具操作我們的cluster, 可以透過下面的方法達成:</p>
-<h3 id="準備工作"><a href="#準備工作" class="headerlink" title="準備工作"></a>準備工作</h3><p>env:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ Client ] ----&gt; [ A Server (my cluster) ]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>A Server</li>
+        <p>This tutorial will guide you through the steps needed to use <code>kubectl</code> to connect to a k8s cluster with <code>config</code> file. <strong>本教程將指導您完成使用 <code>kubectl</code> 通過 <code>config</code> 檔案 連接到 k8s cluster 所需的步驟。</strong></p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubectl">kubectl</a> - <code>kubectl</code> is the Kubernetes-specific command line tool that lets you communicate and control Kubernetes clusters</li>
 </ul>
+<h2 id="Purpose"><a href="#Purpose" class="headerlink" title="Purpose"></a>Purpose</h2><p>The purpose of this article was to export kubeconfig file for connecting to the k8s cluster from another machine. <strong>實驗的的目的是為了導出 kubeconfig 檔案，以便從另一台機器連接到 k8s cluster。</strong></p>
+<h2 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h2><p>Please take a look the following diagram <strong>請看下圖</strong>:</p>
+<p><img src="/docs/note/kubeconfig/kubeconfig.png"></p>
+<h2 id="Experimental-Process"><a href="#Experimental-Process" class="headerlink" title="Experimental Process"></a>Experimental Process</h2><p>First, let me begin by explaining what is <code>kubeconfig</code>, please take a look this <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">article</a>. <strong>首先，讓我先解釋一下什麼是<code>kubeconfig</code>，請看這篇<a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/concepts/configuration/organize-cluster-access-kubeconfig">文章</a></strong></p>
+<p>If you already have a cluster, and you can use kubectl to interact with the cluster, then you probably have a file named config in the $HOME&#x2F;.kube directory. <strong>如果您已經有一個 k8s cluster，並且可以使用 kubectl ，那麼您可能在 $HOME&#x2F;.kube 中有一個名為 config 的文件。</strong></p>
 <ol>
-<li>到 <code>A Server</code> 上使用 <code>cat ~/.kube/config</code> 查看 kubeconfig.</li>
-<li>使用kubectl proxy 對外開放k8s API, 打開後可以 <code>curl 127.0.0.1:8080</code> 確認是否正常運作。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl proxy --address=&#x27;0.0.0.0&#x27; --port=8080 --accept-hosts=&#x27;^*$’</span><br></pre></td></tr></table></figure></li>
+<li><p>run the following command in order to access the k8s API <strong>運行以下命令以訪問 k8s API</strong></p>
+<blockquote>
+<p>check this 👉 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/extend-kubernetes/http-proxy-access-api/">https://kubernetes.io/docs/tasks/extend-kubernetes/http-proxy-access-api/</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl proxy --address=&#x27;0.0.0.0&#x27; --port=8080 --accept-hosts=&#x27;^*$&#x27;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>copy the file <code>$HOME/.kube/config</code> from k8s machine. <strong>從k8s機器上複製 <code>$HOME/.kube/config</code> 檔案</strong></p>
+</li>
+<li><p>paste the content of config file <code>$HOME/.kube/config</code> in client machine. <strong>貼上至你的 client 機器 <code>$HOME/.kube/config</code></strong><br><img src="/docs/note/kubeconfig/ku.png"></p>
+</li>
+<li><p>edit the <code>clusters[].cluster.server</code> field’s ip address and port number. <strong>編輯 <code>clusters[].cluster.server</code> 的 ip address 和 port 號。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">clusters:</span><br><span class="line">- cluster:</span><br><span class="line">    certificate-authority-data: &#123;TOKEN&#125;</span><br><span class="line">    server: https://&#123;HOST_IP_ADDRESS&#125;:6443 &lt;- adjust here</span><br><span class="line">  name: &#123;CLUSTER_NAME&#125;</span><br><span class="line">...</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ol>
-<ul>
-<li>Client</li>
-</ul>
-<ol>
-<li>到 <code>Client</code> 上修改 <code>~/.kube/config</code> 檔案</li>
-<li>貼上來自 <code>A Server</code> 的 <strong>clusters</strong>, <strong>contexts</strong>, <strong>users</strong> 內容。</li>
-</ol>
-<h3 id="確認"><a href="#確認" class="headerlink" title="確認"></a>確認</h3><p>使用 <code>kubectl get nodes</code> 查看是否已經正確連上。</p>
+<h2 id="Verify-your-connection"><a href="#Verify-your-connection" class="headerlink" title="Verify your connection"></a>Verify your connection</h2><p>If all stops are successfully completed, you should see <strong>使用 <code>kubectl get nodes</code> 查看是否已經正確連上。</strong>:</p>
+<p><img src="/docs/note/kubeconfig/check.png"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://tsunejui.github.io/2022/02/22/How-to-export-kubeconfig-file-from-existing-cluster/" data-id="ckzxjps8c0000immk2i3kdsms" data-title="How to export kubeconfig file from existing cluster? 如何匯出kubeconfig file 從你的cluster" class="article-share-link">Share</a>
+      <a data-url="https://tsunejui.github.io/2022/02/22/How-to-export-kubeconfig-file-from-existing-cluster/" data-id="cl2tq3orj0001mska2c4829t6" data-title="How to export kubeconfig file from existing cluster? 如何匯出kubeconfig file 從你的cluster" class="article-share-link">Share</a>
       
       
       
@@ -163,12 +169,12 @@
 <p>I’m Rex, a software engineer. I am passionate about technology and keep continually focusing the solutions of SRE、DevOps and Data Visualization. I am looking forward to applying my skill set into any challenge in the work. contact me if you need assistance!</p>
 <p>嗨, 歡迎來到我的第一篇Blog Post, 耶!<br>在這個BLog, 我準備分享我的coding 路程及生活：</p>
 <p>我叫Rex, 一個軟體工程師, 我對技術充滿熱誠, 而且持續精進自己的能力, 如果我們有合作的機會, 請聯繫我, 非常感謝!</p>
-<p>Github: <a target="_blank" rel="noopener" href="https://github.com/tsunejui">https://github.com/tsunejui</a><br>Email: <a href="mailto:&#116;&#x73;&#117;&#110;&#x65;&#x6a;&#117;&#105;&#64;&#103;&#x6d;&#97;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;">&#116;&#x73;&#117;&#110;&#x65;&#x6a;&#117;&#105;&#64;&#103;&#x6d;&#97;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;</a><br>Twitter: <a target="_blank" rel="noopener" href="https://twitter.com/tsunejui">https://twitter.com/tsunejui</a></p>
+<p>Github: <a target="_blank" rel="noopener" href="https://github.com/tsunejui">https://github.com/tsunejui</a><br>Email: <a href="mailto:&#x74;&#115;&#117;&#110;&#101;&#106;&#117;&#x69;&#x40;&#103;&#109;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;">&#x74;&#115;&#117;&#110;&#101;&#106;&#117;&#x69;&#x40;&#103;&#109;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;</a><br>Twitter: <a target="_blank" rel="noopener" href="https://twitter.com/tsunejui">https://twitter.com/tsunejui</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://tsunejui.github.io/2022/02/10/aboutme/" data-id="ckzxjps8e0001immk1m7y05jk" data-title="WELCOME TO MY BLOG" class="article-share-link">Share</a>
+      <a data-url="https://tsunejui.github.io/2022/02/10/aboutme/" data-id="cl2tq3org0000mska752y2j2d" data-title="WELCOME TO MY BLOG" class="article-share-link">Share</a>
       
       
       
