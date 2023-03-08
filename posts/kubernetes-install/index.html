@@ -176,7 +176,7 @@
 <p>由於 containerd 預設的 config path 是 <code>/etc/containerd/config.toml</code> ，所以不需要改 service 檔案，可以透過 <code>containerd --help</code> 得知。</p>
 </blockquote>
 <pre tabindex="0"><code>curl -o /usr/lib/systemd/system/containerd.service https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
-</code></pre><p>開機啟動 systemd</p>
+</code></pre><p>開機啟動 containerd</p>
 <pre tabindex="0"><code>systemctl daemon-reload &amp;&amp; systemctl enable --now containerd
 </code></pre><p><strong>安裝 runc (以 v1.1.4 為例)</strong></p>
 <p>下載 runc.amd64</p>
