@@ -1,218 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html class="no-js" lang="en">
 <head>
-  <meta charset="utf-8">
-  
-  
-  <title>Category: Kubernetes | Rex&#39;s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="This is Rex&#39;s Blog">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Rex&#39;s Blog">
-<meta property="og:url" content="https://tsunejui.github.io/categories/Kubernetes/index.html">
-<meta property="og:site_name" content="Rex&#39;s Blog">
-<meta property="og:description" content="This is Rex&#39;s Blog">
-<meta property="og:locale" content="en_US">
-<meta property="article:author" content="Rex Wu">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Rex's Blog" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Kubernetes - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
 
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/style.css">
+	
+	<link rel="alternate" type="application/rss+xml" href="/categories/kubernetes/index.xml" title="Rex's Notes 技術筆記 ">
 
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
-
-  
-<meta name="generator" content="Hexo 6.0.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Rex&#39;s Blog</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">Welcome to Rex&#39;s Blog</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://tsunejui.github.io"></form>
-      </div>
-    </div>
-  </div>
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		<div class="divider"></div>
+	</div>
 </header>
-
-      <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/02/22/How-to-export-kubeconfig-file-from-existing-cluster/" class="archive-article-date">
-  <time class="dt-published" datetime="2022-02-22T02:52:03.000Z" itemprop="datePublished">Feb 22</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/22/How-to-export-kubeconfig-file-from-existing-cluster/">How to export kubeconfig file from existing cluster? 如何匯出kubeconfig file 從你的cluster</a>
-    </h1>
-  
-
-    </header>
-  </div>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main list" role="main">
+	<header class="main__header">
+		<h1 class="main__title">Kubernetes</h1>
+	</header><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
+			<a href="/posts/istio-tip/" rel="bookmark">
+			Istio Tip
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		istio Init:CrashLoopBackOff 問題 安裝 istio 後會發現所有 POD 顯示 Init:CrashLoopBackOff，透過查看 log 可以發現錯誤。
+https://github.com/istio/istio/issues/23009
+需要載入以下 mod 修復問題：
+modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_owner; modprobe iptable_nat; modprobe iptable_mangle; modprobe iptable_filter cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/99-istio-modules.conf br_netfilter nf_nat xt_REDIRECT xt_owner iptable_nat iptable_mangle iptable_filter EOF 
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
+			<a href="/posts/kubernetes-tips/" rel="bookmark">
+			Kubernetes Tips
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		產生新的加入 cluster 指令 建立新的 token
+kubeadm token generate 畫面會顯示新的 token，便可以使用 kubeadm token create 建立新的 join command
+以 4a4dv5.i31huo1je1e2dler 為例
+kubeadm token create 4a4dv5.i31huo1je1e2dler --print 
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
+			<a href="/posts/kubernetes-install/" rel="bookmark">
+			Kubernetes 安裝筆記
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		安裝 Kubernetes 事前準備 Preparation Before you begin
+Rocky Linux ISO 載點: link
+Kubernetes 安裝建議高於 2 core CPU 及 2 GB or more RAM: link
+準備 5 台 node, OS 選擇 Rocky Linux 8 每台 node 需要 4 core CPU &amp; 8 GB memory (非必要) 6 組 IP (node * 5 + VIP * 1) Kubernetes Interface
+interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
+建議登入每台主機，並使用 hostnamectl set-hostname xxx 修改 hostname
+	</div>
 </article>
-  
-  
-    </div></section>
-  
+</main>
 
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Kubernetes/">Kubernetes</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/About-Me/" rel="tag">About Me</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notes/" rel="tag">Notes</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/About-Me/" style="font-size: 10px;">About Me</a> <a href="/tags/Notes/" style="font-size: 10px;">Notes</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2022/02/22/How-to-export-kubeconfig-file-from-existing-cluster/">How to export kubeconfig file from existing cluster? 如何匯出kubeconfig file 從你的cluster</a>
-          </li>
-        
-          <li>
-            <a href="/2022/02/10/aboutme/">WELCOME TO MY BLOG</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
+			</div>
+			
+<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="SEARCH…" value="" name="q" aria-label="SEARCH…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="https://tsunejui.github.io/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/istio-tip/">Istio Tip</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/kubernetes-tips/">Kubernetes Tips</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/kubernetes-install/">Kubernetes 安裝筆記</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/aboutme/">About Me</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/istio/">Istio</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/kubernetes/">Kubernetes</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/profile/">Profile</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/note/" title="Note">Note</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tip/" title="Tip">Tip</a>
+	</div>
+</div>
 </aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2023 Rex Wu<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
 </footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.4.1.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
+	</div>
+<script async defer src="/js/menu.js"></script>
 </body>
 </html>

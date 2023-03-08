@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Profile on Rex&#39;s Notes 技術筆記 </title>
+    <link>https://tsunejui.github.io/categories/profile/</link>
+    <description>Recent content in Profile on Rex&#39;s Notes 技術筆記 </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 07 Mar 2023 15:17:43 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/profile/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About Me</title>
+      <link>https://tsunejui.github.io/posts/aboutme/</link>
+      <pubDate>Tue, 07 Mar 2023 15:17:43 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/aboutme/</guid>
+      <description>Hi, welcome to my first Blog Post. YAY!
+I&amp;rsquo;m so ready to have a place to share all my coding travels on, and share my life. Let me introduce myself first:
+I&amp;rsquo;m Rex, a software engineer. I am passionate about technology and keep continually focusing the solutions of SRE、DevOps and Data Visualization. I am looking forward to applying my skill set into any challenge in the work. contact me if you need assistance!</description>
+    </item>
+    
+  </channel>
+</rss>

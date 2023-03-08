@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes on Rex&#39;s Notes 技術筆記 </title>
+    <link>https://tsunejui.github.io/categories/kubernetes/</link>
+    <description>Recent content in Kubernetes on Rex&#39;s Notes 技術筆記 </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 Mar 2023 12:52:25 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Istio Tip</title>
+      <link>https://tsunejui.github.io/posts/istio-tip/</link>
+      <pubDate>Wed, 08 Mar 2023 12:52:25 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/istio-tip/</guid>
+      <description>istio Init:CrashLoopBackOff 問題 安裝 istio 後會發現所有 POD 顯示 Init:CrashLoopBackOff，透過查看 log 可以發現錯誤。
+https://github.com/istio/istio/issues/23009
+需要載入以下 mod 修復問題：
+modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_owner; modprobe iptable_nat; modprobe iptable_mangle; modprobe iptable_filter cat &amp;lt;&amp;lt;EOF | sudo tee /etc/modules-load.d/99-istio-modules.conf br_netfilter nf_nat xt_REDIRECT xt_owner iptable_nat iptable_mangle iptable_filter EOF </description>
+    </item>
+    
+    <item>
+      <title>Kubernetes Tips</title>
+      <link>https://tsunejui.github.io/posts/kubernetes-tips/</link>
+      <pubDate>Wed, 08 Mar 2023 12:50:23 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/kubernetes-tips/</guid>
+      <description>產生新的加入 cluster 指令 建立新的 token
+kubeadm token generate 畫面會顯示新的 token，便可以使用 kubeadm token create 建立新的 join command
+以 4a4dv5.i31huo1je1e2dler 為例
+kubeadm token create 4a4dv5.i31huo1je1e2dler --print </description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 安裝筆記</title>
+      <link>https://tsunejui.github.io/posts/kubernetes-install/</link>
+      <pubDate>Wed, 08 Mar 2023 10:19:24 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/kubernetes-install/</guid>
+      <description>安裝 Kubernetes 事前準備 Preparation Before you begin
+Rocky Linux ISO 載點: link
+Kubernetes 安裝建議高於 2 core CPU 及 2 GB or more RAM: link
+準備 5 台 node, OS 選擇 Rocky Linux 8 每台 node 需要 4 core CPU &amp;amp; 8 GB memory (非必要) 6 組 IP (node * 5 + VIP * 1) Kubernetes Interface
+interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
+建議登入每台主機，並使用 hostnamectl set-hostname xxx 修改 hostname</description>
+    </item>
+    
+  </channel>
+</rss>

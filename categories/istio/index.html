@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Categories - Rex&#39;s Notes 技術筆記 </title>
+	<title>Istio - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 
 	<link rel="stylesheet" href="/css/style.css">
 	
-	<link rel="alternate" type="application/rss+xml" href="/categories/index.xml" title="Rex's Notes 技術筆記 ">
+	<link rel="alternate" type="application/rss+xml" href="/categories/istio/index.xml" title="Rex's Notes 技術筆記 ">
 
 	<link rel="shortcut icon" href="/favicon.ico">
 		
@@ -40,45 +40,22 @@
 			
 <main class="main list" role="main">
 	<header class="main__header">
-		<h1 class="main__title">Categories</h1>
+		<h1 class="main__title">Istio</h1>
 	</header><article class="list__item post">
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
-			<a href="/categories/istio/" rel="bookmark">
-			Istio
+			<a href="/posts/istio-tip/" rel="bookmark">
+			Istio Tip
 			</a>
 		</h2>
 		
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/categories/kubernetes/" rel="bookmark">
-			Kubernetes
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/categories/profile/" rel="bookmark">
-			Profile
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		
+		istio Init:CrashLoopBackOff 問題 安裝 istio 後會發現所有 POD 顯示 Init:CrashLoopBackOff，透過查看 log 可以發現錯誤。
+https://github.com/istio/istio/issues/23009
+需要載入以下 mod 修復問題：
+modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_owner; modprobe iptable_nat; modprobe iptable_mangle; modprobe iptable_filter cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/99-istio-modules.conf br_netfilter nf_nat xt_REDIRECT xt_owner iptable_nat iptable_mangle iptable_filter EOF 
 	</div>
 </article>
 </main>
