@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Kafka 學習筆記 - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		<div class="divider"></div>
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Kafka 學習筆記</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h3 id="kafka-installation">Kafka Installation</h3>
+<blockquote>
+<p>Kafka official site: <a href="https://kafka.apache.org/downloads">https://kafka.apache.org/downloads</a></p>
+</blockquote>
+<p>Kafka provides two types of downloads on its official website, namely <strong>Source downloads</strong> and <strong>Binary downloads</strong>. The difference between the two is that Source download means Kafka&rsquo;s source code, and users need to compile it themselves after downloading, while Binary Download means pre-compiled binaries that users can download and use directly. Additionally, different versions of Kafka written in different Scala versions are available for download in Binary Download.</p>
+<p>以下步驟需要在每個 node 上操作。</p>
+<p><strong>下載 Kafka (以 3.4.0 為例)</strong></p>
+<blockquote>
+<p><code>2.13</code> 為 scala 的版本</p>
+</blockquote>
+<pre tabindex="0"><code>curl -OL https://downloads.apache.org/kafka/3.4.0/kafka_2.13-3.4.0.tgz
+</code></pre><p><strong>解壓縮</strong></p>
+<pre tabindex="0"><code>tar -zxvf kafka_2.13-3.4.0.tgz -C /opt/module
+
+mv /opt/module/kafka_2.13-3.4.0 /opt/module/kafka
+</code></pre><p><strong>設定 broker.id</strong></p>
+<p>如果我需要部署一個 Kafka cluster，要注意在每一台 node 上的 <code>config/server.properties</code> 內的 <code>broker.id</code> 需要設為不一樣，否則會出錯。</p>
+<p><strong>Log Basics</strong></p>
+<p>預設的 <code>log.dirs</code> 為 <code>/tmp/kafka-logs</code>，這位導致 log 遺失，因此需要調整 log 位置。例如: <code>/opt/module/kafka/data</code></p>
+<p><strong>Zookeeper Client</strong></p>
+<p>預設的 <code>zookeeper.connect</code> 為 <code>localhost:2181</code>，需要改為 cluster 內所有 host 位置，假設集群有 3 台 node，他們的 ip 分別是:</p>
+<ul>
+<li>192.168.1.100</li>
+<li>192.168.1.101</li>
+<li>192.168.1.102</li>
+</ul>
+<p>那就應該配置為：</p>
+<blockquote>
+<p><code>/kafka</code> 的意思為，在 zookeeper 內建立一個名為 <code>kafka</code> 的目錄，未來如不需要此 cluster ，直接刪除 <code>kafka</code> 即可。</p>
+</blockquote>
+<pre tabindex="0"><code>zookeeper.connect: 192.168.1.100:2181,192.168.1.101:2181,192.168.1.102:2181/kafka
+</code></pre><p><strong>environment variable</strong></p>
+<p>修改 <code>/etc/profile.d/my_env.sh</code></p>
+<pre tabindex="0"><code>export KAFKA_HOME=/opt/module/kafka/data
+export PATH=$PATH:$KAFKA_HOME/bin
+
+source /etc/profile
+</code></pre><p><strong>啟動 zookeeper</strong></p>
+<pre tabindex="0"><code>/opt/module/kafka/bin/zookeeper-server-start.sh /opt/module/kafka/config/zookeeper.properties
+</code></pre><p><strong>啟動 Kafka</strong></p>
+<pre tabindex="0"><code>/opt/module/kafka/bin/kafka-server-start.sh -daemon /opt/module/kafka/config/server.properties
+</code></pre><h3 id="關閉-kafka">關閉 Kafka</h3>
+<p>先關閉 Kafka 再關閉 zookeeper。否則會無法關閉 Kafka。</p>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

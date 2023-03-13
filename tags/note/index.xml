@@ -6,7 +6,17 @@
     <description>Recent content in Note on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 08 Mar 2023 12:52:25 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/note/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 12 Mar 2023 17:52:27 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/note/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kafka 學習筆記</title>
+      <link>https://tsunejui.github.io/posts/kafka/</link>
+      <pubDate>Sun, 12 Mar 2023 17:52:27 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/kafka/</guid>
+      <description>Kafka Installation Kafka official site: https://kafka.apache.org/downloads
+Kafka provides two types of downloads on its official website, namely Source downloads and Binary downloads. The difference between the two is that Source download means Kafka&amp;rsquo;s source code, and users need to compile it themselves after downloading, while Binary Download means pre-compiled binaries that users can download and use directly. Additionally, different versions of Kafka written in different Scala versions are available for download in Binary Download.</description>
+    </item>
+    
     <item>
       <title>Istio Tip</title>
       <link>https://tsunejui.github.io/posts/istio-tip/</link>
