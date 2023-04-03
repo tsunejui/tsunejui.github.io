@@ -257,7 +257,7 @@ vi /etc/kubernetes/manifests/keepalived.yaml
 <blockquote>
 <p>初始化成功後，系統會提示將 <code>/etc/kubernetes/admin.conf</code> 複製到 <code>$HOME/.kube/config</code>，便可以使用 <code>kubectl get nodes</code> 查看狀況。</p>
 </blockquote>
-<pre tabindex="0"><code>kubeadm init --config=kubeadm-config.yaml
+<pre tabindex="0"><code>kubeadm init --config=kubeadm-config.yaml --upload-certs
 </code></pre><p><strong>安裝 Calico operator</strong></p>
 <pre tabindex="0"><code>kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
 </code></pre><p><strong>設定 Calico POD_CIDR</strong></p>
