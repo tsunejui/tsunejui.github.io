@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://tsunejui.github.io/categories/</loc>
+    <lastmod>2023-04-30T20:53:09+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/categories/linux/</loc>
+    <lastmod>2023-04-30T20:53:09+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/tags/note/</loc>
+    <lastmod>2023-04-30T20:53:09+08:00</lastmod>
+  </url><url>
     <loc>https://tsunejui.github.io/posts/</loc>
     <lastmod>2023-04-30T20:53:09+08:00</lastmod>
   </url><url>
@@ -11,19 +20,10 @@
     <loc>https://tsunejui.github.io/posts/rocky-xrdp/</loc>
     <lastmod>2023-04-30T20:53:09+08:00</lastmod>
   </url><url>
-    <loc>https://tsunejui.github.io/categories/</loc>
-    <lastmod>2023-04-30T20:14:50+08:00</lastmod>
+    <loc>https://tsunejui.github.io/tags/</loc>
+    <lastmod>2023-04-30T20:53:09+08:00</lastmod>
   </url><url>
     <loc>https://tsunejui.github.io/posts/rocky-install-gui/</loc>
-    <lastmod>2023-04-30T20:14:50+08:00</lastmod>
-  </url><url>
-    <loc>https://tsunejui.github.io/categories/linux/</loc>
-    <lastmod>2023-04-30T20:14:50+08:00</lastmod>
-  </url><url>
-    <loc>https://tsunejui.github.io/tags/note/</loc>
-    <lastmod>2023-04-30T20:14:50+08:00</lastmod>
-  </url><url>
-    <loc>https://tsunejui.github.io/tags/</loc>
     <lastmod>2023-04-30T20:14:50+08:00</lastmod>
   </url><url>
     <loc>https://tsunejui.github.io/categories/kafka/</loc>
