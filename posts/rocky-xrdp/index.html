@@ -55,7 +55,7 @@
 <p>啟動 <code>xrdp</code> server:</p>
 <pre tabindex="0"><code>systemctl start xrdp
 </code></pre><p>設定開機啟動:</p>
-<pre tabindex="0"><code>enable xrdp
+<pre tabindex="0"><code>systemctl enable xrdp
 </code></pre><h3 id="打開防火牆">打開防火牆</h3>
 <p>預設 port 為 <code>3389</code>:</p>
 <pre tabindex="0"><code>firewall-cmd --permanent --add-port=3389/tcp &amp;&amp; firewall-cmd --reload 
