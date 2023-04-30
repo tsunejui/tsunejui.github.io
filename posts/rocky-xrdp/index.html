@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Rocky 使用 XRDP - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		<div class="divider"></div>
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Rocky 使用 XRDP</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h3 id="使用環境">使用環境</h3>
+<p>Rocky Linux 8.7</p>
+<p><img src="/os-release.png" alt="os-release"></p>
+<h3 id="安裝-xrdp-server">安裝 xrdp server</h3>
+<p>安裝 <code>xrdp</code>:</p>
+<pre tabindex="0"><code>dnf install xrdp
+</code></pre><p><img src="/xrdp/install.png" alt="install"></p>
+<h3 id="啟動-server">啟動 server</h3>
+<p>啟動 <code>xrdp</code> server:</p>
+<pre tabindex="0"><code>systemctl start xrdp
+</code></pre><p>設定開機啟動:</p>
+<pre tabindex="0"><code>enable xrdp
+</code></pre><h3 id="打開防火牆">打開防火牆</h3>
+<p>預設 port 為 <code>3389</code>:</p>
+<pre tabindex="0"><code>firewall-cmd --permanent --add-port=3389/tcp &amp;&amp; firewall-cmd --reload 
+</code></pre><h3 id="測試">測試</h3>
+<p>使用 <code>Microsoft Remote Desktop</code> 測試連線:</p>
+<p><img src="/xrdp/mrd.png" alt="mrd"></p>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://linux.how2shout.com/how-to-connect-rocky-linux-8-via-windows-rdp-protocol/">https://linux.how2shout.com/how-to-connect-rocky-linux-8-via-windows-rdp-protocol/</a></li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
