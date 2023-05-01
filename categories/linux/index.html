@@ -66,16 +66,16 @@ Reference https://linux.how2shout.com/how-to-connect-rocky-linux-8-via-windows-r
 	<header class="list__header">
 		<h2 class="list__title post__title">
 			<a href="/posts/rocky-install-gui/" rel="bookmark">
-			Install GUI on Rocky Linux
+			Install GUI on Rocky Linux 8.7
 			</a>
 		</h2>
 		
 	</header>
 	<div class="content list__excerpt post__content clearfix">
 		使用環境 Rocky Linux 8.7
-安裝 GNOME Desktop 步驟 更新安裝包 Update Your Server
+YUN packages 更新 更新安裝包 Update Your Server
 yum update 檢查 Package Groups 我們需要使用 Server with GUI，請使用 yum group list檢查是否在列表內:
-安裝 Server with GUI 執行下面的指令:
+yum group list 安裝 Server with GUI 執行下面的指令:
 yum groupinstall &#34;Server with GUI&#34; 設定開機進入圖形介面 更改 /etc/systemd/system/default.target 指向的位置：
 systemctl set-default graphical 重開機 reboot 結果 成功啟動圖形介面:
 Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-linux-8/ 
@@ -100,7 +100,7 @@ Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-l
 	<div class="widget__content">
 		<ul class="widget__list">
 			<li class="widget__item"><a class="widget__link" href="/posts/rocky-xrdp/">Rocky Linux 使用 XRDP</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/rocky-install-gui/">Install GUI on Rocky Linux</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/rocky-install-gui/">Install GUI on Rocky Linux 8.7</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/kafka/">Kafka 學習筆記</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/istio-tip/">Istio Tip</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/kubernetes-tips/">Kubernetes Tips</a></li>
