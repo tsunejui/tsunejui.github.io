@@ -13,7 +13,7 @@
       <pubDate>Wed, 08 Mar 2023 12:52:25 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/istio-tip/</guid>
-      <description>istio Init:CrashLoopBackOff 問題 安裝 istio 後會發現所有 POD 顯示 Init:CrashLoopBackOff，透過查看 log 可以發現錯誤。
+      <description>istio Init:CrashLoopBackOff 問題 安裝 istio 後會發現所有 POD 顯示 Init:CrashLoopBackOff, 透過查看 log 可以發現錯誤。
 https://github.com/istio/istio/issues/23009
 需要載入以下 mod 修復問題：
 modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_owner; modprobe iptable_nat; modprobe iptable_mangle; modprobe iptable_filter cat &amp;lt;&amp;lt;EOF | sudo tee /etc/modules-load.d/99-istio-modules.conf br_netfilter nf_nat xt_REDIRECT xt_owner iptable_nat iptable_mangle iptable_filter EOF </description>

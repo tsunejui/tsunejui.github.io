@@ -45,6 +45,28 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/proxmox-extend-linux-space/" rel="bookmark">
+			Proxmox 增加 Linux 硬碟空間
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		當 Proxmox 上的 Linux 硬碟可用空間不足時, 可以透過以下方法增加空間。
+使用環境 Rocky Linux 8.7
+Proxmox 重新設定硬碟空間 進入 Proxmox 上 VM 的 Hardware, 編輯 Hard Disk:
+增加硬碟空間:
+透過 lsblk 可以看到, 硬碟 sda 容量有增加。
+lsblk 調整 LVM 我們要調整 rl-root 的容量, 也就是 LV 的大小, 而調整 LV 需要先建立 PV, 再將 PV 加入與 LV 相同的 VG, 如下圖所示:
+https://networklessons.com/uncategorized/extend-lvm-partition
+在建立 PV 之前, 我們需要建立 partition, 透過 parted 指令可以輕鬆的達成:
+parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:
+unit MB p free 建立 partition, 填入 Start 和 End:
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/istio-tip/" rel="bookmark">
 			Istio Tip
 			</a>
@@ -52,7 +74,7 @@
 		
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		istio Init:CrashLoopBackOff 問題 安裝 istio 後會發現所有 POD 顯示 Init:CrashLoopBackOff，透過查看 log 可以發現錯誤。
+		istio Init:CrashLoopBackOff 問題 安裝 istio 後會發現所有 POD 顯示 Init:CrashLoopBackOff, 透過查看 log 可以發現錯誤。
 https://github.com/istio/istio/issues/23009
 需要載入以下 mod 修復問題：
 modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_owner; modprobe iptable_nat; modprobe iptable_mangle; modprobe iptable_filter cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/99-istio-modules.conf br_netfilter nf_nat xt_REDIRECT xt_owner iptable_nat iptable_mangle iptable_filter EOF 
@@ -69,7 +91,7 @@ modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_own
 	</header>
 	<div class="content list__excerpt post__content clearfix">
 		產生新的加入 cluster 指令 建立新的 token
-kubeadm token generate 畫面會顯示新的 token，便可以使用 kubeadm token create 建立新的 join command
+kubeadm token generate 畫面會顯示新的 token, 便可以使用 kubeadm token create 建立新的 join command
 以 4a4dv5.i31huo1je1e2dler 為例
 kubeadm token create 4a4dv5.i31huo1je1e2dler --print 
 	</div>
@@ -92,6 +114,7 @@ kubeadm token create 4a4dv5.i31huo1je1e2dler --print
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/proxmox-extend-linux-space/">Proxmox 增加 Linux 硬碟空間</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rocky-xrdp/">Rocky Linux 使用 XRDP</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rocky-install-gui/">Install GUI on Rocky Linux 8.7</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/kafka/">Kafka 學習筆記</a></li>

@@ -6,7 +6,25 @@
     <description>Recent content in Linux on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 30 Apr 2023 20:53:09 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 May 2023 02:02:22 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Proxmox 增加 Linux 硬碟空間</title>
+      <link>https://tsunejui.github.io/posts/proxmox-extend-linux-space/</link>
+      <pubDate>Tue, 02 May 2023 02:02:22 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/proxmox-extend-linux-space/</guid>
+      <description>當 Proxmox 上的 Linux 硬碟可用空間不足時, 可以透過以下方法增加空間。
+使用環境 Rocky Linux 8.7
+Proxmox 重新設定硬碟空間 進入 Proxmox 上 VM 的 Hardware, 編輯 Hard Disk:
+增加硬碟空間:
+透過 lsblk 可以看到, 硬碟 sda 容量有增加。
+lsblk 調整 LVM 我們要調整 rl-root 的容量, 也就是 LV 的大小, 而調整 LV 需要先建立 PV, 再將 PV 加入與 LV 相同的 VG, 如下圖所示:
+https://networklessons.com/uncategorized/extend-lvm-partition
+在建立 PV 之前, 我們需要建立 partition, 透過 parted 指令可以輕鬆的達成:
+parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:
+unit MB p free 建立 partition, 填入 Start 和 End:</description>
+    </item>
+    
     <item>
       <title>Rocky Linux 使用 XRDP</title>
       <link>https://tsunejui.github.io/posts/rocky-xrdp/</link>
@@ -31,7 +49,7 @@ Reference https://linux.how2shout.com/how-to-connect-rocky-linux-8-via-windows-r
       <guid>https://tsunejui.github.io/posts/rocky-install-gui/</guid>
       <description>使用環境 Rocky Linux 8.7
 YUN packages 更新 更新安裝包 Update Your Server
-yum update 檢查 Package Groups 我們需要使用 Server with GUI，請使用 yum group list檢查是否在列表內:
+yum update 檢查 Package Groups 我們需要使用 Server with GUI, 請使用 yum group list檢查是否在列表內:
 yum group list 安裝 Server with GUI 執行下面的指令:
 yum groupinstall &amp;#34;Server with GUI&amp;#34; 設定開機進入圖形介面 更改 /etc/systemd/system/default.target 指向的位置：
 systemctl set-default graphical 重開機 reboot 結果 成功啟動圖形介面:

@@ -60,11 +60,11 @@
 
 mv /opt/module/kafka_2.13-3.4.0 /opt/module/kafka
 </code></pre><p><strong>設定 broker.id</strong></p>
-<p>如果我需要部署一個 Kafka cluster，要注意在每一台 node 上的 <code>config/server.properties</code> 內的 <code>broker.id</code> 需要設為不一樣，否則會出錯。</p>
+<p>如果我需要部署一個 Kafka cluster, 要注意在每一台 node 上的 <code>config/server.properties</code> 內的 <code>broker.id</code> 需要設為不一樣, 否則會出錯。</p>
 <p><strong>Log Basics</strong></p>
-<p>預設的 <code>log.dirs</code> 為 <code>/tmp/kafka-logs</code>，這位導致 log 遺失，因此需要調整 log 位置。例如: <code>/opt/module/kafka/data</code></p>
+<p>預設的 <code>log.dirs</code> 為 <code>/tmp/kafka-logs</code>, 這位導致 log 遺失, 因此需要調整 log 位置。例如: <code>/opt/module/kafka/data</code></p>
 <p><strong>Zookeeper Client</strong></p>
-<p>預設的 <code>zookeeper.connect</code> 為 <code>localhost:2181</code>，需要改為 cluster 內所有 host 位置，假設集群有 3 台 node，他們的 ip 分別是:</p>
+<p>預設的 <code>zookeeper.connect</code> 為 <code>localhost:2181</code>, 需要改為 cluster 內所有 host 位置, 假設集群有 3 台 node, 他們的 ip 分別是:</p>
 <ul>
 <li>192.168.1.100</li>
 <li>192.168.1.101</li>
@@ -72,7 +72,7 @@ mv /opt/module/kafka_2.13-3.4.0 /opt/module/kafka
 </ul>
 <p>那就應該配置為：</p>
 <blockquote>
-<p><code>/kafka</code> 的意思為，在 zookeeper 內建立一個名為 <code>kafka</code> 的目錄，未來如不需要此 cluster ，直接刪除 <code>kafka</code> 即可。</p>
+<p><code>/kafka</code> 的意思為, 在 zookeeper 內建立一個名為 <code>kafka</code> 的目錄, 未來如不需要此 cluster , 直接刪除 <code>kafka</code> 即可。</p>
 </blockquote>
 <pre tabindex="0"><code>zookeeper.connect: 192.168.1.100:2181,192.168.1.101:2181,192.168.1.102:2181/kafka
 </code></pre><p><strong>environment variable</strong></p>

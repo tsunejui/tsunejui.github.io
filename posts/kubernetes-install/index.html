@@ -80,7 +80,7 @@
 </table>
 <p><strong>nodes</strong></p>
 <blockquote>
-<p>建議登入每台主機，並使用 <code>hostnamectl set-hostname xxx</code> 修改 hostname</p>
+<p>建議登入每台主機, 並使用 <code>hostnamectl set-hostname xxx</code> 修改 hostname</p>
 <p>選擇 192.168.50.125 作為 VIP</p>
 </blockquote>
 <table>
@@ -129,7 +129,7 @@
 192.168.50.124 cns-k8s-worker1
 </code></pre><h3 id="關閉-firewall">關閉 firewall</h3>
 <blockquote>
-<p>calico 官網建議關閉 firewalld，因為他們都是透過 iptables 實現 nat 轉發，可能會有互相干擾的風險: <a href="https://docs.tigera.io/calico/3.25/getting-started/kubernetes/requirements">link</a></p>
+<p>calico 官網建議關閉 firewalld, 因為他們都是透過 iptables 實現 nat 轉發, 可能會有互相干擾的風險: <a href="https://docs.tigera.io/calico/3.25/getting-started/kubernetes/requirements">link</a></p>
 <p>Kubernetes 預設會使用的 Ports 及 Protocols: <a href="https://kubernetes.io/docs/reference/networking/ports-and-protocols/">link</a></p>
 <p>Calico 預設會使用的 Ports 及 Protocols: <a href="https://docs.tigera.io/calico/3.25/getting-started/kubernetes/requirements">link</a></p>
 </blockquote>
@@ -153,7 +153,7 @@
 </blockquote>
 <p>生產 config 檔案</p>
 <pre tabindex="0"><code>mkdir /etc/containerd &amp;&amp; containerd config default &gt; /etc/containerd/config.toml
-</code></pre><p>為了使用 <code>Systemd</code> 作為 cgroup driver，需要修改 config 檔案 <code>/etc/containerd/config.toml</code>, 將 <code>SystemdCgroup</code> 改為 <code>true</code></p>
+</code></pre><p>為了使用 <code>Systemd</code> 作為 cgroup driver, 需要修改 config 檔案 <code>/etc/containerd/config.toml</code>, 將 <code>SystemdCgroup</code> 改為 <code>true</code></p>
 <blockquote>
 <p>Why kubernetes choose systemd not cgroupfs? <a href="https://www.sobyte.net/post/2022-07/k8s-cgroupfs-or-syste/">https://www.sobyte.net/post/2022-07/k8s-cgroupfs-or-syste/</a></p>
 </blockquote>
@@ -173,7 +173,7 @@
     SystemdCgroup = true
 </code></pre><p>下載 service 檔案</p>
 <blockquote>
-<p>由於 containerd 預設的 config path 是 <code>/etc/containerd/config.toml</code> ，所以不需要改 service 檔案，可以透過 <code>containerd --help</code> 得知。</p>
+<p>由於 containerd 預設的 config path 是 <code>/etc/containerd/config.toml</code> , 所以不需要改 service 檔案, 可以透過 <code>containerd --help</code> 得知。</p>
 </blockquote>
 <pre tabindex="0"><code>curl -o /usr/lib/systemd/system/containerd.service https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
 </code></pre><p>開機啟動 containerd</p>
@@ -225,7 +225,7 @@ EOF
 <pre tabindex="0"><code>sudo yum install -y kubelet kubeadm kubectl iproute-tc --disableexcludes=kubernetes &amp;&amp; sudo systemctl enable --now kubelet
 </code></pre><h3 id="在-master-node-上設定">在 master node 上設定</h3>
 <blockquote>
-<p>使用 haproxy 及 keepalived 實現 high availability，可以建立 manifest 到 <code>/etc/kubernetes</code> 作為 static pod 啟動。</p>
+<p>使用 haproxy 及 keepalived 實現 high availability, 可以建立 manifest 到 <code>/etc/kubernetes</code> 作為 static pod 啟動。</p>
 </blockquote>
 <p><strong>haproxy 設定</strong></p>
 <blockquote>
@@ -247,7 +247,7 @@ vi /etc/kubernetes/manifests/keepalived.yaml
 </code></pre><p>修改 <code>kubeadm-config.yaml</code> 檔案:</p>
 <blockquote>
 <p>kubeadm-config.yaml refs: <a href="/kubernetes/kubeadm-config.yaml">link</a></p>
-<p>注意 <code>podSubnet</code> 及 <code>serviceSubnet</code> 最好不要與目前電腦的 private IP 相同網段，避免發生衝突。</p>
+<p>注意 <code>podSubnet</code> 及 <code>serviceSubnet</code> 最好不要與目前電腦的 private IP 相同網段, 避免發生衝突。</p>
 <p>kube-proxy 使用模式為 <code>ipvs</code></p>
 <p>podSubnet: <code>10.244.0.0/16</code></p>
 <p>serviceSubnet: <code>10.96.0.0/12</code></p>
@@ -255,13 +255,13 @@ vi /etc/kubernetes/manifests/keepalived.yaml
 <pre tabindex="0"><code>vi kubeadm-config.yaml
 </code></pre><p><strong>初始化 Kubernetes</strong></p>
 <blockquote>
-<p>初始化成功後，系統會提示將 <code>/etc/kubernetes/admin.conf</code> 複製到 <code>$HOME/.kube/config</code>，便可以使用 <code>kubectl get nodes</code> 查看狀況。</p>
+<p>初始化成功後, 系統會提示將 <code>/etc/kubernetes/admin.conf</code> 複製到 <code>$HOME/.kube/config</code>, 便可以使用 <code>kubectl get nodes</code> 查看狀況。</p>
 </blockquote>
 <pre tabindex="0"><code>kubeadm init --config=kubeadm-config.yaml --upload-certs
 </code></pre><p><strong>安裝 Calico operator</strong></p>
 <pre tabindex="0"><code>kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
 </code></pre><p><strong>設定 Calico POD_CIDR</strong></p>
-<p>下載 <code>calico.yaml</code>，修改 <code>spec.calicoNetwork.ipPools.cidr</code> 為 <code>10.244.0.0/16</code></p>
+<p>下載 <code>calico.yaml</code>, 修改 <code>spec.calicoNetwork.ipPools.cidr</code> 為 <code>10.244.0.0/16</code></p>
 <pre tabindex="0"><code>curl -OL https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml
 
 vi custom-resources.yaml
@@ -269,7 +269,7 @@ vi custom-resources.yaml
 kubectl apply -f custom-resources.yaml
 </code></pre><p>檢查 calico 安裝進度:</p>
 <pre tabindex="0"><code>watch kubectl get pods -n calico-system
-</code></pre><p>安裝完成後，便可使用 kubernetes。</p>
+</code></pre><p>安裝完成後, 便可使用 kubernetes。</p>
 
 		</div>
 		<footer class="post__footer">

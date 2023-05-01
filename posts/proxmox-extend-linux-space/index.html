@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Proxmox 增加 Linux 硬碟空間 - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		<div class="divider"></div>
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Proxmox 增加 Linux 硬碟空間</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<p>當 Proxmox 上的 Linux 硬碟可用空間不足時, 可以透過以下方法增加空間。</p>
+<h2 id="使用環境">使用環境</h2>
+<p>Rocky Linux 8.7</p>
+<p><img src="/rocky-linux-gui/os-release.png" alt="os-release"></p>
+<h2 id="proxmox-重新設定硬碟空間">Proxmox 重新設定硬碟空間</h2>
+<p>進入 Proxmox 上 VM 的 Hardware, 編輯 Hard Disk:</p>
+<p><img src="/proxmox-extend-space/resize.png" alt="resize"></p>
+<p>增加硬碟空間:</p>
+<p><img src="/proxmox-extend-space/increment.png" alt="increment"></p>
+<p>透過 <code>lsblk</code> 可以看到, 硬碟 <code>sda</code> 容量有增加。</p>
+<pre tabindex="0"><code>lsblk
+</code></pre><p><img src="/proxmox-extend-space/lsblk-0.png" alt="lsblk-0"></p>
+<h2 id="調整-lvm">調整 LVM</h2>
+<p>我們要調整 <code>rl-root</code> 的容量, 也就是 LV 的大小, 而調整 LV 需要先建立 PV, 再將 PV 加入與 LV 相同的 VG, 如下圖所示:</p>
+<blockquote>
+<p><a href="https://networklessons.com/uncategorized/extend-lvm-partition">https://networklessons.com/uncategorized/extend-lvm-partition</a></p>
+</blockquote>
+<p><img src="/proxmox-extend-space/volume.jpeg" alt="volume"></p>
+<p>在建立 PV 之前, 我們需要建立 partition, 透過 <code>parted</code> 指令可以輕鬆的達成:</p>
+<pre tabindex="0"><code>parted
+</code></pre><p>進入 <code>parted</code> 畫面後, 查看可用空間, 及 Start 和 End:</p>
+<pre tabindex="0"><code>unit MB p free
+</code></pre><p><img src="/proxmox-extend-space/parted-0.png" alt="parted-0"></p>
+<p>建立 partition, 填入 Start 和 End:</p>
+<pre tabindex="0"><code>mkpart primary [start] [end]
+</code></pre><p>在執行 <code>p</code> 查看是否成功建立 partition:</p>
+<pre tabindex="0"><code>p
+</code></pre><p><img src="/proxmox-extend-space/parted-1.png" alt="parted-1"></p>
+<p>案 <code>q</code> 離開</p>
+<pre tabindex="0"><code>q
+</code></pre><p>再次透過 <code>lsblk</code> 確認 partition 建立成功:</p>
+<pre tabindex="0"><code>lsblk
+</code></pre><p><img src="/proxmox-extend-space/lsblk-1.png" alt="lsblk-1"></p>
+<p>在新的 partition 上建立 PV:</p>
+<p><img src="/proxmox-extend-space/pvcreate.png" alt="pvcreate"></p>
+<p>透過 <code>pvscan</code> 查看所有 PV:</p>
+<pre tabindex="0"><code>pvscan
+</code></pre><p>透過 <code>vgscan</code> 查看所有 VG:</p>
+<pre tabindex="0"><code>vgscan
+</code></pre><p><img src="/proxmox-extend-space/scan.png" alt="scan"></p>
+<p>將 PV 加入至 VG:</p>
+<pre tabindex="0"><code>vgextend [vg] [pv]
+</code></pre><p><img src="/proxmox-extend-space/vgextend.png" alt="vgextend"></p>
+<p>透過 <code>lvdisplay</code> 查看 LV:</p>
+<blockquote>
+<p>或是 <code>lvscan</code></p>
+</blockquote>
+<pre tabindex="0"><code>lvdisplay
+</code></pre><p><img src="/proxmox-extend-space/lvdisplay.png" alt="lvdisplay"></p>
+<p>使用 <code>lvextend</code> 增加 LV 容量:</p>
+<pre tabindex="0"><code>lvextend -r -l +100%FREE [lv]
+</code></pre><p><img src="/proxmox-extend-space/lvextend.png" alt="lvextend"></p>
+<h2 id="結果">結果</h2>
+<p>透過 <code>lsblk</code> 可以看到, LV 已成功增加:</p>
+<p><img src="/proxmox-extend-space/lsblk-2.png" alt="lsblk-2"></p>
+<p>透過 <code>df</code> 檢查硬碟使用量:</p>
+<p><img src="/proxmox-extend-space/df.png" alt="df"></p>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tip/" rel="tag">Tip</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
