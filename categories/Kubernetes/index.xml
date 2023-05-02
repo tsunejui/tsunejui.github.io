@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Kubernetes on Rex&#39;s Notes 技術筆記 </title>
+    <title>kubernetes on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/categories/kubernetes/</link>
-    <description>Recent content in Kubernetes on Rex&#39;s Notes 技術筆記 </description>
+    <description>Recent content in kubernetes on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 08 Mar 2023 12:52:25 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
