@@ -220,8 +220,10 @@ exclude=kubelet kubeadm kubectl
 EOF
 </code></pre><p>安裝工具並啟動 kubelet</p>
 <blockquote>
-<p>安裝 <code>iproute-tc</code> 是因為使用 kubeadm join node 時會發生 <code>tc not found</code> 問題: <a href="https://stackoverflow.com/questions/59653331/kubernetes-centos-8-tc-command-missing-impact">link</a>
-如果您需要安裝指定版本，以 <code>v1.26.3</code> 為例，可以將 <code>kubelet</code> <code>kubectl</code> <code>kubectl</code> 改為 <code>kubelet-1.26.3</code> <code>kubeadm-1.26.3</code> <code>kubectl-1.26.3</code></p>
+<p>安裝 <code>iproute-tc</code> 是因為使用 kubeadm join node 時會發生 <code>tc not found</code> 問題: <a href="https://stackoverflow.com/questions/59653331/kubernetes-centos-8-tc-command-missing-impact">link</a></p>
+</blockquote>
+<blockquote>
+<p>如果您需要安裝指定版本，以 <code>v1.26.3</code> 為例，可以將 <code>kubelet</code> <code>kubectl</code> <code>kubectl</code> 改為 <code>kubelet-1.26.3</code> <code>kubeadm-1.26.3</code> <code>kubectl-1.26.3</code></p>
 </blockquote>
 <pre tabindex="0"><code>sudo yum install -y kubelet kubeadm kubectl iproute-tc --disableexcludes=kubernetes &amp;&amp; sudo systemctl enable --now kubelet
 </code></pre><h3 id="在-master-node-上設定">在 master node 上設定</h3>
