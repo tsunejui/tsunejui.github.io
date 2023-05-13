@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>NFS on Rocky Linux 8 - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		<div class="divider"></div>
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">NFS on Rocky Linux 8</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h3 id="什麼是-nfs">什麼是 NFS</h3>
+<p>NFS (Network File System) 是一種分散式檔案系統協議，用於在網路上共享檔案和資源。</p>
+<h3 id="環境設定">環境設定</h3>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>ip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>nfs-server</td>
+<td>10.250.75.111</td>
+</tr>
+<tr>
+<td>2</td>
+<td>nfs-client</td>
+<td>10.250.75.103</td>
+</tr>
+</tbody>
+</table>
+<h3 id="在-nfs-server-上">在 NFS Server 上</h3>
+<ol>
+<li>安裝 nfs 工具包</li>
+</ol>
+<pre tabindex="0"><code>dnf -y install nfs-utils
+</code></pre><ol start="2">
+<li>啟動 nfs server 並且設定開機自動開啟。</li>
+</ol>
+<pre tabindex="0"><code>systemctl enable --now nfs-server.service
+</code></pre><ol start="3">
+<li>建立 nfs 目錄</li>
+</ol>
+<pre tabindex="0"><code>mkdir -p /mnt/nfs_shares
+</code></pre><ol start="4">
+<li>更改 owner 及設定權限</li>
+</ol>
+<blockquote>
+<p>nobody 使用者是一個系統使用者，不擁有任何特殊權限，且通常用於運行低權限的服務或進程。</p>
+</blockquote>
+<pre tabindex="0"><code>chown -R nobody:nobody /mnt/nfs_shares &amp;&amp; chmod -R 777 /mnt/nfs_shares
+</code></pre><ol start="5">
+<li>vim /etc/exports</li>
+</ol>
+<blockquote>
+<p>/etc/exports 是在 Linux 系統中用於配置 NFS 的設定檔案。NFS 是一種分散式檔案系統，它允許不同的機器透過網路共享檔案。</p>
+<p>rw: 可讀可寫</p>
+<p>sync: 寫入後同步</p>
+<p>no_all_squash: 禁用 <a href="https://linux.die.net/man/5/exports"><code>all_squash</code></a></p>
+<p>root_squash: 被啟用時，NFS 伺服器會將 root 使用者的操作映射為匿名使用者（通常是 nobody 或 nfsnobody）</p>
+</blockquote>
+<pre tabindex="0"><code>/mnt/nfs_shares 10.250.75.103(rw,sync,no_all_squash,root_squash)
+</code></pre><ol start="6">
+<li>重啟 nfs-server</li>
+</ol>
+<pre tabindex="0"><code>systemctl restart nfs-server.service
+</code></pre><ol start="7">
+<li>打開防火牆</li>
+</ol>
+<blockquote>
+<p>service 檔案如下:</p>
+<p>/usr/lib/firewalld/services/nfs.xml</p>
+<p>/usr/lib/firewalld/services/rpc-bind.xml</p>
+<p>/usr/lib/firewalld/services/mountd.xml</p>
+</blockquote>
+<pre tabindex="0"><code>firewall-cmd --permanent --add-service=nfs --add-service=rpc-bind --add-service=mountd &amp;&amp; firewall-cmd --reload
+</code></pre><ol>
+<li>查看 export directories</li>
+</ol>
+<blockquote>
+<p>-a: Export or unexport all directories.</p>
+<p>-r: Reexport  all directories</p>
+<p>When exporting or unexporting, show what&rsquo;s going on</p>
+</blockquote>
+<pre tabindex="0"><code>exportfs -arv
+</code></pre><ol start="10">
+<li>查看 export list</li>
+</ol>
+<blockquote>
+<p>-s: Display the current export list suitable for <code>/etc/exports</code>.</p>
+</blockquote>
+<pre tabindex="0"><code>exportfs -s
+</code></pre><h3 id="在-nfs-client-上">在 NFS Client 上</h3>
+<ol>
+<li>檢查 nfs server 有沒有對 client server 開放使用</li>
+</ol>
+<pre tabindex="0"><code>showmount -e 10.250.75.111
+</code></pre><ol start="2">
+<li>新增 mount 目錄</li>
+</ol>
+<pre tabindex="0"><code>mkdir -p /nfs_client
+</code></pre><ol start="3">
+<li>掛載 nfs</li>
+</ol>
+<pre tabindex="0"><code>mount -t nfs 10.250.75.111:/mnt/nfs_shares /nfs_client
+</code></pre><ol start="4">
+<li>查看是否成功</li>
+</ol>
+<pre tabindex="0"><code>mount | grep nfs
+</code></pre><ol start="5">
+<li>設定開機時自動 mount</li>
+</ol>
+<p>編輯 <code>/etc/fstab</code></p>
+<pre tabindex="0"><code>vi /etc/fstab
+</code></pre><p>加入以下內容:</p>
+<pre tabindex="0"><code>10.250.75.111:/mnt/nfs_shares /nfs_client nfs defaults 0 0
+</code></pre><h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/storage_administration_guide/nfs-serverconfig">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/storage_administration_guide/nfs-serverconfig</a></li>
+</ul>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

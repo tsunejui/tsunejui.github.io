@@ -45,6 +45,24 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/nfs/" rel="bookmark">
+			NFS on Rocky Linux 8
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		什麼是 NFS NFS (Network File System) 是一種分散式檔案系統協議，用於在網路上共享檔案和資源。
+環境設定 id name ip 1 nfs-server 10.250.75.111 2 nfs-client 10.250.75.103 在 NFS Server 上 安裝 nfs 工具包 dnf -y install nfs-utils 啟動 nfs server 並且設定開機自動開啟。 systemctl enable --now nfs-server.service 建立 nfs 目錄 mkdir -p /mnt/nfs_shares 更改 owner 及設定權限 nobody 使用者是一個系統使用者，不擁有任何特殊權限，且通常用於運行低權限的服務或進程。
+chown -R nobody:nobody /mnt/nfs_shares &amp;&amp; chmod -R 777 /mnt/nfs_shares vim /etc/exports /etc/exports 是在 Linux 系統中用於配置 NFS 的設定檔案。NFS 是一種分散式檔案系統，它允許不同的機器透過網路共享檔案。
+rw: 可讀可寫
+sync: 寫入後同步
+no_all_squash: 禁用 all_squash
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/proxmox-extend-linux-space/" rel="bookmark">
 			Proxmox 增加 Linux 硬碟空間
 			</a>
@@ -200,6 +218,7 @@ I&rsquo;m Rex, a software engineer. I am passionate about technology and keep co
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/nfs/">NFS on Rocky Linux 8</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/proxmox-extend-linux-space/">Proxmox 增加 Linux 硬碟空間</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rocky-xrdp/">Rocky Linux 使用 XRDP</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rocky-install-gui/">Install GUI on Rocky Linux 8.7</a></li>
