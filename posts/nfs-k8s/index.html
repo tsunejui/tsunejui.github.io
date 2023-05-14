@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>NFS on Kubernetes - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		<div class="divider"></div>
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">NFS on Kubernetes</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h3 id="環境設定">環境設定</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFS Server</td>
+<td>10.250.75.111</td>
+</tr>
+<tr>
+<td>NFS Path</td>
+<td>/mnt/nfs_shares</td>
+</tr>
+</tbody>
+</table>
+<h3 id="部署-nfs-storage-class">部署 NFS Storage Class</h3>
+<p>以下步驟將建立 Custom Provisioner，並串接 NFS Server。</p>
+<ol>
+<li>建立 Provisioner 的 Service Account</li>
+</ol>
+<blockquote>
+<p>請參考 <a href="/nfs-k8s/account.yaml">here</a></p>
+</blockquote>
+<p>建立名為 <code>nfs-client-provisioner</code> 的 Service Account</p>
+<pre tabindex="0"><code>kubectl apply -f account.yaml
+</code></pre><ol start="2">
+<li>建立 Provisioner Deployment</li>
+</ol>
+<blockquote>
+<p>請參考 <a href="/nfs-k8s/provisioner.yaml">here</a></p>
+<p>kubernetes-sigs/nfs-subdir-external-provisioner: <a href="https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner">https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner</a></p>
+<p>為了避免出錯，<code>strategy.type</code> 設定為 <code>Recreate</code>，而 <code>replicas</code> 設為 <code>1</code></p>
+</blockquote>
+<p>使用 <code>kubernetes-sigs/nfs-subdir-external-provisioner</code> 作為 provisioner，請注意以下環境變數設定:</p>
+<pre tabindex="0"><code>- name: PROVISIONER_NAME # storage class 名稱
+    value: k8s-sigs.io/nfs-subdir-external-provisioner
+- name: NFS_SERVER # nfs server 位置
+    value: 10.250.75.111
+- name: NFS_PATH # nfs directory 路徑
+    value: /mnt/nfs_shares
+</code></pre><p>使用 <code>kubectl</code> 部署 <code>nfs-client-provisioner</code>:</p>
+<pre tabindex="0"><code>kubectl apply -f provisioner.yaml
+</code></pre><ol start="3">
+<li>部署 Storage Class</li>
+</ol>
+<blockquote>
+<p>請參考 <a href="/nfs-k8s/storage-class.yaml">here</a></p>
+</blockquote>
+<p>使用 <code>kubectl</code> 部署 <code>cns-nfs-client</code>:</p>
+<blockquote>
+<p>注意 <code>PROVISIONER_NAME</code> 需與 <code>provisioner</code> 名稱相同</p>
+</blockquote>
+<pre tabindex="0"><code>kubectl apply -f storage-class.yaml
+</code></pre><ol start="4">
+<li>部署 PVC</li>
+</ol>
+<blockquote>
+<p>請參考 <a href="/nfs-k8s/pvc.yaml">here</a></p>
+</blockquote>
+<p>使用 <code>kubectl</code> 部署 <code>cns-nfs-pvc</code>:</p>
+<pre tabindex="0"><code>kubectl apply -f pvc.yaml
+</code></pre><p>你可以看到 PV 馬上被建立:</p>
+<p><img src="/nfs-k8s/pv.png" alt="pv"></p>
+<ol start="5">
+<li>部署 Pod 進行測試</li>
+</ol>
+<blockquote>
+<p>請參考 <a href="/nfs-k8s/pod.yaml">here</a></p>
+</blockquote>
+<p>使用 <code>kubectl</code> 部署 <code>nfs-testing</code>:</p>
+<pre tabindex="0"><code>kubectl apply -f pod.yaml
+</code></pre><p>你可以看到 pod 成功 <code>Running</code>:</p>
+<p><img src="/nfs-k8s/pod.png" alt="pod"></p>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

@@ -45,6 +45,26 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/nfs-k8s/" rel="bookmark">
+			NFS on Kubernetes
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		環境設定 項目 內容 NFS Server 10.250.75.111 NFS Path /mnt/nfs_shares 部署 NFS Storage Class 以下步驟將建立 Custom Provisioner，並串接 NFS Server。
+建立 Provisioner 的 Service Account 請參考 here
+建立名為 nfs-client-provisioner 的 Service Account
+kubectl apply -f account.yaml 建立 Provisioner Deployment 請參考 here
+kubernetes-sigs/nfs-subdir-external-provisioner: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
+為了避免出錯，strategy.type 設定為 Recreate，而 replicas 設為 1
+使用 kubernetes-sigs/nfs-subdir-external-provisioner 作為 provisioner，請注意以下環境變數設定:
+- name: PROVISIONER_NAME # storage class 名稱 value: k8s-sigs.io/nfs-subdir-external-provisioner - name: NFS_SERVER # nfs server 位置 value: 10.250.75.111 - name: NFS_PATH # nfs directory 路徑 value: /mnt/nfs_shares 使用 kubectl 部署 nfs-client-provisioner:
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/nfs/" rel="bookmark">
 			NFS on Rocky Linux 8
 			</a>
@@ -218,6 +238,7 @@ I&rsquo;m Rex, a software engineer. I am passionate about technology and keep co
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/nfs-k8s/">NFS on Kubernetes</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/nfs/">NFS on Rocky Linux 8</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/proxmox-extend-linux-space/">Proxmox 增加 Linux 硬碟空間</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rocky-xrdp/">Rocky Linux 使用 XRDP</a></li>

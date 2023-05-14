@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cns-nfs-pvc
+  annotations:
+    nfs.io/storage-path: "cns"
+spec:
+  storageClassName: "cns-nfs-client"
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi

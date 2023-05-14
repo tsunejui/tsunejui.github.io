@@ -6,7 +6,23 @@
     <description>Recent content in K8S on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 08 Mar 2023 12:52:25 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/k8s/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 14 May 2023 23:32:13 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/k8s/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>NFS on Kubernetes</title>
+      <link>https://tsunejui.github.io/posts/nfs-k8s/</link>
+      <pubDate>Sun, 14 May 2023 23:32:13 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/nfs-k8s/</guid>
+      <description>環境設定 項目 內容 NFS Server 10.250.75.111 NFS Path /mnt/nfs_shares 部署 NFS Storage Class 以下步驟將建立 Custom Provisioner，並串接 NFS Server。
+建立 Provisioner 的 Service Account 請參考 here
+建立名為 nfs-client-provisioner 的 Service Account
+kubectl apply -f account.yaml 建立 Provisioner Deployment 請參考 here
+kubernetes-sigs/nfs-subdir-external-provisioner: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
+為了避免出錯，strategy.type 設定為 Recreate，而 replicas 設為 1
+使用 kubernetes-sigs/nfs-subdir-external-provisioner 作為 provisioner，請注意以下環境變數設定:
+- name: PROVISIONER_NAME # storage class 名稱 value: k8s-sigs.io/nfs-subdir-external-provisioner - name: NFS_SERVER # nfs server 位置 value: 10.250.75.111 - name: NFS_PATH # nfs directory 路徑 value: /mnt/nfs_shares 使用 kubectl 部署 nfs-client-provisioner:</description>
+    </item>
+    
     <item>
       <title>Istio Tip</title>
       <link>https://tsunejui.github.io/posts/istio-tip/</link>
