@@ -6,7 +6,20 @@
     <description>Recent content in Tip on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 May 2023 02:02:22 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/tip/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 May 2023 09:43:12 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/tip/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RHEL 9 在 Proxmox 上 Kernel Panic</title>
+      <link>https://tsunejui.github.io/posts/rhel-9-panic/</link>
+      <pubDate>Tue, 16 May 2023 09:43:12 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/rhel-9-panic/</guid>
+      <description>環境描述 使用 Proxmox 7.2-3:
+問題原因 在 Proxmox 上安裝 RHEL 9 時會發生 Kernel Panic:
+解決方法 在新增 VM 時，CPU type 選擇 host:
+成功啟動 RHEL 9:
+Reference https://access.redhat.com/discussions/6959360 </description>
+    </item>
+    
     <item>
       <title>Proxmox 增加 Linux 硬碟空間</title>
       <link>https://tsunejui.github.io/posts/proxmox-extend-linux-space/</link>

@@ -59,6 +59,23 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/rhel-9-panic/" rel="bookmark">
+			RHEL 9 在 Proxmox 上 Kernel Panic
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		環境描述 使用 Proxmox 7.2-3:
+問題原因 在 Proxmox 上安裝 RHEL 9 時會發生 Kernel Panic:
+解決方法 在新增 VM 時，CPU type 選擇 host:
+成功啟動 RHEL 9:
+Reference https://access.redhat.com/discussions/6959360 
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/nfs-k8s/" rel="bookmark">
 			NFS on Kubernetes
 			</a>
@@ -218,24 +235,13 @@ Kubernetes 安裝建議高於 2 core CPU 及 2 GB or more RAM: link
 interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
 建議登入每台主機, 並使用 hostnamectl set-hostname xxx 修改 hostname
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/aboutme/" rel="bookmark">
-			About Me
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		Hi, welcome to my first Blog Post. YAY!
-I&rsquo;m so ready to have a place to share all my coding travels on, and share my life. Let me introduce myself first:
-I&rsquo;m Rex, a software engineer. I am passionate about technology and keep continually focusing the solutions of SRE、DevOps and Data Visualization. I am looking forward to applying my skill set into any challenge in the work. contact me if you need assistance!
-	</div>
 </article>
 </main>
 
+<div class="pagination">
+	<span class="pagination__item pagination__item--current">1/2</span>
+	<a class="pagination__item pagination__item--next btn" href="/page/2/">»</a>
+</div>
 
 			</div>
 			<aside class="sidebar"><div class="widget-search widget">
@@ -251,6 +257,7 @@ I&rsquo;m Rex, a software engineer. I am passionate about technology and keep co
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/rhel-9-panic/">RHEL 9 在 Proxmox 上 Kernel Panic</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/nfs-k8s/">NFS on Kubernetes</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/nfs/">NFS on Rocky Linux 8</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/proxmox-extend-linux-space/">Proxmox 增加 Linux 硬碟空間</a></li>
@@ -260,7 +267,6 @@ I&rsquo;m Rex, a software engineer. I am passionate about technology and keep co
 			<li class="widget__item"><a class="widget__link" href="/posts/istio-tip/">Istio Tip</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/kubernetes-tips/">Kubernetes Tips</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/kubernetes-install/">Kubernetes 安裝筆記</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/aboutme/">About Me</a></li>
 		</ul>
 	</div>
 </div>
