@@ -60,6 +60,21 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/ssh-tunnel/" rel="bookmark">
+			SSH Tunneling
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		What is SSH Tunneling SSH Tunneling is a method of creating an encrypted SSH connection between a client and a server machine through which services ports can be relayed, for example:
+Pre-requisites Rocky Linux VM x 2 Install Grafana on one of them vm ip service port VM I (SSH Client) 10.250.75.103 VM II (SSH Server) 10.250.75.147 3000 (Grafana) Get Started 使用 ssh command 在 VM I:
+-N : Do not execute a remote command.
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/rhel-9-panic/" rel="bookmark">
 			RHEL 9 在 Proxmox 上 Kernel Panic
 			</a>
@@ -218,24 +233,6 @@ kubeadm token generate 畫面會顯示新的 token, 便可以使用 kubeadm toke
 以 4a4dv5.i31huo1je1e2dler 為例
 kubeadm token create 4a4dv5.i31huo1je1e2dler --print-join-command 
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/kubernetes-install/" rel="bookmark">
-			Kubernetes 安裝筆記
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		安裝 Kubernetes 事前準備 Preparation Before you begin
-Rocky Linux ISO 載點: link
-Kubernetes 安裝建議高於 2 core CPU 及 2 GB or more RAM: link
-準備 5 台 node, OS 選擇 Rocky Linux 8 每台 node 需要 4 core CPU &amp; 8 GB memory (非必要) 6 組 IP (node * 5 + VIP * 1) Kubernetes Interface
-interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
-建議登入每台主機, 並使用 hostnamectl set-hostname xxx 修改 hostname
-	</div>
 </article>
 </main>
 
@@ -259,6 +256,7 @@ interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/ssh-tunnel/">SSH Tunneling</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rhel-9-panic/">RHEL 9 在 Proxmox 上 Kernel Panic</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/nfs-k8s/">NFS on Kubernetes</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/nfs/">NFS on Rocky Linux 8</a></li>
@@ -268,7 +266,6 @@ interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
 			<li class="widget__item"><a class="widget__link" href="/posts/kafka/">Kafka 學習筆記</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/istio-tip/">Istio Tip</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/kubernetes-tips/">Kubernetes Tips</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/kubernetes-install/">Kubernetes 安裝筆記</a></li>
 		</ul>
 	</div>
 </div>

@@ -6,7 +6,18 @@
     <description>Recent content in Posts on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 May 2023 09:43:12 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 May 2023 12:34:03 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SSH Tunneling</title>
+      <link>https://tsunejui.github.io/posts/ssh-tunnel/</link>
+      <pubDate>Sat, 20 May 2023 12:34:03 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/ssh-tunnel/</guid>
+      <description>What is SSH Tunneling SSH Tunneling is a method of creating an encrypted SSH connection between a client and a server machine through which services ports can be relayed, for example:
+Pre-requisites Rocky Linux VM x 2 Install Grafana on one of them vm ip service port VM I (SSH Client) 10.250.75.103 VM II (SSH Server) 10.250.75.147 3000 (Grafana) Get Started 使用 ssh command 在 VM I:
+-N : Do not execute a remote command.</description>
+    </item>
+    
     <item>
       <title>RHEL 9 在 Proxmox 上 Kernel Panic</title>
       <link>https://tsunejui.github.io/posts/rhel-9-panic/</link>

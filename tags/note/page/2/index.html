@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Tags - Rex&#39;s Notes 技術筆記 </title>
+	<title>Note - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 
 	<link rel="stylesheet" href="/css/style.css">
 	
-	<link rel="alternate" type="application/rss+xml" href="/tags/index.xml" title="Rex's Notes 技術筆記 ">
+	<link rel="alternate" type="application/rss+xml" href="/tags/note/index.xml" title="Rex's Notes 技術筆記 ">
 
 	<link rel="shortcut icon" href="/favicon.ico">
 		
@@ -55,36 +55,32 @@
 			
 <main class="main list" role="main">
 	<header class="main__header">
-		<h1 class="main__title">Tags</h1>
+		<h1 class="main__title">Note</h1>
 	</header><article class="list__item post">
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
-			<a href="/tags/note/" rel="bookmark">
-			Note
+			<a href="/posts/kubernetes-install/" rel="bookmark">
+			Kubernetes 安裝筆記
 			</a>
 		</h2>
 		
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/tags/tip/" rel="bookmark">
-			Tip
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		
+		安裝 Kubernetes 事前準備 Preparation Before you begin
+Rocky Linux ISO 載點: link
+Kubernetes 安裝建議高於 2 core CPU 及 2 GB or more RAM: link
+準備 5 台 node, OS 選擇 Rocky Linux 8 每台 node 需要 4 core CPU &amp; 8 GB memory (非必要) 6 組 IP (node * 5 + VIP * 1) Kubernetes Interface
+interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
+建議登入每台主機, 並使用 hostnamectl set-hostname xxx 修改 hostname
 	</div>
 </article>
 </main>
 
+<div class="pagination">
+	<a class="pagination__item pagination__item--prev btn" href="/tags/note/">«</a>
+	<span class="pagination__item pagination__item--current">2/2</span>
+</div>
 
 			</div>
 			

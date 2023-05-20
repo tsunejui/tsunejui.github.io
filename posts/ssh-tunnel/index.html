@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SSH Tunneling - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">SSH Tunneling</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h2 id="what-is-ssh-tunneling">What is SSH Tunneling</h2>
+<p><code>SSH Tunneling</code> is a method of creating an encrypted SSH connection between a client and a server machine through which services ports can be relayed, for example:</p>
+<p><img src="/ssh-tunnel/ssh-tunnel.png" alt="tunnel"></p>
+<h3 id="pre-requisites">Pre-requisites</h3>
+<ul>
+<li>Rocky Linux VM x 2</li>
+<li>Install Grafana on one of them</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>vm</th>
+<th>ip</th>
+<th>service port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM I (SSH Client)</td>
+<td>10.250.75.103</td>
+<td></td>
+</tr>
+<tr>
+<td>VM II (SSH Server)</td>
+<td>10.250.75.147</td>
+<td>3000 (Grafana)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="get-started">Get Started</h3>
+<p>使用 <code>ssh command</code> 在 <code>VM I</code>:</p>
+<blockquote>
+<p>-N : Do not execute a remote command.</p>
+<p>-L : Specifies that connections to the given TCP port or Unix socket on the local (client) host are to be forwarded to the given host and port, or Unix socket, on the remote side.</p>
+<p>0.0.0.0:8080:127.0.0.1:3000 : <code>Client Server</code> 上「所有 (<code>0.0.0.0</code>)」網絡介面上的 <code>8080</code> 端口的流量轉發到 <code>Remote Server</code> 的 <code>127.0.0.1:3000</code>。</p>
+<p><a href="mailto:root@10.250.75.147">root@10.250.75.147</a> <code>ssh server</code> 的位置</p>
+</blockquote>
+<pre tabindex="0"><code>ssh -N -L 0.0.0.0:8080:127.0.0.1:3000 root@10.250.75.147
+</code></pre><p>成功透過 <code>10.250.75.103:8080</code> 訪問 <code>10.250.75.147:3000</code>:</p>
+<p><img src="/ssh-tunnel/grafana.png" alt="grafana"></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.ssh.com/academy/ssh/tunneling-example">https://www.ssh.com/academy/ssh/tunneling-example</a></li>
+</ul>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
