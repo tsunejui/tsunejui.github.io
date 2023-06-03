@@ -67,8 +67,7 @@
 	</header>
 	<div class="content list__excerpt post__content clearfix">
 		What is SSH Tunneling SSH Tunneling is a method of creating an encrypted SSH connection between a client and a server machine through which services ports can be relayed, for example:
-Pre-requisites Rocky Linux VM x 2 Install Grafana on one of them vm ip service port VM I (SSH Client) 10.250.75.103 VM II (SSH Server) 10.250.75.147 3000 (Grafana) Get Started 使用 ssh command 在 VM I:
--N : Do not execute a remote command.
+Pre-requisites Rocky Linux VM x 2 Install Grafana on one of them vm ip service port VM I (SSH Client) 10.250.75.103 VM II (SSH Server) 10.250.75.147 3000 (Grafana) 確保 /etc/ssh/sshd_config 內的 AllowTCPForwarding 為 true Get Started 使用 ssh command 在 VM I:
 	</div>
 </article><article class="list__item post">
 	
