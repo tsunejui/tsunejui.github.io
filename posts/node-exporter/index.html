@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Node Exporter - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Node Exporter</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<p>安裝 node exporter 監控 linux</p>
+<h2 id="使用環境">使用環境</h2>
+<p>Rocky Linux 8.7</p>
+<p><img src="/rocky-linux-gui/os-release.png" alt="os-release"></p>
+<h2 id="操作步驟">操作步驟</h2>
+<h3 id="下載-binary-檔案">下載 binary 檔案</h3>
+<p>下載 <a href="https://github.com/prometheus/node_exporter">node-exporter</a></p>
+<pre tabindex="0"><code>curl -OL https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz
+</code></pre><p><img src="/node_exporter/release.png" alt="release"></p>
+<h3 id="解壓縮">解壓縮</h3>
+<p>解壓縮 <code>tar</code> 檔案</p>
+<pre tabindex="0"><code>tar -xzf node_exporter-1.6.0.linux-amd64.tar.gz 
+</code></pre><h3 id="設定-binary-位置及權限">設定 Binary 位置及權限</h3>
+<p>新增資料夾</p>
+<pre tabindex="0"><code>mkdir /etc/node_exporter
+</code></pre><p>搬移檔案</p>
+<pre tabindex="0"><code>mv node_exporter-1.6.0.linux-amd64/node_exporter /etc/node_exporter/node_exporter
+</code></pre><p>賦予權限:</p>
+<pre tabindex="0"><code>chmod +x /etc/node_exporter/node_exporter
+</code></pre><h3 id="建立-service-檔案">建立 Service 檔案</h3>
+<pre tabindex="0"><code>vi node_exporter.service
+</code></pre><p>填入以下內容</p>
+<pre tabindex="0"><code>[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c &#39;/etc/node_exporter/node_exporter&#39;
+
+[Install]
+WantedBy=multi-user.target
+</code></pre><p>搬移到 <code>/etc/systemd/system/</code></p>
+<pre tabindex="0"><code>cp node_exporter.service /etc/systemd/system/
+</code></pre><h3 id="systemd-設定">systemd 設定</h3>
+<p>重啟 <code>daemon</code></p>
+<pre tabindex="0"><code>systemctl daemon-reload
+</code></pre><p>設定開機自動啟動</p>
+<pre tabindex="0"><code>systemctl enable node_exporter.service
+</code></pre><p>啟動 <code>node_exporter</code></p>
+<pre tabindex="0"><code>systemctl restart node_exporter.service
+</code></pre><p>查看 status</p>
+<pre tabindex="0"><code>systemctl status node_exporter.service
+</code></pre><h3 id="開啟防火牆">開啟防火牆</h3>
+<pre tabindex="0"><code>firewall-cmd --add-port=9100/tcp --permanent &amp;&amp; firewall-cmd --reload 
+</code></pre><h2 id="metrics-結果">Metrics 結果</h2>
+<p>呼叫 <code>metrics API</code></p>
+<pre tabindex="0"><code>curl 127.0.0.1:9100/metrics
+</code></pre><p><img src="/node_exporter/metrics.png" alt="metrics"></p>
+<h2 id="設定-prometheus">設定 Prometheus</h2>
+<p>在 prometheus.yml 上設定以下內容</p>
+<pre tabindex="0"><code>- job_name: &#34;cns-node&#34;
+  honor_timestamps: true
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+  - targets:
+    - 192.168.50.51:9100
+</code></pre>
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
