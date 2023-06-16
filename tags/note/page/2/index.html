@@ -60,6 +60,22 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/kubernetes-tips/" rel="bookmark">
+			Kubernetes Tips
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		產生新的加入 cluster 指令 建立新的 token
+kubeadm token generate 畫面會顯示新的 token, 便可以使用 kubeadm token create 建立新的 join command
+以 4a4dv5.i31huo1je1e2dler 為例
+kubeadm token create 4a4dv5.i31huo1je1e2dler --print-join-command 
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/kubernetes-install/" rel="bookmark">
 			Kubernetes 安裝筆記
 			</a>
@@ -124,6 +140,8 @@ interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
 				<a class="widget__link" href="/categories/linux/">Linux</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/profile/">Profile</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/sre/">SRE</a></li>
 		</ul>
 	</div>
 </div>

@@ -60,6 +60,30 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/node-exporter/" rel="bookmark">
+			Node Exporter
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		安裝 node exporter 監控 linux
+使用環境 Rocky Linux 8.7
+操作步驟 下載 binary 檔案 下載 node-exporter
+curl -OL https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz 解壓縮 解壓縮 tar 檔案
+tar -xzf node_exporter-1.6.0.linux-amd64.tar.gz 設定 Binary 位置及權限 新增資料夾
+mkdir /etc/node_exporter 搬移檔案
+mv node_exporter-1.6.0.linux-amd64/node_exporter /etc/node_exporter/node_exporter 賦予權限:
+chmod +x /etc/node_exporter/node_exporter 建立 Service 檔案 vi node_exporter.service 填入以下內容
+[Unit] Description=Node Exporter Wants=network-online.target After=network-online.target [Service] Type=simple ExecStart=/bin/bash -c &#39;/etc/node_exporter/node_exporter&#39; [Install] WantedBy=multi-user.target 搬移到 /etc/systemd/system/
+cp node_exporter.service /etc/systemd/system/ systemd 設定 重啟 daemon
+systemctl daemon-reload 設定開機自動啟動
+systemctl enable node_exporter.
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/rhel-9-panic/" rel="bookmark">
 			RHEL 9 在 Proxmox 上 Kernel Panic
 			</a>
@@ -173,6 +197,8 @@ kubeadm token create 4a4dv5.i31huo1je1e2dler --print-join-command
 				<a class="widget__link" href="/categories/linux/">Linux</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/profile/">Profile</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/sre/">SRE</a></li>
 		</ul>
 	</div>
 </div>

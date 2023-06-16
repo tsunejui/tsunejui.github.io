@@ -2,7 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://tsunejui.github.io/categories/</loc>
+    <lastmod>2023-06-16T09:42:09+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/categories/linux/</loc>
+    <lastmod>2023-06-16T09:42:09+08:00</lastmod>
+  </url><url>
     <loc>https://tsunejui.github.io/posts/node-exporter/</loc>
+    <lastmod>2023-06-16T09:42:09+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/tags/note/</loc>
     <lastmod>2023-06-16T09:42:09+08:00</lastmod>
   </url><url>
     <loc>https://tsunejui.github.io/posts/</loc>
@@ -11,25 +20,19 @@
     <loc>https://tsunejui.github.io/</loc>
     <lastmod>2023-06-16T09:42:09+08:00</lastmod>
   </url><url>
-    <loc>https://tsunejui.github.io/categories/</loc>
-    <lastmod>2023-05-20T12:34:03+08:00</lastmod>
+    <loc>https://tsunejui.github.io/categories/sre/</loc>
+    <lastmod>2023-06-16T09:42:09+08:00</lastmod>
   </url><url>
-    <loc>https://tsunejui.github.io/categories/linux/</loc>
-    <lastmod>2023-05-20T12:34:03+08:00</lastmod>
+    <loc>https://tsunejui.github.io/tags/</loc>
+    <lastmod>2023-06-16T09:42:09+08:00</lastmod>
   </url><url>
-    <loc>https://tsunejui.github.io/tags/note/</loc>
-    <lastmod>2023-05-20T12:34:03+08:00</lastmod>
+    <loc>https://tsunejui.github.io/tags/tip/</loc>
+    <lastmod>2023-06-16T09:42:09+08:00</lastmod>
   </url><url>
     <loc>https://tsunejui.github.io/posts/ssh-tunnel/</loc>
     <lastmod>2023-05-20T12:34:03+08:00</lastmod>
   </url><url>
-    <loc>https://tsunejui.github.io/tags/</loc>
-    <lastmod>2023-05-20T12:34:03+08:00</lastmod>
-  </url><url>
     <loc>https://tsunejui.github.io/posts/rhel-9-panic/</loc>
-    <lastmod>2023-05-16T09:43:12+08:00</lastmod>
-  </url><url>
-    <loc>https://tsunejui.github.io/tags/tip/</loc>
     <lastmod>2023-05-16T09:43:12+08:00</lastmod>
   </url><url>
     <loc>https://tsunejui.github.io/categories/k8s/</loc>

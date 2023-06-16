@@ -6,7 +6,27 @@
     <description>Recent content in Tip on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 May 2023 09:43:12 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/tip/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 16 Jun 2023 09:42:09 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/tip/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Node Exporter</title>
+      <link>https://tsunejui.github.io/posts/node-exporter/</link>
+      <pubDate>Fri, 16 Jun 2023 09:42:09 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/node-exporter/</guid>
+      <description>安裝 node exporter 監控 linux
+使用環境 Rocky Linux 8.7
+操作步驟 下載 binary 檔案 下載 node-exporter
+curl -OL https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz 解壓縮 解壓縮 tar 檔案
+tar -xzf node_exporter-1.6.0.linux-amd64.tar.gz 設定 Binary 位置及權限 新增資料夾
+mkdir /etc/node_exporter 搬移檔案
+mv node_exporter-1.6.0.linux-amd64/node_exporter /etc/node_exporter/node_exporter 賦予權限:
+chmod +x /etc/node_exporter/node_exporter 建立 Service 檔案 vi node_exporter.service 填入以下內容
+[Unit] Description=Node Exporter Wants=network-online.target After=network-online.target [Service] Type=simple ExecStart=/bin/bash -c &amp;#39;/etc/node_exporter/node_exporter&amp;#39; [Install] WantedBy=multi-user.target 搬移到 /etc/systemd/system/
+cp node_exporter.service /etc/systemd/system/ systemd 設定 重啟 daemon
+systemctl daemon-reload 設定開機自動啟動
+systemctl enable node_exporter.</description>
+    </item>
+    
     <item>
       <title>RHEL 9 在 Proxmox 上 Kernel Panic</title>
       <link>https://tsunejui.github.io/posts/rhel-9-panic/</link>
