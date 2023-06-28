@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Kafka 安裝 - Kraft Mode - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Kafka 安裝 - Kraft Mode</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h3 id="事前準備-preparation">事前準備 Preparation</h3>
+<p>準備 3 台 node:</p>
+<table>
+<thead>
+<tr>
+<th>os</th>
+<th>name</th>
+<th>ip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rocky Linux 8.8</td>
+<td>cns-kafka-0</td>
+<td>192.168.50.170</td>
+</tr>
+<tr>
+<td>Rocky Linux 8.8</td>
+<td>cns-kafka-1</td>
+<td>192.168.50.171</td>
+</tr>
+<tr>
+<td>Rocky Linux 8.8</td>
+<td>cns-kafka-2</td>
+<td>192.168.50.172</td>
+</tr>
+</tbody>
+</table>
+<h3 id="安裝步驟">安裝步驟</h3>
+<h4 id="設定-hosts-在每個-node-上執行">設定 hosts (在每個 Node 上執行)</h4>
+<p>透過以下指令設定 <code>/etc/hosts</code>:</p>
+<pre tabindex="0"><code>cat &lt;&lt; EOF &gt;&gt; /etc/hosts
+192.168.50.170 cns-kafka-0
+192.168.50.171 cns-kafka-1
+192.168.50.172 cns-kafka-2
+EOF
+</code></pre><h4 id="安裝-openjdk-11-在每個-node-上執行">安裝 OpenJDK 11 (在每個 Node 上執行)</h4>
+<p>To use Corretto RPM repositories with the yum package manager (such as Amazon Linux AMI), import the Corretto public key and then add the repository to the system list. For most systems, you must run the following commands:</p>
+<blockquote>
+<p>可以透過 Amazon Corretto 安裝 JAVA: <a href="https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/linux-info.html">https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/linux-info.html</a></p>
+</blockquote>
+<pre tabindex="0"><code>sudo rpm --import https://yum.corretto.aws/corretto.key 
+sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
+</code></pre><p>After the repository is added, you can install Corretto 11 by running this command:</p>
+<pre tabindex="0"><code>sudo yum install -y java-11-amazon-corretto-devel
+</code></pre><p>Upon completion, you should able to run the follow command:</p>
+<pre tabindex="0"><code>java -version
+</code></pre><h4 id="安裝-kafka-在每個-node-上執行">安裝 Kafka (在每個 Node 上執行)</h4>
+<p>下載 Kafka:</p>
+<blockquote>
+<p>可以到 Kafka 頁面下載最新的 Kafka: <a href="https://kafka.apache.org/downloads">https://kafka.apache.org/downloads</a></p>
+</blockquote>
+<pre tabindex="0"><code>curl -OL https://downloads.apache.org/kafka/3.5.0/kafka_2.13-3.5.0.tgz
+</code></pre><p>解壓縮:</p>
+<pre tabindex="0"><code>tar xzf kafka_2.13-3.5.0.tgz
+</code></pre><p>搬移資料夾位置:</p>
+<pre tabindex="0"><code>mv kafka_2.13-3.5.0.tgz /etc/kafka
+</code></pre><h4 id="修改-serverproperties-在每個-node-上執行">修改 server.properties (在每個 Node 上執行)</h4>
+<p>編輯 <code>server.properties</code>:</p>
+<pre tabindex="0"><code>vi /etc/kafka/config/kraft/server.properties
+</code></pre><p>修改以下內容:</p>
+<blockquote>
+<p>如果需要修改 log 位置, 則要修改 <code>log.dirs</code></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>node.id</td>
+<td>1</td>
+<td>每個 node 需要不一樣的 id, 如: <code>cns-kafka-0</code> 設定 <code>1</code>, <code>cns-kafka-1</code> 設定 <code>2</code>, <code>cns-kafka-2</code> 設定 <code>3</code></td>
+</tr>
+<tr>
+<td>controller.quorum.voters</td>
+<td>1@cns-kafka-0:9093,2@cns-kafka-1:9093,3@cns-kafka-2:9093</td>
+<td>設定每個 voters</td>
+</tr>
+<tr>
+<td>advertised.listeners</td>
+<td>PLAINTEXT://192.168.50.170:9092</td>
+<td>每個 node 需要提供不一樣的 listeners 給 client, 如: <code>cns-kafka-0</code> 設定 <code>PLAINTEXT://192.168.50.170:9092</code>, <code>cns-kafka-1</code> 設定 <code>PLAINTEXT://192.168.50.171:9092</code>, <code>cns-kafka-2</code> 設定 <code>PLAINTEXT://192.168.50.172:9092</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="產生-cluster-uuid-只在其中一個-node-上執行">產生 Cluster UUID (只在其中一個 Node 上執行)</h4>
+<p>使用 <code>kafka-storage.sh</code> 產生 uuid</p>
+<pre tabindex="0"><code>/etc/kafka/bin/kafka-storage.sh random-uuid
+</code></pre><h4 id="格式化-storage-directory-在每一個-node-上執行">格式化 storage directory (在每一個 Node 上執行)</h4>
+<blockquote>
+<p>請替換 <code>&lt;uuid&gt;</code> 為剛剛產出的結果</p>
+<p>This will format the directory that is in the log.dirs in the config/kraft/server.properties file (by default <code>/tmp/kraft-combined-logs</code>)</p>
+</blockquote>
+<pre tabindex="0"><code>/etc/kafka/bin/kafka-storage.sh format -t &lt;uuid&gt; -c /etc/kafka/config/kraft/server.properties
+</code></pre><h4 id="使用-systemd-管理-kafka">使用 Systemd 管理 Kafka</h4>
+<p>建立 <code>kafka.service</code>:</p>
+<pre tabindex="0"><code>cat &lt;&lt; EOF &gt;&gt; kafka.service
+[Unit]
+Description=Kafka Server
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c &#39;etc/kafka/bin/kafka-server-start.sh /etc/kafka/config/kraft/server.properties &gt; /tmp/kafka.log 2&gt;&amp;1&#39;
+ExecStop=/etc/kafka/bin/kafka-server-stop.sh /etc/kafka/config/kraft/server.properties
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+</code></pre><p>搬移 <code>kafka.service</code> 到 <code>system</code> 目錄:</p>
+<pre tabindex="0"><code>cp kafka.service /etc/systemd/system
+</code></pre><p>重啟 daemon, 設定開機啟動:</p>
+<pre tabindex="0"><code>systemctl daemon-reload &amp;&amp; systemctl enable kafka.service
+</code></pre><p>啟動 Kafka:</p>
+<blockquote>
+<p>你可以透過 <code>/tmp/kafka.log</code> 查看啟動 log</p>
+</blockquote>
+<pre tabindex="0"><code>systemctl restart kafka.service
+</code></pre><h4 id="建立-kafka-ui">建立 kafka-ui</h4>
+<p>你可以透過 <code>kafka-ui</code> 查看 Kafka 狀態, 並且設定 service:</p>
+<blockquote>
+<p>kafka-ui: <a href="https://github.com/provectus/kafka-ui">https://github.com/provectus/kafka-ui</a></p>
+<p>可以修改 <code>KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS</code> 指向 Kafka</p>
+</blockquote>
+<pre tabindex="0"><code># container-kafka-ui.service
+# autogenerated by Podman 4.4.1
+# Sat May 27 11:47:42 CST 2023
+
+[Unit]
+Description=Podman container-kafka-ui.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+TimeoutStopSec=70
+ExecStart=/usr/bin/podman run \
+        --cidfile=%t/%n.ctr-id \
+        --cgroups=no-conmon \
+        --rm \
+        --sdnotify=conmon \
+        --replace \
+        --name kafka-ui \
+        -d \
+        -p 8080:8080 \
+        -e KAFKA_CLUSTERS_0_NAME=local \
+        -e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.50.170:9092,192.168.50.171:9092,192.168.50.172:9092 provectuslabs/kafka-ui:latest
+ExecStop=/usr/bin/podman stop \
+        --ignore -t 10 \
+        --cidfile=%t/%n.ctr-id
+ExecStopPost=/usr/bin/podman rm \
+        -f \
+        --ignore -t 10 \
+        --cidfile=%t/%n.ctr-id
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=default.target
+</code></pre><h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://www.conduktor.io/kafka/how-to-install-apache-kafka-on-linux-without-zookeeper-kraft-mode/">https://www.conduktor.io/kafka/how-to-install-apache-kafka-on-linux-without-zookeeper-kraft-mode/</a></li>
+<li><a href="https://stackoverflow.com/questions/46158296/kafka-broker-not-available-at-starting">https://stackoverflow.com/questions/46158296/kafka-broker-not-available-at-starting</a></li>
+</ul>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
