@@ -188,6 +188,7 @@ EOF
 <p>你可以透過 <code>kafka-ui</code> 查看 Kafka 狀態, 並且設定 service:</p>
 <blockquote>
 <p>kafka-ui: <a href="https://github.com/provectus/kafka-ui">https://github.com/provectus/kafka-ui</a></p>
+<p>請先準備 image: <a href="./https://hub.docker.com/r/provectuslabs/kafka-ui">provectuslabs/kafka-ui:latest</a></p>
 <p>可以修改 <code>KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS</code> 指向 Kafka</p>
 </blockquote>
 <pre tabindex="0"><code># container-kafka-ui.service
@@ -228,7 +229,10 @@ NotifyAccess=all
 
 [Install]
 WantedBy=default.target
-</code></pre><h3 id="reference">Reference</h3>
+</code></pre><h3 id="結果">結果</h3>
+<p>你可以看到 Kafka-UI 的畫面:</p>
+<p><img src="/kafka-install-kraft/kafka-ui.png" alt="kafka-ui"></p>
+<h3 id="reference">Reference</h3>
 <ul>
 <li><a href="https://www.conduktor.io/kafka/how-to-install-apache-kafka-on-linux-without-zookeeper-kraft-mode/">https://www.conduktor.io/kafka/how-to-install-apache-kafka-on-linux-without-zookeeper-kraft-mode/</a></li>
 <li><a href="https://stackoverflow.com/questions/46158296/kafka-broker-not-available-at-starting">https://stackoverflow.com/questions/46158296/kafka-broker-not-available-at-starting</a></li>
