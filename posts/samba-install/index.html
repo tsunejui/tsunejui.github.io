@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Samba 安裝 - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Samba 安裝</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h3 id="使用環境">使用環境</h3>
+<p>Rocky Linux 8.7</p>
+<p><img src="/os-release.png" alt="os-release"></p>
+<h3 id="安裝步驟">安裝步驟</h3>
+<p>透過 <code>dnf</code> 安裝 <code>samba</code>:</p>
+<pre tabindex="0"><code>dnf install samba
+</code></pre><p>設定 <code>systemd</code> 開機自動啟動:</p>
+<pre tabindex="0"><code>systemctl enable smb.service
+</code></pre><p>開啟防火牆</p>
+<pre tabindex="0"><code>firewall-cmd --permanent --add-service=samba &amp;&amp; firewall-cmd --reload
+</code></pre><h3 id="設定-samba">設定 samba</h3>
+<p>新增Linux User: <code>rex</code></p>
+<pre tabindex="0"><code>useradd rex
+</code></pre><p>新增 samba 帳號: <code>rex</code></p>
+<pre tabindex="0"><code>smbpasswd -a rex
+</code></pre><p>新增目錄 <code>/mnt/shared</code> 並指派 owner 為 <code>rex</code>:</p>
+<pre tabindex="0"><code>mkdir /mnt/shared &amp;&amp; chown rex -R /mnt/shared/
+</code></pre><p>編輯 <code>vi /etc/samba/smb.conf</code>, 並且加入以下內容:</p>
+<blockquote>
+<p>設定參數請參考: <a href="https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html">https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html</a></p>
+</blockquote>
+<pre tabindex="0"><code>...
+[cnssmb]
+    comment = CNS Samba Directory
+    path = /mnt/shared
+    public = yes
+    create mask = 0777
+    directory mask = 0777
+    browseable = yes
+    writeable = yes
+    read only = no
+</code></pre><p>設定 SELinux:</p>
+<pre tabindex="0"><code>chcon -R -t samba_share_t /mnt/shared &amp;&amp; semanage fcontext -a -t samba_share_t &#34;/mnt/shared(/.*)?&#34;
+</code></pre><p>啟動 <code>samba</code>:</p>
+<pre tabindex="0"><code>systemctl restart smb.service
+</code></pre><h3 id="測試結果">測試結果</h3>
+<p>在 mac 上可以在 finder 上使用 <code>command + k</code> 連到samba:</p>
+<p><img src="/samba/connect.png" alt="smb"></p>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/chap-managing_confined_services-samba">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/chap-managing_confined_services-samba</a></li>
+<li><a href="https://linuxconfig.org/install-samba-on-redhat-8">https://linuxconfig.org/install-samba-on-redhat-8</a></li>
+</ul>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tip/" rel="tag">Tip</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

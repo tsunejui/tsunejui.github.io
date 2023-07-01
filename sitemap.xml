@@ -3,7 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://tsunejui.github.io/categories/</loc>
-    <lastmod>2023-06-28T10:43:24+08:00</lastmod>
+    <lastmod>2023-07-01T17:23:23+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/categories/linux/</loc>
+    <lastmod>2023-07-01T17:23:23+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/tags/note/</loc>
+    <lastmod>2023-07-01T17:23:23+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/posts/</loc>
+    <lastmod>2023-07-01T17:23:23+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/</loc>
+    <lastmod>2023-07-01T17:23:23+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/posts/samba-install/</loc>
+    <lastmod>2023-07-01T17:23:23+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/tags/</loc>
+    <lastmod>2023-07-01T17:23:23+08:00</lastmod>
+  </url><url>
+    <loc>https://tsunejui.github.io/tags/tip/</loc>
+    <lastmod>2023-07-01T17:23:23+08:00</lastmod>
   </url><url>
     <loc>https://tsunejui.github.io/categories/kafka/</loc>
     <lastmod>2023-06-28T10:43:24+08:00</lastmod>
@@ -11,28 +32,10 @@
     <loc>https://tsunejui.github.io/posts/kafka-kraft-install/</loc>
     <lastmod>2023-06-28T10:43:24+08:00</lastmod>
   </url><url>
-    <loc>https://tsunejui.github.io/tags/note/</loc>
-    <lastmod>2023-06-28T10:43:24+08:00</lastmod>
-  </url><url>
-    <loc>https://tsunejui.github.io/posts/</loc>
-    <lastmod>2023-06-28T10:43:24+08:00</lastmod>
-  </url><url>
-    <loc>https://tsunejui.github.io/</loc>
-    <lastmod>2023-06-28T10:43:24+08:00</lastmod>
-  </url><url>
-    <loc>https://tsunejui.github.io/tags/</loc>
-    <lastmod>2023-06-28T10:43:24+08:00</lastmod>
-  </url><url>
-    <loc>https://tsunejui.github.io/categories/linux/</loc>
-    <lastmod>2023-06-16T09:42:09+08:00</lastmod>
-  </url><url>
     <loc>https://tsunejui.github.io/posts/node-exporter/</loc>
     <lastmod>2023-06-16T09:42:09+08:00</lastmod>
   </url><url>
     <loc>https://tsunejui.github.io/categories/sre/</loc>
-    <lastmod>2023-06-16T09:42:09+08:00</lastmod>
-  </url><url>
-    <loc>https://tsunejui.github.io/tags/tip/</loc>
     <lastmod>2023-06-16T09:42:09+08:00</lastmod>
   </url><url>
     <loc>https://tsunejui.github.io/posts/ssh-tunnel/</loc>

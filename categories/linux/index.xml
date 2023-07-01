@@ -6,7 +6,25 @@
     <description>Recent content in Linux on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 16 Jun 2023 09:42:09 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 01 Jul 2023 17:23:23 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Samba 安裝</title>
+      <link>https://tsunejui.github.io/posts/samba-install/</link>
+      <pubDate>Sat, 01 Jul 2023 17:23:23 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/samba-install/</guid>
+      <description>使用環境 Rocky Linux 8.7
+安裝步驟 透過 dnf 安裝 samba:
+dnf install samba 設定 systemd 開機自動啟動:
+systemctl enable smb.service 開啟防火牆
+firewall-cmd --permanent --add-service=samba &amp;amp;&amp;amp; firewall-cmd --reload 設定 samba 新增Linux User: rex
+useradd rex 新增 samba 帳號: rex
+smbpasswd -a rex 新增目錄 /mnt/shared 並指派 owner 為 rex:
+mkdir /mnt/shared &amp;amp;&amp;amp; chown rex -R /mnt/shared/ 編輯 vi /etc/samba/smb.conf, 並且加入以下內容:
+設定參數請參考: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
+... [cnssmb] comment = CNS Samba Directory path = /mnt/shared public = yes create mask = 0777 directory mask = 0777 browseable = yes writeable = yes read only = no 設定 SELinux:</description>
+    </item>
+    
     <item>
       <title>Node Exporter</title>
       <link>https://tsunejui.github.io/posts/node-exporter/</link>
