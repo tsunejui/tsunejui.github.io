@@ -63,7 +63,11 @@
 <h2 id="使用環境">使用環境</h2>
 <p>Rocky Linux 8.7</p>
 <p><img src="/rocky-linux-gui/os-release.png" alt="os-release"></p>
-<h2 id="安裝-docker">安裝 <code>docker</code></h2>
+<h2 id="安裝步驟">安裝步驟</h2>
+<h3 id="關閉-selinux">關閉 SELinux</h3>
+<p>建議暫時關閉 SELinux 避免安裝中出錯:</p>
+<pre tabindex="0"><code>setenforce 0
+</code></pre><h3 id="安裝-docker">安裝 <code>docker</code></h3>
 <blockquote>
 <p><a href="https://docs.docker.com/engine/install/centos/">https://docs.docker.com/engine/install/centos/</a></p>
 </blockquote>
@@ -72,20 +76,13 @@
 </code></pre><p>加入 repository:</p>
 <pre tabindex="0"><code>yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 </code></pre><p>安裝 <code>docker</code></p>
-<pre tabindex="0"><code>yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+<pre tabindex="0"><code>yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 </code></pre><p>啟動 <code>docker</code></p>
 <pre tabindex="0"><code>systemctl start docker
-</code></pre><p>下載 <code>docker-compose</code>:</p>
-<blockquote>
-<p><a href="https://github.com/docker/compose/releases">https://github.com/docker/compose/releases</a></p>
-</blockquote>
-<pre tabindex="0"><code>curl -OL https://github.com/docker/compose/releases/download/v2.19.1/docker-compose-linux-x86_64
-</code></pre><p>搬移 <code>docker-compose</code> 位置:</p>
-<pre tabindex="0"><code>mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
-</code></pre><p>賦予執行權限:</p>
-<pre tabindex="0"><code>chmod +x /usr/local/bin/docker-compose
-</code></pre><h2 id="下載-awx-1710httpsgithubcomansibleawxreleasestag1710">下載 <a href="https://github.com/ansible/awx/releases/tag/17.1.0">AWX 17.1.0</a></h2>
-<blockquote>
+</code></pre><h3 id="下載-awx-1710httpsgithubcomansibleawxreleasestag1710">下載 <a href="https://github.com/ansible/awx/releases/tag/17.1.0">AWX 17.1.0</a></h3>
+<p>安裝 <code>git</code>:</p>
+<pre tabindex="0"><code>dnf install -y git
+</code></pre><blockquote>
 <p>Starting in version 18.0, the AWX Operator is the preferred way to install AWX.</p>
 <p><a href="https://github.com/ansible/awx/blob/devel/INSTALL.md">https://github.com/ansible/awx/blob/devel/INSTALL.md</a></p>
 </blockquote>
@@ -100,18 +97,45 @@
 <pre tabindex="0"><code>pwgen -N 1 -s 40
 </code></pre><p>密鑰產生如下:</p>
 <pre tabindex="0"><code>941hpENajUpsNPf8nptcbk4qoAyeyI1MscF7A84g
-</code></pre><h3 id="安裝-awx">安裝 AWX</h3>
-<p>擴增 repository:</p>
-<pre tabindex="0"><code>dnf install epel-release
-</code></pre><p>安裝 <code>ansible</code>:</p>
-<pre tabindex="0"><code>dnf install -y ansible
 </code></pre><p>編輯 <code>awx/installer/inventory</code>:</p>
 <pre tabindex="0"><code>admin_user=cns
 admin_password=Admin12345
 secret_key=941hpENajUpsNPf8nptcbk4qoAyeyI1MscF7A84g
-</code></pre><p>使用 <code>ansible-playbook</code> 安裝 <code>awx</code>:</p>
+</code></pre><h3 id="安裝-awx">安裝 AWX</h3>
+<p>擴增 repository:</p>
+<pre tabindex="0"><code>dnf install epel-release
+</code></pre><p>安裝 <code>python</code>:</p>
+<pre tabindex="0"><code>dnf install -y python3-pip
+</code></pre><p>指定 <code>python</code> 指令為 <code>/usr/bin/python3</code>:</p>
+<pre tabindex="0"><code>alternatives --set python /usr/bin/python3
+</code></pre><p>確認 <code>python</code> 及 <code>pip3</code> 是否正常運作:</p>
+<pre tabindex="0"><code>python --version &amp;&amp; pip3 --version
+</code></pre><p>更新 <code>pip</code>:</p>
+<pre tabindex="0"><code>pip3 install --upgrade pip
+</code></pre><p>安裝 <code>ansible</code> 所需的 <code>python</code> 套件:</p>
+<blockquote>
+<p>如果出現 <code>Command &quot;python setup.py egg_info&quot; failed with error code 1 in /tmp/pip-build-irb44omu/pynacl/</code> 則更新 <code>setuptools</code>:</p>
+<p><code>pip3 install --upgrade setuptools</code></p>
+</blockquote>
+<pre tabindex="0"><code>pip3 install setuptools-rust wheel docker-compose
+</code></pre><p>安裝 <code>ansible</code>:</p>
+<pre tabindex="0"><code>pip3 install ansible
+</code></pre><p>確認 <code>ansible</code> 成功安裝:</p>
+<pre tabindex="0"><code>ansible-playbook --version
+</code></pre><p>到 <code>awx/installer</code> 路徑並使用 <code>ansible-playbook</code> 安裝 <code>awx</code>:</p>
+<blockquote>
+<p>這個過程會非常久，因為要下載許多 image，其中 <code>ansible/awx</code> 最大，約 1.41G，執行 migration 也需要不少時間。</p>
+</blockquote>
 <pre tabindex="0"><code>ansible-playbook -i inventory install.yml
-</code></pre>
+</code></pre><p><img src="/awx-install/cmd" alt="awx-install-cli"></p>
+<h2 id="完成畫面">完成畫面</h2>
+<p>透過瀏覽器訪問 80 port，輸入 admin 帳號密碼，便可成功登入:</p>
+<p><img src="/awx-install/view" alt="awx-install-view"></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.techsupportpk.com/2020/03/how-to-install-ansible-awx-centos-rhel-7-8.html">https://www.techsupportpk.com/2020/03/how-to-install-ansible-awx-centos-rhel-7-8.html</a></li>
+</ul>
+
 		</div>
 		<footer class="post__footer">
 			
