@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Awx Install (Container) - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Awx Install (Container)</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<p>利用 <code>podman</code> 安裝 <a href="https://github.com/ansible/awx">AWX</a></p>
+<h2 id="使用環境">使用環境</h2>
+<p>Rocky Linux 8.7</p>
+<p><img src="/rocky-linux-gui/os-release.png" alt="os-release"></p>
+<h2 id="安裝-docker">安裝 <code>docker</code></h2>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/install/centos/">https://docs.docker.com/engine/install/centos/</a></p>
+</blockquote>
+<p>安裝 <code>yum-utils</code>:</p>
+<pre tabindex="0"><code>yum install -y yum-utils
+</code></pre><p>加入 repository:</p>
+<pre tabindex="0"><code>yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+</code></pre><p>安裝 <code>docker</code></p>
+<pre tabindex="0"><code>yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+</code></pre><p>啟動 <code>docker</code></p>
+<pre tabindex="0"><code>systemctl start docker
+</code></pre><p>下載 <code>docker-compose</code>:</p>
+<blockquote>
+<p><a href="https://github.com/docker/compose/releases">https://github.com/docker/compose/releases</a></p>
+</blockquote>
+<pre tabindex="0"><code>curl -OL https://github.com/docker/compose/releases/download/v2.19.1/docker-compose-linux-x86_64
+</code></pre><p>搬移 <code>docker-compose</code> 位置:</p>
+<pre tabindex="0"><code>mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
+</code></pre><p>賦予執行權限:</p>
+<pre tabindex="0"><code>chmod +x /usr/local/bin/docker-compose
+</code></pre><h2 id="下載-awx-1710httpsgithubcomansibleawxreleasestag1710">下載 <a href="https://github.com/ansible/awx/releases/tag/17.1.0">AWX 17.1.0</a></h2>
+<blockquote>
+<p>Starting in version 18.0, the AWX Operator is the preferred way to install AWX.</p>
+<p><a href="https://github.com/ansible/awx/blob/devel/INSTALL.md">https://github.com/ansible/awx/blob/devel/INSTALL.md</a></p>
+</blockquote>
+<pre tabindex="0"><code>git clone -b 17.1.0 https://github.com/ansible/awx.git
+</code></pre><h3 id="產生-awx-密鑰">產生 AWX 密鑰</h3>
+<p>安裝 <code>pwgen</code>:</p>
+<blockquote>
+<p><a href="https://pwgen.io/en/">https://pwgen.io/en/</a></p>
+</blockquote>
+<pre tabindex="0"><code>dnf install -y pwgen
+</code></pre><p>到 <code>awx/installer/</code> 內並執行:</p>
+<pre tabindex="0"><code>pwgen -N 1 -s 40
+</code></pre><p>密鑰產生如下:</p>
+<pre tabindex="0"><code>941hpENajUpsNPf8nptcbk4qoAyeyI1MscF7A84g
+</code></pre><h3 id="安裝-awx">安裝 AWX</h3>
+<p>擴增 repository:</p>
+<pre tabindex="0"><code>dnf install epel-release
+</code></pre><p>安裝 <code>ansible</code>:</p>
+<pre tabindex="0"><code>dnf install -y ansible
+</code></pre><p>編輯 <code>awx/installer/inventory</code>:</p>
+<pre tabindex="0"><code>admin_user=cns
+admin_password=Admin12345
+secret_key=941hpENajUpsNPf8nptcbk4qoAyeyI1MscF7A84g
+</code></pre><p>使用 <code>ansible-playbook</code> 安裝 <code>awx</code>:</p>
+<pre tabindex="0"><code>ansible-playbook -i inventory install.yml
+</code></pre>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

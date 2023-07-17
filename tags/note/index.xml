@@ -6,7 +6,28 @@
     <description>Recent content in Note on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 01 Jul 2023 17:23:23 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/note/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 17 Jul 2023 13:36:31 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/note/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Awx Install (Container)</title>
+      <link>https://tsunejui.github.io/posts/awx-install/</link>
+      <pubDate>Mon, 17 Jul 2023 13:36:31 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/awx-install/</guid>
+      <description>利用 podman 安裝 AWX
+使用環境 Rocky Linux 8.7
+安裝 docker https://docs.docker.com/engine/install/centos/
+安裝 yum-utils:
+yum install -y yum-utils 加入 repository:
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 安裝 docker
+yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 啟動 docker
+systemctl start docker 下載 docker-compose:
+https://github.com/docker/compose/releases
+curl -OL https://github.com/docker/compose/releases/download/v2.19.1/docker-compose-linux-x86_64 搬移 docker-compose 位置:
+mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose 賦予執行權限:
+chmod +x /usr/local/bin/docker-compose 下載 AWX 17.1.0 Starting in version 18.0, the AWX Operator is the preferred way to install AWX.
+https://github.com/ansible/awx/blob/devel/INSTALL.md</description>
+    </item>
+    
     <item>
       <title>Samba 安裝</title>
       <link>https://tsunejui.github.io/posts/samba-install/</link>
