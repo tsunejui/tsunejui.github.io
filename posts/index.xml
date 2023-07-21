@@ -13,7 +13,7 @@
       <pubDate>Mon, 17 Jul 2023 13:36:31 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/awx-install/</guid>
-      <description>利用 podman 安裝 AWX
+      <description>利用 dokcer 安裝 AWX
 使用環境 Rocky Linux 8.7
 安裝步驟 關閉 SELinux 建議暫時關閉 SELinux 避免安裝中出錯:
 setenforce 0 安裝 docker https://docs.docker.com/engine/install/centos/
