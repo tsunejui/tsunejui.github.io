@@ -70,7 +70,7 @@
 <p><img src="/proxmox-extend-space/increment.png" alt="increment"></p>
 <p>透過 <code>lsblk</code> 可以看到, 硬碟 <code>sda</code> 容量有增加。</p>
 <pre tabindex="0"><code>lsblk
-</code></pre><p><img src="/proxmox-extend-space/lsblk-0.png" alt="lsblk-0"></p>
+</code></pre><!-- raw HTML omitted -->
 <h2 id="調整-lvm">調整 LVM</h2>
 <p>我們要調整 <code>rl-root</code> 的容量, 也就是 LV 的大小, 而調整 LV 需要先建立 PV, 再將 PV 加入與 LV 相同的 VG, 如下圖所示:</p>
 <blockquote>
@@ -81,12 +81,12 @@
 <pre tabindex="0"><code>parted
 </code></pre><p>進入 <code>parted</code> 畫面後, 查看可用空間, 及 Start 和 End:</p>
 <pre tabindex="0"><code>unit MB p free
-</code></pre><p><img src="/proxmox-extend-space/parted-0.png" alt="parted-0"></p>
+</code></pre><!-- raw HTML omitted -->
 <p>建立 partition, 填入 Start 和 End:</p>
 <pre tabindex="0"><code>mkpart primary [start] [end]
 </code></pre><p>在執行 <code>p</code> 查看是否成功建立 partition:</p>
 <pre tabindex="0"><code>p
-</code></pre><p><img src="/proxmox-extend-space/parted-1.png" alt="parted-1"></p>
+</code></pre><!-- raw HTML omitted -->
 <p>案 <code>q</code> 離開</p>
 <pre tabindex="0"><code>q
 </code></pre><p>再次透過 <code>lsblk</code> 確認 partition 建立成功:</p>
@@ -94,7 +94,8 @@
 </code></pre><p><img src="/proxmox-extend-space/lsblk-1.png" alt="lsblk-1"></p>
 <p>在新的 partition 上建立 PV:</p>
 <p><img src="/proxmox-extend-space/pvcreate.png" alt="pvcreate"></p>
-<p>透過 <code>pvscan</code> 查看所有 PV:</p>
+<pre tabindex="0"><code>pvcreate /dev/sda3
+</code></pre><p>透過 <code>pvscan</code> 查看所有 PV:</p>
 <pre tabindex="0"><code>pvscan
 </code></pre><p>透過 <code>vgscan</code> 查看所有 VG:</p>
 <pre tabindex="0"><code>vgscan
