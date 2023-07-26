@@ -78,6 +78,9 @@
 </blockquote>
 <p><img src="/proxmox-extend-space/volume.jpeg" alt="volume"></p>
 <p>在建立 PV 之前, 我們需要建立 partition, 透過 <code>parted</code> 指令可以輕鬆的達成:</p>
+<blockquote>
+<p>如果要操作的硬碟不是 <code>/dev/sda</code>, 你需要下 <code>select /dev/sdb</code>, 請將 <code>/dev/sdb</code> 改成你希望操作的硬碟</p>
+</blockquote>
 <pre tabindex="0"><code>parted
 </code></pre><p>進入 <code>parted</code> 畫面後, 查看可用空間, 及 Start 和 End:</p>
 <blockquote>

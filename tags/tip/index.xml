@@ -72,8 +72,8 @@ Proxmox 重新設定硬碟空間 進入 Proxmox 上 VM 的 Hardware, 編輯 Hard
 lsblk 調整 LVM 我們要調整 rl-root 的容量, 也就是 LV 的大小, 而調整 LV 需要先建立 PV, 再將 PV 加入與 LV 相同的 VG, 如下圖所示:
 https://networklessons.com/uncategorized/extend-lvm-partition
 在建立 PV 之前, 我們需要建立 partition, 透過 parted 指令可以輕鬆的達成:
-parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:
-如果遇到 unrecognised disk label 的問題, 很有可能是因為硬碟裡面沒有任何資料, 無法辨識出他的label, 因此需要新增label給硬碟：</description>
+如果要操作的硬碟不是 /dev/sda, 你需要下 select /dev/sdb, 請將 /dev/sdb 改成你希望操作的硬碟
+parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:</description>
     </item>
     
     <item>
