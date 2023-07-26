@@ -80,9 +80,18 @@
 <p>在建立 PV 之前, 我們需要建立 partition, 透過 <code>parted</code> 指令可以輕鬆的達成:</p>
 <pre tabindex="0"><code>parted
 </code></pre><p>進入 <code>parted</code> 畫面後, 查看可用空間, 及 Start 和 End:</p>
+<blockquote>
+<p>如果遇到 <code>unrecognised disk label</code> 的問題, 很有可能是因為硬碟裡面沒有任何資料, 無法辨識出他的label, 因此需要新增label給硬碟：</p>
+<p>使用 <code>mklabel msdos</code> 新增 label, <code>msdos</code> 是最常見的格式, 大於 2TB 的硬碟, 可以使用 <code>gpt</code></p>
+<p>格式可以參考: <a href="https://www.gnu.org/software/parted/manual/html_node/mklabel.html">https://www.gnu.org/software/parted/manual/html_node/mklabel.html</a></p>
+</blockquote>
 <pre tabindex="0"><code>unit MB p free
 </code></pre><p><img src="/proxmox-extend-space/parted-0.png" alt="parted-0"></p>
 <p>建立 partition, 填入 Start 和 End:</p>
+<blockquote>
+<p>如果出現 <code>Warning: The resulting partition is not properly aligned for best performance: 1s % 2048s != 0s</code> 等訊息，使用 % 來讓 parted 自動對齊磁區以獲得最佳性能</p>
+<p>如: <code>mkpart primary 0% 100%</code></p>
+</blockquote>
 <pre tabindex="0"><code>mkpart primary [start] [end]
 </code></pre><p>在執行 <code>p</code> 查看是否成功建立 partition:</p>
 <pre tabindex="0"><code>p
@@ -117,6 +126,10 @@
 <p><img src="/proxmox-extend-space/lsblk-2.png" alt="lsblk-2"></p>
 <p>透過 <code>df</code> 檢查硬碟使用量:</p>
 <p><img src="/proxmox-extend-space/df.png" alt="df"></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://serverfault.com/questions/104923/unrecognised-disc-label-when-using-parted-with-qemu-images">https://serverfault.com/questions/104923/unrecognised-disc-label-when-using-parted-with-qemu-images</a></li>
+</ul>
 
 		</div>
 		<footer class="post__footer">

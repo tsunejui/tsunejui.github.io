@@ -117,7 +117,7 @@ lsblk 調整 LVM 我們要調整 rl-root 的容量, 也就是 LV 的大小, 而�
 https://networklessons.com/uncategorized/extend-lvm-partition
 在建立 PV 之前, 我們需要建立 partition, 透過 parted 指令可以輕鬆的達成:
 parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:
-unit MB p free 建立 partition, 填入 Start 和 End:</description>
+如果遇到 unrecognised disk label 的問題, 很有可能是因為硬碟裡面沒有任何資料, 無法辨識出他的label, 因此需要新增label給硬碟：</description>
     </item>
     
     <item>
