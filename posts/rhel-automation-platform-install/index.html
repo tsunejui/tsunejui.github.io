@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>RHEL Ansible Automation Platform (AAP) Installation - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">RHEL Ansible Automation Platform (AAP) Installation</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h2 id="環境準備">環境準備</h2>
+<p>Linux 的版本為 <code>Red Hat Enterprise Linux 9.1 (Plow)</code>:</p>
+<p><img src="/automation-install/os-release.png" alt="os"></p>
+<h2 id="下載-tar-檔案">下載 tar 檔案</h2>
+<ol>
+<li>下載 <code>Red Hat Ansible Automation Platform (v. 2.4 for RHEL 9 for x86_64)</code>:</li>
+</ol>
+<blockquote>
+<p>至 <a href="https://access.redhat.com/downloads/content/480">https://access.redhat.com/downloads/content/480</a> 下載 <code>Ansible Automation Platform 2.4 Setup Bundle</code></p>
+</blockquote>
+<p><img src="/automation-install/download.png" alt="download"></p>
+<ol start="2">
+<li>解壓縮</li>
+</ol>
+<pre tabindex="0"><code>tar xvzf ansible-automation-platform-setup-&lt;latest-version&gt;.tar.gz
+</code></pre><p><img src="/automation-install/unzip.png" alt="unzip"></p>
+<h2 id="安裝-red-hat-ansible-automation-platform-subscription">安裝 Red Hat Ansible Automation Platform subscription</h2>
+<ol>
+<li>取得token</li>
+</ol>
+<blockquote>
+<p>至 <a href="https://access.redhat.com/management/api">https://access.redhat.com/management/api</a> 產生 Token</p>
+</blockquote>
+<p><img src="/automation-install/register.png" alt="register"></p>
+<ol start="2">
+<li>在 Redhat 上使用 <code>subscription-manager register</code> 註冊機器</li>
+</ol>
+<blockquote>
+<p>你也可以透過 <code>subscription-manager register --username &lt;username&gt; --password &lt;password&gt; --auto-attach</code> 註冊機器</p>
+</blockquote>
+<pre tabindex="0"><code>subscription-manager register --token &lt;token&gt; --insecure 
+</code></pre><ol start="3">
+<li>獲得 Subscription 的 <code>pool_id</code></li>
+</ol>
+<pre tabindex="0"><code>subscription-manager list --available --all | grep &#34;Ansible Automation Platform&#34; -B 3 -A 6
+</code></pre><ol start="4">
+<li>安裝 Subscription</li>
+</ol>
+<pre tabindex="0"><code>subscription-manager attach --pool=2c94e43f88fcee5b0189010269427636
+</code></pre><ol start="5">
+<li>驗證是否成功</li>
+</ol>
+<pre tabindex="0"><code>subscription-manager list --consumed
+</code></pre><h2 id="建立-ansible-automation-platform-database">建立 Ansible Automation Platform Database</h2>
+<p>如果需要自建 AAP 的 Database 則需執行此步驟，不需要請略過。</p>
+<ol>
+<li>安裝 PostgreSQL</li>
+</ol>
+<blockquote>
+<p>請至 <a href="https://www.postgresql.org/download/">https://www.postgresql.org/download/</a> 安裝資料庫，注意 <code>Red Hat Ansible Automation Platform uses PostgreSQL 12.</code></p>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.0-ea/html/red_hat_ansible_automation_platform_installation_guide/planning-installation">https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.0-ea/html/red_hat_ansible_automation_platform_installation_guide/planning-installation</a></p>
+</blockquote>
+<p><img src="/automation-install/postgresql-required.png" alt="postgresql"></p>
+<ol start="2">
+<li>建立資料庫</li>
+</ol>
+<p><img src="/automation-install/database.png" alt="database"></p>
+<h2 id="安裝-ansible-automation-platform">安裝 Ansible Automation Platform</h2>
+<ol>
+<li>進入 setup bundle 目錄，並且編輯 <code>inventory</code> 檔案，修改欄位如下:</li>
+</ol>
+<pre tabindex="0"><code>[automationcontroller]
+&lt;fqdn&gt; ansible_connection=local ## &lt;- 請將 fqdn 改為 domain name
+
+[all:vars]
+admin_password=&#39;Admin12345&#39; ## &lt;- 初次使用 admin 登入時的密碼
+
+pg_host=&#39;127.0.0.1&#39; ## &lt;- 修改為資料庫的 host
+pg_port=5432
+
+pg_database=&#39;aap&#39;
+pg_username=&#39;postgres&#39;
+pg_password=&#39;postgres&#39;
+</code></pre><ol start="2">
+<li>修改後執行 <code>setup.sh</code></li>
+</ol>
+<pre tabindex="0"><code>./setup.sh
+</code></pre><p><img src="/automation-install/install.png" alt="install"></p>
+<ol start="3">
+<li>安裝成功後，可以看到 <code>automation-controller.service</code> 運作正常</li>
+</ol>
+<pre tabindex="0"><code>systemctl status automation-controller.service 
+</code></pre><p><img src="/automation-install/status.png" alt="status"></p>
+<h2 id="初始化設定">初始化設定</h2>
+<ol>
+<li>透過 80 port 可以看到 AAP 的畫面，可以透過匯入 Subscription Manifest 的方式或者輸入 Redhat 帳號密碼來啟動 Subscription</li>
+</ol>
+<p><img src="/automation-install/init-0.png" alt="init0"></p>
+<ol start="2">
+<li>如果要透過匯入 Subscription Manifest 的方式啟動 Subscription，則需要先到 Redhat Subscription Allocations 上新增一個 Allocation:</li>
+</ol>
+<blockquote>
+<p>Redhat Subscription Allocations: <a href="https://access.redhat.com/management/subscription_allocations">https://access.redhat.com/management/subscription_allocations</a></p>
+</blockquote>
+<p><img src="/automation-install/allocation.png" alt="allocation"></p>
+<ol start="3">
+<li>進入剛剛新增的 Allocation 頁面，並且查看 Subscriptions，將擁有 AAP 的 Subscription 加入:</li>
+</ol>
+<p><img src="/automation-install/add-subscription.png" alt="add-subscription"></p>
+<ol start="4">
+<li>加入後可到 <code>console.redhat.com</code> 頁面將 Manifest 匯出:</li>
+</ol>
+<blockquote>
+<p>Redhat Console: <a href="https://console.redhat.com/insights/subscriptions/manifests">https://console.redhat.com/insights/subscriptions/manifests</a></p>
+</blockquote>
+<p><img src="/automation-install/download-manifest.png" alt="download-manifest"></p>
+<ol start="5">
+<li>回到 AAP 畫面，匯入 Manifest 後按下一步，進入自動分析頁面 (全部勾消)，進行下一步</li>
+</ol>
+<p><img src="/automation-install/analytics.png" alt="analytics"></p>
+<ol start="6">
+<li>進入 License 頁面，進行 Submit</li>
+</ol>
+<p><img src="/automation-install/license.png" alt="license"></p>
+<ol start="7">
+<li>進入 AAP 頁面，安裝完成</li>
+</ol>
+<p><img src="/automation-install/done.png" alt="done"></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.0-ea/html/red_hat_ansible_automation_platform_installation_guide/planning-installation">https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.0-ea/html/red_hat_ansible_automation_platform_installation_guide/planning-installation</a></li>
+</ul>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

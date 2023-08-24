@@ -1,0 +1,50 @@
+apiVersion: v1
+
+# The base domain of the cluster. All DNS records must be sub-domains of this base and include the cluster name.
+baseDomain: example.com
+
+# The controlPlane section is a single mapping, but the compute section is a sequence of mappings. To meet the requirements of the different data structures, the first line of the compute section must begin with a hyphen, -, and the first line of the controlPlane section must not. Only one control plane pool is used.
+compute:
+
+  # Specifies whether to enable or disable simultaneous multithreading (SMT), or hyperthreading. By default, SMT is enabled to increase the performance of the cores in your machines. You can disable it by setting the parameter value to Disabled. If you disable SMT, you must disable it in all cluster machines; this includes both control plane and compute machines.
+  - hyperthreading: Enabled
+    name: worker
+
+    # You must set this value to 0 when you install OpenShift Container Platform on user-provisioned infrastructure. In installer-provisioned installations, the parameter controls the number of compute machines that the cluster creates and manages for you. In user-provisioned installations, you must manually deploy the compute machines before you finish installing the cluster.
+    replicas: 0
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+
+  # The number of control plane machines that you add to the cluster. Because the cluster uses these values as the number of etcd endpoints in the cluster, the value must match the number of control plane machines that you deploy.
+  replicas: 3
+metadata:
+  # The cluster name that you specified in your DNS records.
+  name: test
+networking:
+
+  # A block of IP addresses from which pod IP addresses are allocated. This block must not overlap with existing physical networks. These IP addresses are used for the pod network. If you need to access the pods from an external network, you must configure load balancers and routers to manage the traffic.
+  clusterNetwork:
+    - cidr: 10.128.0.0/14
+
+      # The subnet prefix length to assign to each individual node. For example, if hostPrefix is set to 23, then each node is assigned a /23 subnet out of the given cidr, which allows for 510 (2^(32 - 23) - 2) pod IP addresses. If you are required to provide access to nodes from an external network, configure load balancers and routers to manage the traffic.
+      hostPrefix: 23
+
+  networkType: OpenShiftSDN
+
+  # The IP address pool to use for service IP addresses. You can enter only one IP address pool. This block must not overlap with existing physical networks. If you need to access the services from an external network, configure load balancers and routers to manage the traffic.
+  serviceNetwork:
+    - 172.30.0.0/16
+platform:
+
+  # You must set the platform to none. You cannot provide additional platform configuration variables for your platform.
+  none: {}
+
+# Whether to enable or disable FIPS mode. By default, FIPS mode is not enabled. If FIPS mode is enabled, the Red Hat Enterprise Linux CoreOS (RHCOS) machines that OpenShift Container Platform runs on bypass the default Kubernetes cryptography suite and use the cryptography modules that are provided with RHCOS instead.
+fips: false
+
+# The pull secret from the Red Hat OpenShift Cluster Manager. This pull secret allows you to authenticate with the services that are provided by the included authorities, including Quay.io, which serves the container images for OpenShift Container Platform components.
+pullSecret: '{"auths": ...}'
+
+# The SSH public key for the core user in Red Hat Enterprise Linux CoreOS (RHCOS).
+sshKey: "ssh-ed25519 AAAA..."

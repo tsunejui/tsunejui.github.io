@@ -60,8 +60,25 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/rhel-automation-platform-install/" rel="bookmark">
+			RHEL Ansible Automation Platform (AAP) Installation
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		環境準備 Linux 的版本為 Red Hat Enterprise Linux 9.1 (Plow):
+下載 tar 檔案 下載 Red Hat Ansible Automation Platform (v. 2.4 for RHEL 9 for x86_64): 至 https://access.redhat.com/downloads/content/480 下載 Ansible Automation Platform 2.4 Setup Bundle
+解壓縮 tar xvzf ansible-automation-platform-setup-&lt;latest-version&gt;.tar.gz 安裝 Red Hat Ansible Automation Platform subscription 取得token 至 https://access.redhat.com/management/api 產生 Token
+在 Redhat 上使用 subscription-manager register 註冊機器 你也可以透過 subscription-manager register --username &lt;username&gt; --password &lt;password&gt; --auto-attach 註冊機器
+subscription-manager register --token &lt;token&gt; --insecure 獲得 Subscription 的 pool_id subscription-manager list --available --all | grep &#34;Ansible Automation Platform&#34; -B 3 -A 6 安裝 Subscription subscription-manager attach --pool=2c94e43f88fcee5b0189010269427636 驗證是否成功 subscription-manager list --consumed 建立 Ansible Automation Platform Database 如果需要自建 AAP 的 Database 則需執行此步驟，不需要請略過。
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/awx-install/" rel="bookmark">
-			AWX Install (Container)
+			AWX Installation (Container)
 			</a>
 		</h2>
 		
@@ -99,7 +116,8 @@ git clone -b 17.
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
-			<li class="widget__item"><a class="widget__link" href="/posts/awx-install/">AWX Install (Container)</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/rhel-automation-platform-install/">RHEL Ansible Automation Platform (AAP) Installation</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/awx-install/">AWX Installation (Container)</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/samba-install/">Samba 安裝</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/kafka-kraft-install/">Kafka 安裝 - Kraft Mode</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/node-exporter/">Node Exporter</a></li>
@@ -108,7 +126,6 @@ git clone -b 17.
 			<li class="widget__item"><a class="widget__link" href="/posts/nfs-k8s/">NFS on Kubernetes</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/nfs/">NFS on Rocky Linux 8</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/proxmox-extend-linux-space/">Proxmox 增加 Linux 硬碟空間</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/rocky-xrdp/">Rocky Linux 使用 XRDP</a></li>
 		</ul>
 	</div>
 </div>
