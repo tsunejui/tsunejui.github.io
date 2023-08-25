@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>NodeClockNotSynchronising alert troubleshooting in Openshift 4 - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">NodeClockNotSynchronising alert troubleshooting in Openshift 4</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<p>本篇文章尚未完成，目前僅僅作為紀錄，尚未確定root cause。</p>
+<h2 id="事件經過">事件經過</h2>
+<p>某日客戶收到來自 OCP 的 critical 告警，名稱為 <code>NodeClockNotSynchronising</code>，請我們調查原因。</p>
+<h2 id="告警訊息">告警訊息</h2>
+<p>首先調查告警意義，至 <code>openshoft-monitoring</code> Project 下尋找名為 <code>prometheus-k8s-rulefiles-0</code> 的 ConfigMap，便可看到以下內容</p>
+<blockquote>
+<p><a href="https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md">https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md</a></p>
+</blockquote>
+<pre tabindex="0"><code>- alert: NodeClockNotSynchronising
+annotations:
+    description: Clock on {{ $labels.instance }} is not synchronising. Ensure NTP
+    is configured on this host.
+    runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md
+    summary: Clock not synchronising.
+expr: |
+    min_over_time(node_timex_sync_status{job=&#34;node-exporter&#34;}[5m]) == 0
+    and
+    node_timex_maxerror_seconds{job=&#34;node-exporter&#34;} &gt;= 16
+for: 10m
+labels:
+    severity: critical
+</code></pre><p><img src="/node-clock-not-synchronising/rule.png" alt="rule"></p>
+<p>根據官方文件，我們可以得知以下訊息:</p>
+<p>The <code>NodeClockNotSynchronising</code> alert triggers when a node is affected by issues with the NTP server for that node. For example, this alert might trigger when certificates are rotated for the API Server on a node, and the certificates fail validation because of an invalid time.</p>
+<p>而判斷的條件主要是兩項指標，他們分別的意義如下:</p>
+<p><strong>node_timex_sync_status</strong></p>
+<p><code>node_timex_sync_status</code> returns 1 if NTP is working properly,or 0 if NTP is not working properly. <code>node_timex_maxerror_seconds</code> indicates how many seconds NTP is falling behind.</p>
+<p><strong>node_timex_maxerror_seconds</strong></p>
+<p>The alert triggers when the value for <code>min_over_time(node_timex_sync_status[5m])</code> equals 0 and the value for <code>node_timex_maxerror_seconds</code> is greater than or equal to 16.</p>
+<h2 id="客戶環境">客戶環境</h2>
+<p>接下來可至 Observe/Metrics 頁面查看客戶當前的指標，可以發現以下情況:</p>
+<h3 id="node_timex_sync_status-為-0"><code>node_timex_sync_status</code> 為 0</h3>
+<p><img src="/node-clock-not-synchronising/error0.png" alt="error0"></p>
+<h3 id="node_timex_maxerror_secondsjobnode-exporter-為-16"><code>node_timex_maxerror_seconds{job=&quot;node-exporter&quot;}</code> 為 16</h3>
+<p><img src="/node-clock-not-synchronising/error1.png" alt="error1"></p>
+<h2 id="調查-metrics-原理">調查 Metrics 原理</h2>
+<p>上述發生在所有node中，由此判斷可能是 NTP 的問題，為了進一步瞭解 metrics 的實際意義，便查看 node_exporter 的源碼:</p>
+<blockquote>
+<p><a href="https://github.com/prometheus/node_exporter/blob/master/collector/timex.go#L176">https://github.com/prometheus/node_exporter/blob/master/collector/timex.go#L176</a></p>
+</blockquote>
+<pre tabindex="0"><code>const (
+	// The system clock is not synchronized to a reliable
+	// server (TIME_ERROR).
+	timeError = 5
+	// The timex.Status time resolution bit (STA_NANO),
+	// 0 = microsecond, 1 = nanoseconds.
+	staNano = 0x2000
+
+	// 1 second in
+	nanoSeconds  = 1000000000
+	microSeconds = 1000000
+)
+
+...
+
+func (c *timexCollector) Update(ch chan&lt;- prometheus.Metric) error {
+	var syncStatus float64
+	var divisor float64
+	var timex = new(unix.Timex)
+
+	status, err := unix.Adjtimex(timex)
+	if err != nil {
+		if errors.Is(err, os.ErrPermission) {
+			level.Debug(c.logger).Log(&#34;msg&#34;, &#34;Not collecting timex metrics&#34;, &#34;err&#34;, err)
+			return ErrNoData
+		}
+		return fmt.Errorf(&#34;failed to retrieve adjtimex stats: %w&#34;, err)
+	}
+
+	if status == timeError {
+		syncStatus = 0
+	} else {
+		syncStatus = 1
+	}
+	if (timex.Status &amp; staNano) != 0 {
+		divisor = nanoSeconds
+	} else {
+		divisor = microSeconds
+	}
+	// See NOTES in adjtimex(2).
+	const ppm16frac = 1000000.0 * 65536.0
+
+	ch &lt;- c.syncStatus.mustNewConstMetric(syncStatus)                               // node_timex_sync_status
+	ch &lt;- c.offset.mustNewConstMetric(float64(timex.Offset) / divisor)
+	ch &lt;- c.freq.mustNewConstMetric(1 + float64(timex.Freq)/ppm16frac)
+	ch &lt;- c.maxerror.mustNewConstMetric(float64(timex.Maxerror) / microSeconds)     // node_timex_maxerror_seconds
+	ch &lt;- c.esterror.mustNewConstMetric(float64(timex.Esterror) / microSeconds)
+	ch &lt;- c.status.mustNewConstMetric(float64(timex.Status))
+	ch &lt;- c.constant.mustNewConstMetric(float64(timex.Constant))
+	ch &lt;- c.tick.mustNewConstMetric(float64(timex.Tick) / microSeconds)
+	ch &lt;- c.ppsfreq.mustNewConstMetric(float64(timex.Ppsfreq) / ppm16frac)
+	ch &lt;- c.jitter.mustNewConstMetric(float64(timex.Jitter) / divisor)
+	ch &lt;- c.shift.mustNewConstMetric(float64(timex.Shift))
+	ch &lt;- c.stabil.mustNewConstMetric(float64(timex.Stabil) / ppm16frac)
+	ch &lt;- c.jitcnt.mustNewConstMetric(float64(timex.Jitcnt))
+	ch &lt;- c.calcnt.mustNewConstMetric(float64(timex.Calcnt))
+	ch &lt;- c.errcnt.mustNewConstMetric(float64(timex.Errcnt))
+	ch &lt;- c.stbcnt.mustNewConstMetric(float64(timex.Stbcnt))
+	ch &lt;- c.tai.mustNewConstMetric(float64(timex.Tai))
+
+	return nil
+}
+</code></pre><p>從 source code 得知是 <code>unix.Adjtimex(timex)</code> 得到的值，沒有 error，而取得的 <code>status</code> 為 <code>5</code>，</p>
+<blockquote>
+<p><a href="https://github.com/golang/sys/blob/master/unix/zsyscall_linux.go#L489">https://github.com/golang/sys/blob/master/unix/zsyscall_linux.go#L489</a></p>
+</blockquote>
+<pre tabindex="0"><code>func Adjtimex(buf *Timex) (state int, err error) {
+	r0, _, e1 := Syscall(SYS_ADJTIMEX, uintptr(unsafe.Pointer(buf)), 0, 0)
+	state = int(r0)
+	if e1 != 0 {
+		err = errnoErr(e1)
+	}
+	return
+}
+</code></pre><p><code>syscall</code> 是一個指向底層操作的 interface，而我在 man7.org 上查到 <code>adjtimex</code> 是可以訪問 kernel time 的 program，而如果回傳 5 則是 <code>TIME_ERROR</code>:</p>
+<blockquote>
+<p><a href="https://man7.org/linux/man-pages/man2/adjtimex.2.html">https://man7.org/linux/man-pages/man2/adjtimex.2.html</a></p>
+</blockquote>
+<pre tabindex="0"><code>...
+TIME_ERROR
+    The system clock is not synchronized to a reliable server.
+    This value is returned when any of the following holds
+    true:
+
+    •  Either STA_UNSYNC or STA_CLOCKERR is set.
+
+    •  STA_PPSSIGNAL is clear and either STA_PPSFREQ or
+        STA_PPSTIME is set.
+
+    •  STA_PPSTIME and STA_PPSJITTER are both set.
+
+    •  STA_PPSFREQ is set and either STA_PPSWANDER or
+        STA_PPSJITTER is set.
+
+    The symbolic name TIME_BAD is a synonym for TIME_ERROR,
+    provided for backward compatibility.
+</code></pre><p>在<a href="https://lkml.iu.edu/hypermail/linux/kernel/9602/0739.html">lkml.iu.edu</a> 文章中對於 <code>maxerror</code> 有更好的解釋:</p>
+<pre tabindex="0"><code>long maxerror (ro)
+This member is the value of the time_maxerror kernel variable,
+which represents the maximum error of the indicated time relative
+to the primary synchronization source, in microseconds. For NTP,
+the value is initialized by a ntp_adjtime() call to the
+synchronization distance, which is equal to the root dispersion
+plus one-half the root delay. It is increased by a small amount
+(time_tolerance) each second to reflect the maximum clock frequency
+error. This variable is provided bu a ntp-adjtime() system call and
+modified by the kernel, but is otherwise not used by the kernel.
+</code></pre><p>種種跡象都顯示這是一個 NTP 時間與 kernel time 的不同，但弔詭的地方是我透過 <code>hwclock</code> 與 <code>date</code> 進行比較，並未看出差異:</p>
+<pre tabindex="0"><code>hwclock --show&amp;&amp;date +&#34;%Y-%m-%d %H:%M:%S.%N%:z&#34;
+</code></pre><h2 id="可能的原因">可能的原因</h2>
+<p>其實如果直接 Google 搜尋 <code>NodeClockNotSynchronising</code> 錯誤，在第一個網頁就可以看到 Redhat 官方 Issue。</p>
+<blockquote>
+<p><a href="https://access.redhat.com/solutions/6257001">https://access.redhat.com/solutions/6257001</a></p>
+</blockquote>
+<p><img src="/node-clock-not-synchronising/issue.png" alt="issue"></p>
+<p>透過 <code>chronyc</code> 指令可以查詢 <code>chronyd</code> 的每個來源的訊息:</p>
+<pre tabindex="0"><code>chronyc sourcestats -v
+</code></pre><p>可以看到客戶設定的 2 個 NTP server 中，其中一個偏差值特別高:</p>
+<p><img src="/node-clock-not-synchronising/debug.png" alt="debug"></p>
+<p>根據客戶的反饋，在事發之前確實有對NTP做過調整。此外，Redhat 在<a href="https://access.redhat.com/solutions/58025">另外一篇</a> Issue 中有提到，不建議設定 2 個 NTP Server，原因與系統設定 NTP Server 的機制有關，可以參考這篇: <a href="https://support.ntp.org/Support/SelectingOffsiteNTPServers">https://support.ntp.org/Support/SelectingOffsiteNTPServers</a></p>
+<p>如果設定 2 個 NTP Server，當其中有一台 NTP 異常時，系統無法判斷哪一個更好，因為你沒有任何其他參考來比較它們。根據 <a href="https://access.redhat.com/solutions/778603">Best practices for NTP</a>，至少選擇 4 台為佳。</p>
+<pre tabindex="0"><code>Upstream Time Server Quantity
+Many people wonder how many upstream time servers they should list in their NTP configuration file. The mathematics are complex, and fully understood by very few people. However, we can boil them down to some simple rules-of-thumb:
+If you list just one, there can be no question which will be considered to be &#34;right&#34; or &#34;wrong&#34;. But if that one goes down, you are toast.
+With two, it is impossible to tell which one is better, because you don&#39;t have any other references to compare them with.
+This is actually the worst possible configuration -- you&#39;d be better off using just one upstream time server and letting the clocks run free if that upstream were to die or become unreachable.
+With three servers, you have the minimum number of time sources needed to allow ntpd to dectect if one time source is a &#34;falseticker&#34;. However ntpd will then be in the position of choosing from the two remaining sources.This configuration provides no redundancy.
+With at least four upstream servers, one (or more) can be a &#34;falseticker&#34;, or just unreachable, and ntpd will have a sufficient number of sources to choose from.
+</code></pre><h2 id="結論">結論</h2>
+<p>再報告給客戶之後，後來 Metrics 就正常了，也沒有聽到其他問題。但對於此次事件還有一些疑點:</p>
+<ol>
+<li>
+<p><code>node_timex_maxerror_seconds{job=&quot;node-exporter&quot;}</code> 為什麼都是 16</p>
+</li>
+<li>
+<p>Adjtimex 是依據什麼判斷 <code>TIME_ERROR</code></p>
+</li>
+</ol>
+<p>未來如果有時間，會希望補上這方面的知識，如果讀者您知道答案，還麻煩您私訊給我，幫我解惑，謝謝。</p>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/debug/" rel="tag">Debug</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

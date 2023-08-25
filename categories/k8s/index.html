@@ -60,6 +60,24 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/node-clock-not-synchronising/" rel="bookmark">
+			NodeClockNotSynchronising alert troubleshooting in Openshift 4
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		本篇文章尚未完成，目前僅僅作為紀錄，尚未確定root cause。
+事件經過 某日客戶收到來自 OCP 的 critical 告警，名稱為 NodeClockNotSynchronising，請我們調查原因。
+告警訊息 首先調查告警意義，至 openshoft-monitoring Project 下尋找名為 prometheus-k8s-rulefiles-0 的 ConfigMap，便可看到以下內容
+https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md
+- alert: NodeClockNotSynchronising annotations: description: Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host. runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md summary: Clock not synchronising. expr: | min_over_time(node_timex_sync_status{job=&#34;node-exporter&#34;}[5m]) == 0 and node_timex_maxerror_seconds{job=&#34;node-exporter&#34;} &gt;= 16 for: 10m labels: severity: critical 根據官方文件，我們可以得知以下訊息:
+The NodeClockNotSynchronising alert triggers when a node is affected by issues with the NTP server for that node.
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/nfs-k8s/" rel="bookmark">
 			NFS on Kubernetes
 			</a>
@@ -145,6 +163,7 @@ interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/node-clock-not-synchronising/">NodeClockNotSynchronising alert troubleshooting in Openshift 4</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rhel-automation-platform-install/">RHEL Ansible Automation Platform (AAP) Installation</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/awx-install/">AWX Installation (Container)</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/samba-install/">Samba 安裝</a></li>
@@ -154,7 +173,6 @@ interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
 			<li class="widget__item"><a class="widget__link" href="/posts/rhel-9-panic/">RHEL 9 在 Proxmox 上 Kernel Panic</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/nfs-k8s/">NFS on Kubernetes</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/nfs/">NFS on Rocky Linux 8</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/proxmox-extend-linux-space/">Proxmox 增加 Linux 硬碟空間</a></li>
 		</ul>
 	</div>
 </div>
@@ -173,6 +191,8 @@ interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/linux/">Linux</a></li>
 			<li class="widget__item">
+				<a class="widget__link" href="/categories/openshift/">Openshift</a></li>
+			<li class="widget__item">
 				<a class="widget__link" href="/categories/profile/">Profile</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/sre/">SRE</a></li>
@@ -182,6 +202,7 @@ interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
 <div class="widget-taglist widget">
 	<h4 class="widget__title">Tags</h4>
 	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/debug/" title="Debug">Debug</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/note/" title="Note">Note</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/tip/" title="Tip">Tip</a>
 	</div>
