@@ -13,8 +13,7 @@
       <pubDate>Sat, 26 Aug 2023 01:51:06 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/node-clock-not-synchronising/</guid>
-      <description>本篇文章尚未完成，目前僅僅作為紀錄，尚未確定root cause。
-事件經過 某日客戶收到來自 OCP 的 critical 告警，名稱為 NodeClockNotSynchronising，請我們調查原因。
+      <description>事件經過 某日客戶收到來自 OCP 的 critical 告警，名稱為 NodeClockNotSynchronising，請我們調查原因。
 告警訊息 首先調查告警意義，至 openshoft-monitoring Project 下尋找名為 prometheus-k8s-rulefiles-0 的 ConfigMap，便可看到以下內容
 https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md
 - alert: NodeClockNotSynchronising annotations: description: Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host. runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md summary: Clock not synchronising. expr: | min_over_time(node_timex_sync_status{job=&amp;#34;node-exporter&amp;#34;}[5m]) == 0 and node_timex_maxerror_seconds{job=&amp;#34;node-exporter&amp;#34;} &amp;gt;= 16 for: 10m labels: severity: critical 根據官方文件，我們可以得知以下訊息:
