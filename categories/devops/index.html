@@ -60,6 +60,26 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/f5-vip-setting/" rel="bookmark">
+			F5 VIP Setting
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		環境描述 客戶環境需要在 F5 設定 VIP，並分配流量到不同的主機，我需要在公司 Lab 上模擬，由於對 F5 的操作不熟悉，因此撰寫此篇文章作為紀錄 VIP 設定方法。
+請注意，此篇文章是簡易的設定紀錄，我並非 F5 的專業人員，如果錯誤請見諒
+F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
+設定 Name 及 Health Monitors 的方式 (下圖為新增後的編輯畫面):
+到 Local Traffic / Virtual Servers / Virtual Servers List 頁面上新增 Virtual Server:
+到 Properties 頁面上設定 General Properties 及憑證相關資料 (下圖為新增後的編輯畫面):
+到 Resource 頁面上設定 Load Balancing (下圖為新增後的編輯畫面):
+結果 設定完成後便立即生效，在 Local Traffic / Pools : Pool List / &lt;pool-name&gt; 上可以看到 Pool 內的 members 狀況:
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/openshift-gitops-dex-expiration-time/" rel="bookmark">
 			Dex Expiration Time on Openshift Gitops
 			</a>
@@ -133,6 +153,7 @@ git clone -b 17.
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/f5-vip-setting/">F5 VIP Setting</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/openshift-gitops-dex-expiration-time/">Dex Expiration Time on Openshift Gitops</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/node-clock-not-synchronising/">NodeClockNotSynchronising alert troubleshooting in Openshift 4</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rhel-automation-platform-install/">RHEL Ansible Automation Platform (AAP) Installation</a></li>
@@ -142,7 +163,6 @@ git clone -b 17.
 			<li class="widget__item"><a class="widget__link" href="/posts/node-exporter/">Node Exporter</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/ssh-tunnel/">SSH Tunneling</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rhel-9-panic/">RHEL 9 在 Proxmox 上 Kernel Panic</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/nfs-k8s/">NFS on Kubernetes</a></li>
 		</ul>
 	</div>
 </div>

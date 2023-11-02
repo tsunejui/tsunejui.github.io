@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>F5 VIP Setting - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">F5 VIP Setting</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h3 id="環境描述">環境描述</h3>
+<p>客戶環境需要在 F5 設定 VIP，並分配流量到不同的主機，我需要在公司 Lab 上模擬，由於對 F5 的操作不熟悉，因此撰寫此篇文章作為紀錄 VIP 設定方法。</p>
+<blockquote>
+<p>請注意，此篇文章是簡易的設定紀錄，我並非 F5 的專業人員，如果錯誤請見諒</p>
+</blockquote>
+<h3 id="f5-設定介面">F5 設定介面</h3>
+<p>到 <code>Local Traffic / Pools / Pool List</code> 頁面上新增 Pool:</p>
+<p><img src="/f5-vip-setting/create-pool.png" alt="create-pool"></p>
+<p>設定 <code>Name</code> 及 <code>Health Monitors</code> 的方式 (下圖為新增後的編輯畫面):</p>
+<p><img src="/f5-vip-setting/setting-pool.png" alt="setting-pool"></p>
+<p>到 <code>Local Traffic / Virtual Servers / Virtual Servers List</code> 頁面上新增 Virtual Server:</p>
+<p><img src="/f5-vip-setting/create-vs.png" alt="create-vs"></p>
+<p>到 <code>Properties</code> 頁面上設定 <code>General Properties</code> 及憑證相關資料 (下圖為新增後的編輯畫面):</p>
+<p><img src="/f5-vip-setting/properties.png" alt="properties"></p>
+<p>到 <code>Resource</code> 頁面上設定 <code>Load Balancing</code> (下圖為新增後的編輯畫面):</p>
+<p><img src="/f5-vip-setting/resource.png" alt="resource"></p>
+<h3 id="結果">結果</h3>
+<p>設定完成後便立即生效，在 <code>Local Traffic  /  Pools : Pool List  / &lt;pool-name&gt;</code> 上可以看到 Pool 內的 members 狀況:</p>
+<p><img src="/f5-vip-setting/members.png" alt="members"></p>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
