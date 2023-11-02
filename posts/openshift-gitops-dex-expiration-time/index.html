@@ -115,7 +115,9 @@
 </code></pre><h3 id="結果">結果</h3>
 <p>儲存設定後，會看到 Managed resource 的警告，無須理會，修改 ArgoCD 的 CRD 並不會被 overwrite:</p>
 <p><img src="/openshift-gitops-dex-expiration-time/alert.png" alt="alert"></p>
-<p>等待 <code>Dex Server</code> 的 pod 重啟後，再次登入，可以看到 jwt token 的 expiration date 已被調整，並且在過期後會自動登出:</p>
+<p>ArgoCD Operator 會更新 <code>argocd-cm</code> 的 <code>dex.config</code>:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/new-config.png" alt="new-config"></p>
+<p>等待 <code>Dex Server</code> 的 pod 重啟後再次登入 Web 介面，可以看到 jwt token 的 expiration date 已被調整，在過期後會自動登出:</p>
 <p><img src="/openshift-gitops-dex-expiration-time/signout.png" alt="signout"></p>
 <h3 id="reference">Reference</h3>
 <ul>
