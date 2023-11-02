@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Openshift - Rex&#39;s Notes 技術筆記 </title>
+	<title>F5 - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 
 	<link rel="stylesheet" href="/css/style.css">
 	
-	<link rel="alternate" type="application/rss+xml" href="/categories/openshift/index.xml" title="Rex's Notes 技術筆記 ">
+	<link rel="alternate" type="application/rss+xml" href="/categories/f5/index.xml" title="Rex's Notes 技術筆記 ">
 
 	<link rel="shortcut icon" href="/favicon.ico">
 		
@@ -55,40 +55,26 @@
 			
 <main class="main list" role="main">
 	<header class="main__header">
-		<h1 class="main__title">Openshift</h1>
+		<h1 class="main__title">F5</h1>
 	</header><article class="list__item post">
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
-			<a href="/posts/openshift-gitops-dex-expiration-time/" rel="bookmark">
-			Dex Expiration Time on Openshift Gitops
+			<a href="/posts/f5-vip-setting/" rel="bookmark">
+			F5 VIP Setting
 			</a>
 		</h2>
 		
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 GitOps Operator。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。
-從上圖可得知，ArgoCD 的 web 介面上，會再登入後產生一把 token 並放到 cookie 內，名為 argocd.token，我們可以透過 jwt.io 解析這把 token，查看 expiration date:
-在沒有做任何設定的情況下，透過 Openshift 帳密使用 SSO 登入機制進入 ArgoCD 畫面，所產生的 token 過期時間應該是 24h 後，這是因為 ArgoCD 在 SSO 認證上是交給 Dex Server 控制，而 Dex Server 的預設過期時間是 24h：
-可以從 ArgoCD 的 Security 文章查看 Dex Server 的說明:
-尋找方法 ArgoCD Operator 會透過 Kind: ArgoCD 的 CRD ，名為 openshift-gitops，產生需要的 components，如 server、applicationSet、grafana&hellip;:
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/node-clock-not-synchronising/" rel="bookmark">
-			NodeClockNotSynchronising alert troubleshooting in Openshift 4
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		事件經過 某日客戶收到來自 OCP 的 critical 告警，名稱為 NodeClockNotSynchronising，請我們調查原因。
-告警訊息 首先調查告警意義，至 openshoft-monitoring Project 下尋找名為 prometheus-k8s-rulefiles-0 的 ConfigMap，便可看到以下內容
-https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md
-- alert: NodeClockNotSynchronising annotations: description: Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host. runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md summary: Clock not synchronising. expr: | min_over_time(node_timex_sync_status{job=&#34;node-exporter&#34;}[5m]) == 0 and node_timex_maxerror_seconds{job=&#34;node-exporter&#34;} &gt;= 16 for: 10m labels: severity: critical 根據官方文件，我們可以得知以下訊息:
-The NodeClockNotSynchronising alert triggers when a node is affected by issues with the NTP server for that node.
+		環境描述 客戶環境需要在 F5 設定 VIP，並分配流量到不同的主機，我需要在公司 Lab 上模擬，由於對 F5 的操作不熟悉，因此撰寫此篇文章作為紀錄 VIP 設定方法。
+請注意，此篇文章是簡易的設定紀錄，我並非 F5 的專業人員，如果錯誤請見諒
+F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
+設定 Name 及 Health Monitors 的方式 (下圖為新增後的編輯畫面):
+到 Local Traffic / Virtual Servers / Virtual Servers List 頁面上新增 Virtual Server:
+到 Properties 頁面上設定 General Properties 及憑證相關資料 (下圖為新增後的編輯畫面):
+到 Resource 頁面上設定 Load Balancing (下圖為新增後的編輯畫面):
+結果 設定完成後便立即生效，在 Local Traffic / Pools : Pool List / &lt;pool-name&gt; 上可以看到 Pool 內的 members 狀況:
 	</div>
 </article>
 </main>
