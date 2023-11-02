@@ -59,7 +59,10 @@
 			
 		</header>
 		<div class="content post__content clearfix">
-			<p><img src="/openshift-gitops-dex-expiration-time/argocd-operator.png" alt="operator"></p>
+			<p>ArgoCD 認證機制:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/argocd-operator-login.png" alt="login"></p>
+<p>修改流程:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/argocd-operator.png" alt="operator"></p>
 <h3 id="環境描述">環境描述</h3>
 <p>近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 <a href="https://github.com/redhat-developer/gitops-operator">GitOps Operator</a>。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。</p>
 <p><img src="/openshift-gitops-dex-expiration-time/home.png" alt="home"></p>

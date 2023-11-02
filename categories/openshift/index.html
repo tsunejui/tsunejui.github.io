@@ -67,7 +67,9 @@
 		
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 GitOps Operator。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。
+		ArgoCD 認證機制:
+修改流程:
+環境描述 近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 GitOps Operator。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。
 從上圖可得知，ArgoCD 的 web 會再登入後產生一把 token 並放到 cookie 內，名為 argocd.token，我們可以透過 jwt.io 解析這把 token，查看 expiration date:
 在沒有做任何設定的情況下，透過 Openshift 帳密使用 SSO 登入機制進入 ArgoCD 畫面，所產生的 token 過期時間應該是 24h 後，這是因為 ArgoCD 在 SSO 認證上是交給 Dex Server 控制，而 Dex Server 的預設過期時間是 24h：
 可以從 ArgoCD 的 Security 文章查看 Dex Server 的說明:
