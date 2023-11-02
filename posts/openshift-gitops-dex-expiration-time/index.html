@@ -59,7 +59,8 @@
 			
 		</header>
 		<div class="content post__content clearfix">
-			<h3 id="環境描述">環境描述</h3>
+			<p><img src="/openshift-gitops-dex-expiration-time/argocd-operator.png" alt="operator"></p>
+<h3 id="環境描述">環境描述</h3>
 <p>近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 <a href="https://github.com/redhat-developer/gitops-operator">GitOps Operator</a>。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。</p>
 <p><img src="/openshift-gitops-dex-expiration-time/home.png" alt="home"></p>
 <p>從上圖可得知，ArgoCD 的 web 介面上，會再登入後產生一把 token 並放到 cookie 內，名為 <code>argocd.token</code>，我們可以透過 <a href="https://jwt.io/">jwt.io</a> 解析這把 token，查看 expiration date:</p>
