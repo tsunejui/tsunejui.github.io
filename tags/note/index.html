@@ -60,6 +60,23 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/openshift-gitops-dex-expiration-time/" rel="bookmark">
+			Dex Expiration Time on Openshift Gitops
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		環境描述 近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 GitOps Operator。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。
+從上圖可得知，ArgoCD 的 web 介面上，會再登入後產生一把 token 並放到 cookie 內，名為 argocd.token，我們可以透過 jwt.io 解析這把 token，查看 expiration date:
+在沒有做任何設定的情況下，透過 Openshift 帳密使用 SSO 登入機制進入 ArgoCD 畫面，所產生的 token 過期時間應該是 24h 後，這是因為 ArgoCD 在 SSO 認證上是交給 Dex Server 控制，而 Dex Server 的預設過期時間是 24h：
+可以從 ArgoCD 的 Security 文章查看 Dex Server 的說明:
+尋找方法 ArgoCD Operator 會透過 Kind: ArgoCD 的 CRD ，名為 openshift-gitops，產生需要的 components，如 server、applicationSet、grafana&hellip;:
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/node-clock-not-synchronising/" rel="bookmark">
 			NodeClockNotSynchronising alert troubleshooting in Openshift 4
 			</a>
@@ -226,24 +243,6 @@ kubernetes-sigs/nfs-subdir-external-provisioner: https://github.com/kubernetes-s
 使用 kubernetes-sigs/nfs-subdir-external-provisioner 作為 provisioner，請注意以下環境變數設定:
 - name: PROVISIONER_NAME # storage class 名稱 value: k8s-sigs.io/nfs-subdir-external-provisioner - name: NFS_SERVER # nfs server 位置 value: 10.250.75.111 - name: NFS_PATH # nfs directory 路徑 value: /mnt/nfs_shares 使用 kubectl 部署 nfs-client-provisioner:
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/nfs/" rel="bookmark">
-			NFS on Rocky Linux 8
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		什麼是 NFS NFS (Network File System) 是一種分散式檔案系統協議，用於在網路上共享檔案和資源。
-環境設定 id name ip 1 nfs-server 10.250.75.111 2 nfs-client 10.250.75.103 在 NFS Server 上 安裝 nfs 工具包 dnf -y install nfs-utils 啟動 nfs server 並且設定開機自動開啟。 systemctl enable --now nfs-server.service 建立 nfs 目錄 mkdir -p /mnt/nfs_shares 更改 owner 及設定權限 nobody 使用者是一個系統使用者，不擁有任何特殊權限，且通常用於運行低權限的服務或進程。
-chown -R nobody:nobody /mnt/nfs_shares &amp;&amp; chmod -R 777 /mnt/nfs_shares vim /etc/exports /etc/exports 是在 Linux 系統中用於配置 NFS 的設定檔案。NFS 是一種分散式檔案系統，它允許不同的機器透過網路共享檔案。
-rw: 可讀可寫
-sync: 寫入後同步
-no_all_squash: 禁用 all_squash
-	</div>
 </article>
 </main>
 
@@ -267,6 +266,7 @@ no_all_squash: 禁用 all_squash
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/openshift-gitops-dex-expiration-time/">Dex Expiration Time on Openshift Gitops</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/node-clock-not-synchronising/">NodeClockNotSynchronising alert troubleshooting in Openshift 4</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rhel-automation-platform-install/">RHEL Ansible Automation Platform (AAP) Installation</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/awx-install/">AWX Installation (Container)</a></li>
@@ -276,7 +276,6 @@ no_all_squash: 禁用 all_squash
 			<li class="widget__item"><a class="widget__link" href="/posts/ssh-tunnel/">SSH Tunneling</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/rhel-9-panic/">RHEL 9 在 Proxmox 上 Kernel Panic</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/nfs-k8s/">NFS on Kubernetes</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/nfs/">NFS on Rocky Linux 8</a></li>
 		</ul>
 	</div>
 </div>
@@ -285,7 +284,7 @@ no_all_squash: 禁用 all_squash
 	<div class="widget__content">
 		<ul class="widget__list">
 			<li class="widget__item">
-				<a class="widget__link" href="/categories/cicd/">CICD</a></li>
+				<a class="widget__link" href="/categories/devops/">Devops</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/istio/">Istio</a></li>
 			<li class="widget__item">

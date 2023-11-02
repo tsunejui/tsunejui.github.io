@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Dex Expiration Time on Openshift Gitops - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Dex Expiration Time on Openshift Gitops</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h3 id="環境描述">環境描述</h3>
+<p>近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 <a href="https://github.com/redhat-developer/gitops-operator">GitOps Operator</a>。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。</p>
+<p><img src="/openshift-gitops-dex-expiration-time/home.png" alt="home"></p>
+<p>從上圖可得知，ArgoCD 的 web 介面上，會再登入後產生一把 token 並放到 cookie 內，名為 <code>argocd.token</code>，我們可以透過 <a href="https://jwt.io/">jwt.io</a> 解析這把 token，查看 expiration date:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/token.png" alt="token"></p>
+<p>在沒有做任何設定的情況下，透過 Openshift 帳密使用 SSO 登入機制進入 ArgoCD 畫面，所產生的 token 過期時間應該是 <code>24h</code> 後，這是因為 ArgoCD 在 SSO 認證上是交給 <a href="https://github.com/dexidp/dex">Dex Server</a> 控制，而 <code>Dex Server</code> 的預設過期時間是 <code>24h</code>：</p>
+<p><img src="/openshift-gitops-dex-expiration-time/pod.png" alt="pod"></p>
+<p>可以從 ArgoCD 的 <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/security/">Security</a> 文章查看 <code>Dex Server</code> 的說明:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/argo-doc.png" alt="argo-doc"></p>
+<h3 id="尋找方法">尋找方法</h3>
+<p>ArgoCD Operator 會透過 <code>Kind: ArgoCD</code> 的 CRD ，名為 <code>openshift-gitops</code>，產生需要的 components，如 server、applicationSet、grafana&hellip;:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/crd.png" alt="crd"></p>
+<p>而 ArgoCD Operator 會將 CRD 上的設定轉換成 configmap，名為 <code>argocd-cm</code>:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/configmap.png" alt="configmap"></p>
+<p>可以從 <code>argocd-cm</code> 看到有關 <code>Dex Server</code> 的設定，其中的 <code>connector</code> 是透過 <code>openshift-gitops</code> 內的 <code>sso.dex.openShiftOAuth</code> 參數產生的:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/config.png" alt="config"></p>
+<pre tabindex="0"><code>connectors:
+    - config:
+        clientID: system:serviceaccount:openshift-gitops:openshift-gitops-argocd-dex-server
+        clientSecret: $oidc.dex.clientSecret
+        groups: []
+        insecureCA: true
+        issuer: https://kubernetes.default.svc
+        redirectURI: https://openshift-gitops-server-openshift-gitops.apps.ocp.olg.online.com/api/dex/callback
+        id: openshift
+        name: OpenShift
+        type: openshift
+</code></pre><p>在 ArgoCD Operator 的<a href="https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#single-sign-on-options">文件</a>上有寫道 Dex Options 可以設定的值，我們可以將將設定放在 <code>openshift-gitops</code> 的 <code>dex.config</code>，但這個會導致 <code>sso.dex.openShiftOAuth</code> 的設定失效:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/dex-options.png" alt="dex-options"></p>
+<h3 id="修改設定">修改設定</h3>
+<p>參考在 Dex Server 的 github 上的 <a href="https://github.com/dexidp/dex/blob/master/examples/config-dev.yaml">example/config-dev.yaml</a>:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/dex-github.png" alt="dex-github"></p>
+<p>在 Dex 的官網中有針對 <code>expiry</code> 參數的<a href="https://dexidp.io/docs/id-tokens/">說明</a>，可以看到只需要調整 <code>idTokens</code>，便可以修改 token 過期時間:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/expiration-setting.png" alt="expiration-setting"></p>
+<p>複製原本的 <code>connector</code> 的內容，並加入 <code>expiry</code> 的設定，一同寫入 <code>sso.dex.config</code> 上 (需自行新增):</p>
+<p><img src="/openshift-gitops-dex-expiration-time/expiry.png" alt="expiry"></p>
+<pre tabindex="0"><code>sso:
+  dex:
+    config: |
+      expiry:
+        idTokens: &#34;10h&#34;
+      connectors:
+      - config:
+          clientID: system:serviceaccount:openshift-gitops:openshift-gitops-argocd-dex-server
+          clientSecret: $oidc.dex.clientSecret
+          groups: []
+          insecureCA: true
+          issuer: https://kubernetes.default.svc
+          redirectURI: https://openshift-gitops-server-openshift-gitops.apps.ocp.olg.online.com/api/dex/callback
+        id: openshift
+        name: OpenShift
+        type: openshift
+...
+</code></pre><h3 id="結果">結果</h3>
+<p>儲存設定後，會看到 Managed resource 的警告，無須理會，修改 ArgoCD 的 CRD 並不會被 overwrite:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/alert.png" alt="alert"></p>
+<p>等待 <code>Dex Server</code> 的 pod 重啟後，再次登入，可以看到 jwt token 的 expiration date 已被調整，並且在過期後會自動登出:</p>
+<p><img src="/openshift-gitops-dex-expiration-time/signout.png" alt="signout"></p>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#single-sign-on-options">https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#single-sign-on-options</a></li>
+<li><a href="https://dexidp.io/docs/id-tokens/">https://dexidp.io/docs/id-tokens/</a></li>
+<li><a href="https://github.com/dexidp/dex/blob/master/examples/config-dev.yaml">https://github.com/dexidp/dex/blob/master/examples/config-dev.yaml</a></li>
+<li><a href="https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml">https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml</a></li>
+</ul>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

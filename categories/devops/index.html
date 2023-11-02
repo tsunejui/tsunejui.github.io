@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Openshift - Rex&#39;s Notes 技術筆記 </title>
+	<title>Devops - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 
 	<link rel="stylesheet" href="/css/style.css">
 	
-	<link rel="alternate" type="application/rss+xml" href="/categories/openshift/index.xml" title="Rex's Notes 技術筆記 ">
+	<link rel="alternate" type="application/rss+xml" href="/categories/devops/index.xml" title="Rex's Notes 技術筆記 ">
 
 	<link rel="shortcut icon" href="/favicon.ico">
 		
@@ -55,7 +55,7 @@
 			
 <main class="main list" role="main">
 	<header class="main__header">
-		<h1 class="main__title">Openshift</h1>
+		<h1 class="main__title">Devops</h1>
 	</header><article class="list__item post">
 	
 	<header class="list__header">
@@ -77,18 +77,42 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
-			<a href="/posts/node-clock-not-synchronising/" rel="bookmark">
-			NodeClockNotSynchronising alert troubleshooting in Openshift 4
+			<a href="/posts/rhel-automation-platform-install/" rel="bookmark">
+			RHEL Ansible Automation Platform (AAP) Installation
 			</a>
 		</h2>
 		
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		事件經過 某日客戶收到來自 OCP 的 critical 告警，名稱為 NodeClockNotSynchronising，請我們調查原因。
-告警訊息 首先調查告警意義，至 openshoft-monitoring Project 下尋找名為 prometheus-k8s-rulefiles-0 的 ConfigMap，便可看到以下內容
-https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md
-- alert: NodeClockNotSynchronising annotations: description: Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host. runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md summary: Clock not synchronising. expr: | min_over_time(node_timex_sync_status{job=&#34;node-exporter&#34;}[5m]) == 0 and node_timex_maxerror_seconds{job=&#34;node-exporter&#34;} &gt;= 16 for: 10m labels: severity: critical 根據官方文件，我們可以得知以下訊息:
-The NodeClockNotSynchronising alert triggers when a node is affected by issues with the NTP server for that node.
+		環境準備 Linux 的版本為 Red Hat Enterprise Linux 9.1 (Plow):
+下載 tar 檔案 下載 Red Hat Ansible Automation Platform (v. 2.4 for RHEL 9 for x86_64): 至 https://access.redhat.com/downloads/content/480 下載 Ansible Automation Platform 2.4 Setup Bundle
+解壓縮 tar xvzf ansible-automation-platform-setup-&lt;latest-version&gt;.tar.gz 安裝 Red Hat Ansible Automation Platform subscription 取得token 至 https://access.redhat.com/management/api 產生 Token
+在 Redhat 上使用 subscription-manager register 註冊機器 你也可以透過 subscription-manager register --username &lt;username&gt; --password &lt;password&gt; --auto-attach 註冊機器
+subscription-manager register --token &lt;token&gt; --insecure 獲得 Subscription 的 pool_id subscription-manager list --available --all | grep &#34;Ansible Automation Platform&#34; -B 3 -A 6 安裝 Subscription subscription-manager attach --pool=2c94e43f88fcee5b0189010269427636 驗證是否成功 subscription-manager list --consumed 建立 Ansible Automation Platform Database 如果需要自建 AAP 的 Database 則需執行此步驟，不需要請略過。
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
+			<a href="/posts/awx-install/" rel="bookmark">
+			AWX Installation (Container)
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		利用 dokcer 安裝 AWX
+使用環境 Rocky Linux 8.7
+安裝步驟 關閉 SELinux 建議暫時關閉 SELinux 避免安裝中出錯:
+setenforce 0 安裝 docker https://docs.docker.com/engine/install/centos/
+安裝 yum-utils:
+yum install -y yum-utils 加入 repository:
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 安裝 docker
+yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 啟動 docker
+systemctl start docker 下載 AWX 17.1.0 安裝 git:
+dnf install -y git Starting in version 18.0, the AWX Operator is the preferred way to install AWX.
+https://github.com/ansible/awx/blob/devel/INSTALL.md
+git clone -b 17.
 	</div>
 </article>
 </main>
