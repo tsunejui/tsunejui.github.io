@@ -6,7 +6,16 @@
     <description>Recent content in Categories on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 02 Nov 2023 15:20:48 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 12 Nov 2023 21:33:35 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AWS</title>
+      <link>https://tsunejui.github.io/categories/aws/</link>
+      <pubDate>Sun, 12 Nov 2023 21:33:35 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/aws/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>F5</title>
       <link>https://tsunejui.github.io/categories/f5/</link>

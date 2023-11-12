@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>AWS on Rex&#39;s Notes 技術筆記 </title>
+    <link>https://tsunejui.github.io/categories/aws/</link>
+    <description>Recent content in AWS on Rex&#39;s Notes 技術筆記 </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 12 Nov 2023 21:33:35 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/aws/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AWS Security Token Service (STS) Example</title>
+      <link>https://tsunejui.github.io/posts/aws-security-token-service-example/</link>
+      <pubDate>Sun, 12 Nov 2023 21:33:35 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/aws-security-token-service-example/</guid>
+      <description>環境描述 最近公司需要評估 AWS ROSA 在客戶端導入的可行性，因此需要研究其行為，根據 ROSA 的文件，建立 ROSA 的方式可以分成 with STS 及 without STS，由於之前沒有使用過 AWS STS ，此篇文章作為 STS API 的基本測試步驟：
+基本介紹 根據 AWS 官方介紹，AWS STS API 提供了 trusted users 取得 Temporary security credentials 的方法。在 AWS ROSA 上可以帶來一些好處：
+測試步驟 (請先設定好 ~/.aws/credentials) 建立 User Alice aws iam create-user --user-name Alice 建立 Example Policy 編輯 iam policy 檔案: vi example-policy.json
+{ &amp;#34;Version&amp;#34;: &amp;#34;2012-10-17&amp;#34;, &amp;#34;Statement&amp;#34;: [ { &amp;#34;Sid&amp;#34;: &amp;#34;VisualEditor0&amp;#34;, &amp;#34;Effect&amp;#34;: &amp;#34;Allow&amp;#34;, &amp;#34;Action&amp;#34;: [ &amp;#34;s3:ListStorageLensConfigurations&amp;#34;, &amp;#34;s3:ListAccessPointsForObjectLambda&amp;#34;, &amp;#34;s3:ListBucketMultipartUploads&amp;#34;, &amp;#34;s3:ListAllMyBuckets&amp;#34;, &amp;#34;s3:ListAccessPoints&amp;#34;, &amp;#34;s3:ListJobs&amp;#34;, &amp;#34;s3:ListBucketVersions&amp;#34;, &amp;#34;s3:ListBucket&amp;#34;, &amp;#34;s3:ListMultiRegionAccessPoints&amp;#34;, &amp;#34;s3:ListMultipartUploadParts&amp;#34; ], &amp;#34;Resource&amp;#34;: &amp;#34;*&amp;#34; } ] } 新增 iam policy:</description>
+    </item>
+    
+  </channel>
+</rss>

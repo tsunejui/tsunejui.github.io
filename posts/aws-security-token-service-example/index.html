@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>AWS Security Token Service (STS) Example - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">AWS Security Token Service (STS) Example</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h2 id="環境描述">環境描述</h2>
+<p>最近公司需要評估 AWS ROSA 在客戶端導入的可行性，因此需要研究其行為，根據 ROSA 的<a href="https://docs.openshift.com/rosa/rosa_getting_started/rosa-getting-started.html">文件</a>，建立 ROSA 的方式可以分成 <code>with STS</code> 及 <code>without STS</code>，由於之前沒有使用過 AWS STS ，此篇文章作為 STS API 的基本測試步驟：</p>
+<p><img src="/aws-security-token-service-example/aws-assume-role.png" alt="arch"></p>
+<h2 id="基本介紹">基本介紹</h2>
+<p>根據 AWS 官方<a href="https://docs.aws.amazon.com/STS/latest/APIReference/welcome.html">介紹</a>，AWS STS API 提供了 trusted users 取得 Temporary security credentials 的方法。在 AWS ROSA 上可以帶來一些好處：</p>
+<p><a href="https://www.youtube.com/watch?v=R1T0yk9l6Ys"><img src="https://img.youtube.com/vi/R1T0yk9l6Ys/0.jpg" alt="benefits"></a></p>
+<h2 id="測試步驟-請先設定好-awscredentials">測試步驟 (請先設定好 ~/.aws/credentials)</h2>
+<ol>
+<li>建立 User Alice</li>
+</ol>
+<pre tabindex="0"><code>aws iam create-user --user-name Alice
+</code></pre><ol start="2">
+<li>建立 Example Policy</li>
+</ol>
+<p>編輯 iam policy 檔案: <code>vi example-policy.json</code></p>
+<pre tabindex="0"><code>{
+	&#34;Version&#34;: &#34;2012-10-17&#34;,
+	&#34;Statement&#34;: [
+		{
+			&#34;Sid&#34;: &#34;VisualEditor0&#34;,
+			&#34;Effect&#34;: &#34;Allow&#34;,
+			&#34;Action&#34;: [
+				&#34;s3:ListStorageLensConfigurations&#34;,
+				&#34;s3:ListAccessPointsForObjectLambda&#34;,
+				&#34;s3:ListBucketMultipartUploads&#34;,
+				&#34;s3:ListAllMyBuckets&#34;,
+				&#34;s3:ListAccessPoints&#34;,
+				&#34;s3:ListJobs&#34;,
+				&#34;s3:ListBucketVersions&#34;,
+				&#34;s3:ListBucket&#34;,
+				&#34;s3:ListMultiRegionAccessPoints&#34;,
+				&#34;s3:ListMultipartUploadParts&#34;
+			],
+			&#34;Resource&#34;: &#34;*&#34;
+		}
+	]
+}
+</code></pre><p>新增 iam policy:</p>
+<pre tabindex="0"><code>aws iam create-policy --policy-name example-policy --policy-document file://example-policy.json
+</code></pre><ol start="3">
+<li>建立 Example Role</li>
+</ol>
+<p>編輯 iam role policy 檔案: <code>vi example-role-trust-policy.json</code></p>
+<blockquote>
+<p>請替換 <!-- raw HTML omitted --></p>
+<p>關於 Principal 的說明可以參考 <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html</a></p>
+<p>以下內容將允許 Alice 帳號使用 <code>sts:AssumeRole</code> 的功能</p>
+</blockquote>
+<pre tabindex="0"><code>{
+  &#34;Version&#34;: &#34;2012-10-17&#34;,
+  &#34;Statement&#34;: {
+    &#34;Effect&#34;: &#34;Allow&#34;,
+    &#34;Principal&#34;: {
+      &#34;AWS&#34;: &#34;arn:aws:iam::&lt;account-id&gt;:user/Alice&#34;
+    },
+    &#34;Action&#34;: &#34;sts:AssumeRole&#34;
+  }
+}
+</code></pre><p>新增 iam role:</p>
+<pre tabindex="0"><code>aws iam create-role --role-name example-role --assume-role-policy-document file://example-role-trust-policy.json
+</code></pre><ol start="4">
+<li>Attach Role Policy</li>
+</ol>
+<blockquote>
+<p>請替換 <!-- raw HTML omitted --></p>
+</blockquote>
+<pre tabindex="0"><code>aws iam attach-role-policy --role-name example-role --policy-arn arn:aws:iam::&lt;account-id&gt;:policy/example-policy
+</code></pre><p>可以透過以下指令進行驗證:</p>
+<pre tabindex="0"><code>aws iam list-attached-role-policies --role-name example-role
+</code></pre><ol start="5">
+<li>取得 Alice 的 <code>Access Key ID</code> 以及 <code>Access Secret Access Key</code>:</li>
+</ol>
+<pre tabindex="0"><code>aws iam create-access-key --user-name Alice
+</code></pre><p>設定 credentials: <code>vi ~/.aws/credentials</code></p>
+<blockquote>
+<p>請替換掉 <code>xxx</code></p>
+</blockquote>
+<pre tabindex="0"><code>[Alice]
+aws_access_key_id = xxx
+aws_secret_access_key = xxx
+</code></pre><ol start="6">
+<li>透過 Alice 的 Profile 取得 S3 Buckets (會失敗)</li>
+</ol>
+<pre tabindex="0"><code>aws s3 ls --profile Alice
+</code></pre><ol start="7">
+<li>使用 Alice 的 Profile 呼叫 STS API，並且取得臨時的 Token</li>
+</ol>
+<blockquote>
+<p>請替換 <!-- raw HTML omitted --></p>
+</blockquote>
+<pre tabindex="0"><code>aws sts assume-role --role-arn arn:aws:iam::&lt;account-id&gt;:role/example-role --role-session-name Alice-Session --profile Alice
+</code></pre><p>設定 credentials: <code>vi ~/.aws/credentials</code>設定</p>
+<blockquote>
+<p>請替換掉 <code>xxx</code></p>
+</blockquote>
+<pre tabindex="0"><code>[Alice-STS]
+aws_access_key_id = xxx
+aws_secret_access_key = xxx
+aws_session_token = xxx
+</code></pre><ol start="8">
+<li>透過 Alice-STS 的 Profile 取得 S3 Bucket (會成功)</li>
+</ol>
+<pre tabindex="0"><code>aws s3 ls --profile Alice-STS
+</code></pre><ol start="9">
+<li>可以透過 <code>sts get-caller-identity</code> 查看帳戶資訊:</li>
+</ol>
+<pre tabindex="0"><code>aws sts get-caller-identity --profile Alice-STS
+</code></pre><h2 id="結論">結論</h2>
+<p>透過以上結論可以了解 STS 的運作原理，而 AWS ROSA 的原理則是透過 <code>rosa</code> 指令新增許多 Role，並且透過 <code>710019948333</code> 帳號使用 STS API 索取權限後，進行 Openshift 的部署:</p>
+<p><img src="/aws-security-token-service-example/description.png" alt="description"></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html">https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html</a></li>
+<li><a href="https://cloud.redhat.com/learning/learn:red-hat-openshift-service-aws-rosa-explained/resource/resources:what-aws-security-token-service-sts">https://cloud.redhat.com/learning/learn:red-hat-openshift-service-aws-rosa-explained/resource/resources:what-aws-security-token-service-sts</a></li>
+<li><a href="https://access.redhat.com/documentation/en-us/red_hat_openshift_service_on_aws/4/html/prepare_your_environment/rosa-sts-ocm-role">https://access.redhat.com/documentation/en-us/red_hat_openshift_service_on_aws/4/html/prepare_your_environment/rosa-sts-ocm-role</a></li>
+<li><a href="https://repost.aws/knowledge-center/iam-assume-role-cli">https://repost.aws/knowledge-center/iam-assume-role-cli</a></li>
+</ul>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tip/" rel="tag">Tip</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

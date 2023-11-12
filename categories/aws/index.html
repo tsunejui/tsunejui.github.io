@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Tags - Rex&#39;s Notes 技術筆記 </title>
+	<title>AWS - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 
 	<link rel="stylesheet" href="/css/style.css">
 	
-	<link rel="alternate" type="application/rss+xml" href="/tags/index.xml" title="Rex's Notes 技術筆記 ">
+	<link rel="alternate" type="application/rss+xml" href="/categories/aws/index.xml" title="Rex's Notes 技術筆記 ">
 
 	<link rel="shortcut icon" href="/favicon.ico">
 		
@@ -55,45 +55,22 @@
 			
 <main class="main list" role="main">
 	<header class="main__header">
-		<h1 class="main__title">Tags</h1>
+		<h1 class="main__title">AWS</h1>
 	</header><article class="list__item post">
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
-			<a href="/tags/tip/" rel="bookmark">
-			Tip
+			<a href="/posts/aws-security-token-service-example/" rel="bookmark">
+			AWS Security Token Service (STS) Example
 			</a>
 		</h2>
 		
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/tags/note/" rel="bookmark">
-			Note
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/tags/debug/" rel="bookmark">
-			Debug
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		
+		環境描述 最近公司需要評估 AWS ROSA 在客戶端導入的可行性，因此需要研究其行為，根據 ROSA 的文件，建立 ROSA 的方式可以分成 with STS 及 without STS，由於之前沒有使用過 AWS STS ，此篇文章作為 STS API 的基本測試步驟：
+基本介紹 根據 AWS 官方介紹，AWS STS API 提供了 trusted users 取得 Temporary security credentials 的方法。在 AWS ROSA 上可以帶來一些好處：
+測試步驟 (請先設定好 ~/.aws/credentials) 建立 User Alice aws iam create-user --user-name Alice 建立 Example Policy 編輯 iam policy 檔案: vi example-policy.json
+{ &#34;Version&#34;: &#34;2012-10-17&#34;, &#34;Statement&#34;: [ { &#34;Sid&#34;: &#34;VisualEditor0&#34;, &#34;Effect&#34;: &#34;Allow&#34;, &#34;Action&#34;: [ &#34;s3:ListStorageLensConfigurations&#34;, &#34;s3:ListAccessPointsForObjectLambda&#34;, &#34;s3:ListBucketMultipartUploads&#34;, &#34;s3:ListAllMyBuckets&#34;, &#34;s3:ListAccessPoints&#34;, &#34;s3:ListJobs&#34;, &#34;s3:ListBucketVersions&#34;, &#34;s3:ListBucket&#34;, &#34;s3:ListMultiRegionAccessPoints&#34;, &#34;s3:ListMultipartUploadParts&#34; ], &#34;Resource&#34;: &#34;*&#34; } ] } 新增 iam policy:
 	</div>
 </article>
 </main>
