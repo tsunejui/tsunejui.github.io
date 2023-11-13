@@ -75,7 +75,8 @@ https://github.com/openshift/cluster-monitoring-operator/pull/330/commits/534536
 https://github.com/openshift/cluster-monitoring-operator/blob/master/Documentation/api.md#prometheusk8sconfig
 目前我找到這個 issue，在 2020 年 8 月還不支援
 https://github.com/openshift/cluster-monitoring-operator/issues/896
-解決方法 現在這是我看過最暴力的做法，先透過修改 clusterversion/version ，將 openshift-monitoring 設定為 unmanaged，之後再 scale down 所有 deployment ，親測有效，但很暴力: https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b
+解決方法 現在這是我看過最暴力的做法，先透過修改 clusterversion/version ，將 openshift-monitoring 設定為 unmanaged，之後再 scale down 所有 deployment ，親測有效，但很暴力:
+https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b
 oc patch clusterversion/version --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: overrides: - group: apps/v1 kind: Deployment name: cluster-monitoring-operator namespace: openshift-monitoring unmanaged: true EOF )&#34; oc patch prometheus/k8s -n openshift-monitoring --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: replicas: 0 EOF )&#34; oc patch alertmanagers/main -n openshift-monitoring --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: replicas: 0 EOF )&#34; oc scale --replicas=0 deploy/cluster-monitoring-operator -n openshift-monitoring oc scale --replicas=0 deployment.
 	</div>
 </article><article class="list__item post">

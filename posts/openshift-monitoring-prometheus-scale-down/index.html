@@ -77,8 +77,10 @@
 <p><a href="https://github.com/openshift/cluster-monitoring-operator/issues/896">https://github.com/openshift/cluster-monitoring-operator/issues/896</a></p>
 </blockquote>
 <h2 id="解決方法">解決方法</h2>
-<p>現在這是我看過最暴力的做法，先透過修改 <code>clusterversion/version</code> ，將 <code>openshift-monitoring</code> 設定為 <code>unmanaged</code>，之後再 scale down 所有 deployment ，親測有效，但很暴力:
-<a href="https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b">https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b</a></p>
+<p>現在這是我看過最暴力的做法，先透過修改 <code>clusterversion/version</code> ，將 <code>openshift-monitoring</code> 設定為 <code>unmanaged</code>，之後再 scale down 所有 deployment ，親測有效，但很暴力:</p>
+<blockquote>
+<p><a href="https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b">https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b</a></p>
+</blockquote>
 <pre tabindex="0"><code>oc patch clusterversion/version --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF
 spec:
   overrides:
