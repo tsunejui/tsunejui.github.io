@@ -17,6 +17,24 @@
     </item>
     
     <item>
+      <title>Openshift</title>
+      <link>https://tsunejui.github.io/categories/openshift/</link>
+      <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/openshift/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SRE</title>
+      <link>https://tsunejui.github.io/categories/sre/</link>
+      <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/sre/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>F5</title>
       <link>https://tsunejui.github.io/categories/f5/</link>
       <pubDate>Thu, 02 Nov 2023 15:20:48 +0800</pubDate>
@@ -31,15 +49,6 @@
       <pubDate>Thu, 02 Nov 2023 00:13:03 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/categories/devops/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Openshift</title>
-      <link>https://tsunejui.github.io/categories/openshift/</link>
-      <pubDate>Thu, 02 Nov 2023 00:13:03 +0800</pubDate>
-      
-      <guid>https://tsunejui.github.io/categories/openshift/</guid>
       <description></description>
     </item>
     
@@ -67,15 +76,6 @@
       <pubDate>Wed, 28 Jun 2023 10:43:24 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/categories/kafka/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>SRE</title>
-      <link>https://tsunejui.github.io/categories/sre/</link>
-      <pubDate>Fri, 16 Jun 2023 09:42:09 +0800</pubDate>
-      
-      <guid>https://tsunejui.github.io/categories/sre/</guid>
       <description></description>
     </item>
     

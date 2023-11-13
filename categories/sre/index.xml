@@ -6,7 +6,22 @@
     <description>Recent content in SRE on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 16 Jun 2023 09:42:09 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/sre/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 07 Nov 2023 22:29:20 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/sre/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scale Down the Prometheus on Openshift Monitoring</title>
+      <link>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</link>
+      <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</guid>
+      <description>環境描述 客戶希望可以修改 Openshift 4.12 上 Prometheus 的 Replicas 數量為 0，希望我可以研究。
+研究結果 目前 Openshift 4.12 沒有提供修改 Prometheus 數量的方法。 原本以為修改 Prometheus CRD 就可以更改 Replicas 的數量，但是修改後過沒多久就會被 Operator 改回來。以下是我找到的資料:
+曾經在3.11可以調整replicas的設定，但後來消失了: https://github.com/openshift/cluster-monitoring-operator/pull/330/commits/53453691c9d47f5c621a9d538aba12431541a2c8
+我在 cluster-monitoring-operator 的設定上也沒找到參數可以調整，測試 replicas 也無法: https://github.com/openshift/cluster-monitoring-operator/blob/master/Documentation/api.md#prometheusk8sconfig
+目前我找到這個 issue，在 2020 年 8 月還不支援 https://github.com/openshift/cluster-monitoring-operator/issues/896
+解決方法 現在這是我看過最暴力的做法，先透過修改 clusterversion/version ，將 openshift-monitoring 設定為 unmanaged，之後再 scale down 所有 deployment ，親測有效，但很暴力: https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b
+oc patch clusterversion/version --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat &amp;lt;&amp;lt;- EOF spec: overrides: - group: apps/v1 kind: Deployment name: cluster-monitoring-operator namespace: openshift-monitoring unmanaged: true EOF )&amp;#34; oc patch prometheus/k8s -n openshift-monitoring --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat &amp;lt;&amp;lt;- EOF spec: replicas: 0 EOF )&amp;#34; oc patch alertmanagers/main -n openshift-monitoring --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat &amp;lt;&amp;lt;- EOF spec: replicas: 0 EOF )&amp;#34; oc scale --replicas=0 deploy/cluster-monitoring-operator -n openshift-monitoring oc scale --replicas=0 deployment.</description>
+    </item>
+    
     <item>
       <title>Node Exporter</title>
       <link>https://tsunejui.github.io/posts/node-exporter/</link>

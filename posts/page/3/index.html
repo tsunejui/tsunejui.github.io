@@ -60,6 +60,24 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/kubernetes-install/" rel="bookmark">
+			Kubernetes 安裝筆記
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		安裝 Kubernetes 事前準備 Preparation Before you begin
+Rocky Linux ISO 載點: link
+Kubernetes 安裝建議高於 2 core CPU 及 2 GB or more RAM: link
+準備 5 台 node, OS 選擇 Rocky Linux 8 每台 node 需要 4 core CPU &amp; 8 GB memory (非必要) 6 組 IP (node * 5 + VIP * 1) Kubernetes Interface
+interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
+建議登入每台主機, 並使用 hostnamectl set-hostname xxx 修改 hostname
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/aboutme/" rel="bookmark">
 			About Me
 			</a>
@@ -95,6 +113,7 @@ I&rsquo;m Rex, a software engineer. I am passionate about technology and keep co
 	<div class="widget__content">
 		<ul class="widget__list">
 			<li class="widget__item"><a class="widget__link" href="/posts/aws-security-token-service-example/">AWS Security Token Service (STS) Example</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/openshift-monitoring-prometheus-scale-down/">Scale Down the Prometheus on Openshift Monitoring</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/f5-vip-setting/">F5 VIP Setting</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/openshift-gitops-dex-expiration-time/">Dex Expiration Time on Openshift Gitops</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/node-clock-not-synchronising/">NodeClockNotSynchronising alert troubleshooting in Openshift 4</a></li>
@@ -103,7 +122,6 @@ I&rsquo;m Rex, a software engineer. I am passionate about technology and keep co
 			<li class="widget__item"><a class="widget__link" href="/posts/samba-install/">Samba 安裝</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/kafka-kraft-install/">Kafka 安裝 - Kraft Mode</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/node-exporter/">Node Exporter</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/ssh-tunnel/">SSH Tunneling</a></li>
 		</ul>
 	</div>
 </div>

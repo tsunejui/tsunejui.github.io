@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Scale Down the Prometheus on Openshift Monitoring - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Scale Down the Prometheus on Openshift Monitoring</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h2 id="環境描述">環境描述</h2>
+<p>客戶希望可以修改 Openshift 4.12 上 Prometheus 的 Replicas 數量為 0，希望我可以研究。</p>
+<h2 id="研究結果">研究結果</h2>
+<h3 id="目前-openshift-412-沒有提供修改-prometheus-數量的方法">目前 Openshift 4.12 沒有提供修改 Prometheus 數量的方法。</h3>
+<p>原本以為修改 Prometheus CRD 就可以更改 Replicas 的數量，但是修改後過沒多久就會被 Operator 改回來。以下是我找到的資料:</p>
+<p>曾經在3.11可以調整replicas的設定，但後來消失了:
+<a href="https://github.com/openshift/cluster-monitoring-operator/pull/330/commits/53453691c9d47f5c621a9d538aba12431541a2c8">https://github.com/openshift/cluster-monitoring-operator/pull/330/commits/53453691c9d47f5c621a9d538aba12431541a2c8</a></p>
+<p>我在 cluster-monitoring-operator 的設定上也沒找到參數可以調整，測試 replicas 也無法:
+<a href="https://github.com/openshift/cluster-monitoring-operator/blob/master/Documentation/api.md#prometheusk8sconfig">https://github.com/openshift/cluster-monitoring-operator/blob/master/Documentation/api.md#prometheusk8sconfig</a></p>
+<p>目前我找到這個 issue，在 2020 年 8 月還不支援
+<a href="https://github.com/openshift/cluster-monitoring-operator/issues/896">https://github.com/openshift/cluster-monitoring-operator/issues/896</a></p>
+<h2 id="解決方法">解決方法</h2>
+<p>現在這是我看過最暴力的做法，先透過修改 <code>clusterversion/version</code> ，將 <code>openshift-monitoring</code> 設定為 <code>unmanaged</code>，之後再 scale down 所有 deployment ，親測有效，但很暴力:
+<a href="https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b">https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b</a></p>
+<pre tabindex="0"><code>oc patch clusterversion/version --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF
+spec:
+  overrides:
+  - group: apps/v1
+    kind: Deployment
+    name: cluster-monitoring-operator
+    namespace: openshift-monitoring
+    unmanaged: true
+EOF
+)&#34;
+
+oc patch prometheus/k8s -n openshift-monitoring --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF
+spec:
+  replicas: 0
+EOF
+)&#34;
+
+oc patch alertmanagers/main -n openshift-monitoring --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF
+spec:
+  replicas: 0
+EOF
+)&#34;
+
+oc scale --replicas=0 deploy/cluster-monitoring-operator -n openshift-monitoring
+oc scale --replicas=0 deployment.apps/prometheus-adapter -n openshift-monitoring
+oc scale --replicas=0 deployment.apps/thanos-querier -n openshift-monitoring
+oc scale --replicas=0 deployment.apps/grafana -n openshift-monitoring
+oc scale --replicas=0 deployment.apps/kube-state-metrics  -n openshift-monitoring
+oc scale --replicas=0 deployment.apps/openshift-state-metrics  -n openshift-monitoring
+oc scale --replicas=0 deployment.apps/prometheus-adapter -n openshift-monitoring
+oc scale --replicas=0 deployment.apps/telemeter-client   -n openshift-monitoring
+oc scale --replicas=0 deployment.apps/prometheus-operator   -n openshift-monitoring
+oc scale --replicas=0 statefulset.apps/alertmanager-main -n openshift-monitoring
+oc delete DaemonSet node-exporter -n openshift-monitoring
+</code></pre><h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://github.com/openshift/cluster-monitoring-operator">https://github.com/openshift/cluster-monitoring-operator</a></li>
+<li><a href="https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/shards-and-replicas.md">https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/shards-and-replicas.md</a></li>
+</ul>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tip/" rel="tag">Tip</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
