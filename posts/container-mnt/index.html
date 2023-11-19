@@ -63,25 +63,25 @@
 <p>Rocky Linux 8.7</p>
 <p><img src="/rocky-linux-gui/os-release.png" alt="os-release"></p>
 <h3 id="環境描述">環境描述</h3>
-<p>維護 kubernetes 時，常常需要透過一些 CLI tool 維護 container，如果 image 本身不提供這些 tool，就會比較麻煩，這時候我們可以透過 <code>kubectl cp</code> 將我們需要維護的 CLI tool 複製到 container 內，但在官方的說明內有指出，使用 <code>kubectl cp</code> 會需要容器內有安裝 <code>tar</code> 指令，否則會失敗:</p>
+<p>在 kubernetes 上常常需要透過一些 CLI tool 幫助維護 container，如果 image 本身不提供這些 tool，執行上就會比較麻煩。通常可以透過 <code>kubectl cp</code> 將 CLI tool 複製到 container 內解決問題，需要注意的是，在官方的文件上有指出，如果使用 <code>kubectl cp</code> 則會需要容器內已安裝 <code>tar</code> 指令，否則會失敗:</p>
 <blockquote>
 <p><a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">https://kubernetes.io/docs/reference/kubectl/cheatsheet/</a></p>
 </blockquote>
 <p><img src="/container-mnt/top.png" alt="top"></p>
-<p>我以 <a href="https://github.com/tsunejui/simple-spring-boot-app">simple-spring-boot-app</a> 這個專案為例，他的 base image 是 google 的 <a href="https://github.com/GoogleContainerTools/distroless">distroless</a>，在這個 image 內，除了 <code>java</code> 外，並沒有其他的 command，這時候執行 <code>kubectl cp</code>，就會發生錯誤:</p>
+<p>以 <a href="https://github.com/tsunejui/simple-spring-boot-app">simple-spring-boot-app</a> 專案為例，base image 是 google 的 <a href="https://github.com/GoogleContainerTools/distroless">distroless</a>，這個 image 內除了 <code>java</code> 外，並沒有其他的 command，在執行 <code>kubectl cp</code> 時會發生錯誤:</p>
 <blockquote>
 <p>simple-spring-boot-app: <a href="https://github.com/tsunejui/simple-spring-boot-app">https://github.com/tsunejui/simple-spring-boot-app</a></p>
 <p>distroless: <a href="https://github.com/GoogleContainerTools/distroless">https://github.com/GoogleContainerTools/distroless</a></p>
 </blockquote>
 <p><img src="/container-mnt/cp-error.png" alt="cp-error"></p>
-<p>這時候，我們可能需要到 node 上，透過 container 的管理工具所提供的方法 (<code>cp</code> 指令)，將檔案複製到 container 內，一些工具如下:</p>
+<p>此時需要到 node 上，透過 container 的管理工具所提供的方法 (<code>cp</code> 指令)，將檔案複製到 container 內，一些工具如下:</p>
 <ul>
 <li>Docker: <code>docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-</code></li>
 <li>Podman: <code>podman cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-</code></li>
 <li>cri-tools: <code>crictl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-</code></li>
 <li>nerdctl: <code>nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-</code></li>
 </ul>
-<p>如果 node 上 container 的管理工具並沒有提供 <code>cp</code> 的功能，或者沒有網路安裝 container 的管理工具時，我們也找到該 process (也就是 container) 所使用 <code>mnt namespace</code>，並查看 <code>/</code> 的 mount point，直接將 CLI tool 放置於指定的目錄即可。</p>
+<p>假設 node 上 container 的管理工具並沒有提供 <code>cp</code> 的功能，或者沒有安裝 container 的管理工具時，可以透過以下測試步驟，找到 process (也就是 container) 所使用的 <code>mnt namespace</code> 的 <code>mountinfo</code>，並查看對應的 mount point，直接將 CLI tool 放置於指定的目錄即可。</p>
 <h2 id="基本介紹">基本介紹</h2>
 <ol>
 <li>準備執行檔</li>

@@ -14,13 +14,13 @@
       
       <guid>https://tsunejui.github.io/posts/container-mnt/</guid>
       <description>使用環境 Rocky Linux 8.7
-環境描述 維護 kubernetes 時，常常需要透過一些 CLI tool 維護 container，如果 image 本身不提供這些 tool，就會比較麻煩，這時候我們可以透過 kubectl cp 將我們需要維護的 CLI tool 複製到 container 內，但在官方的說明內有指出，使用 kubectl cp 會需要容器內有安裝 tar 指令，否則會失敗:
+環境描述 在 kubernetes 上常常需要透過一些 CLI tool 幫助維護 container，如果 image 本身不提供這些 tool，執行上就會比較麻煩。通常可以透過 kubectl cp 將 CLI tool 複製到 container 內解決問題，需要注意的是，在官方的文件上有指出，如果使用 kubectl cp 則會需要容器內已安裝 tar 指令，否則會失敗:
 https://kubernetes.io/docs/reference/kubectl/cheatsheet/
-我以 simple-spring-boot-app 這個專案為例，他的 base image 是 google 的 distroless，在這個 image 內，除了 java 外，並沒有其他的 command，這時候執行 kubectl cp，就會發生錯誤:
+以 simple-spring-boot-app 專案為例，base image 是 google 的 distroless，這個 image 內除了 java 外，並沒有其他的 command，在執行 kubectl cp 時會發生錯誤:
 simple-spring-boot-app: https://github.com/tsunejui/simple-spring-boot-app
 distroless: https://github.com/GoogleContainerTools/distroless
-這時候，我們可能需要到 node 上，透過 container 的管理工具所提供的方法 (cp 指令)，將檔案複製到 container 內，一些工具如下:
-Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- cri-tools: crictl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- nerdctl: nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- 如果 node 上 container 的管理工具並沒有提供 cp 的功能，或者沒有網路安裝 container 的管理工具時，我們也找到該 process (也就是 container) 所使用 mnt namespace，並查看 / 的 mount point，直接將 CLI tool 放置於指定的目錄即可。</description>
+此時需要到 node 上，透過 container 的管理工具所提供的方法 (cp 指令)，將檔案複製到 container 內，一些工具如下:
+Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- cri-tools: crictl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- nerdctl: nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- 假設 node 上 container 的管理工具並沒有提供 cp 的功能，或者沒有安裝 container 的管理工具時，可以透過以下測試步驟，找到 process (也就是 container) 所使用的 mnt namespace 的 mountinfo，並查看對應的 mount point，直接將 CLI tool 放置於指定的目錄即可。</description>
     </item>
     
     <item>
