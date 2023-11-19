@@ -86,7 +86,7 @@
 <ol>
 <li>準備執行檔</li>
 </ol>
-<p>本次實驗將直接搬移檔案到 process 相同 mnt namespace 的 mount point 內指定的目錄，並且執行，首先我們先準備一個執行檔，可以透過 C 語言撰寫一個簡單的 hello world 工具: <code>vi hello.c</code></p>
+<p>本次實驗將直接搬移檔案到與 process 相同 mnt namespace 的 mount point 內指定的目錄，並且執行。首先我們先準備一個執行檔，可以透過 C 語言撰寫一個簡單的 hello world 工具: <code>vi hello.c</code></p>
 <pre tabindex="0"><code>#include &lt;stdio.h&gt;
 int main() {
    printf(&#34;Hello, World!&#34;);
