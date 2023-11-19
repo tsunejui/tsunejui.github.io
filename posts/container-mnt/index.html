@@ -82,7 +82,7 @@
 <li>nerdctl: <code>nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-</code></li>
 </ul>
 <p>假設 node 上 container 的管理工具並沒有提供 <code>cp</code> 的功能，或者沒有安裝 container 的管理工具時，可以透過以下測試步驟，找到 process (也就是 container) 所使用的 <code>mnt namespace</code> 的 <code>mountinfo</code>，並查看對應的 mount point，直接將 CLI tool 放置於指定的目錄即可。</p>
-<h2 id="基本介紹">基本介紹</h2>
+<h2 id="測試步驟">測試步驟</h2>
 <ol>
 <li>建立 POD</li>
 </ol>
