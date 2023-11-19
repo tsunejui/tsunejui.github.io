@@ -60,6 +60,26 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/container-mnt/" rel="bookmark">
+			Container Note - Mount Namespace
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		使用環境 Rocky Linux 8.7
+環境描述 維護 kubernetes 時，常常需要透過一些 CLI tool 維護 container，如果 image 本身不提供這些 tool，就會比較麻煩，這時候我們可以透過 kubectl cp 將我們需要為戶的 CLI tool 複製到 container 內，但在官方的說明內有指出，使用 kubectl cp 會需要容器內有安裝 tar 指令，否則會失敗:
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+我以 simple-spring-boot-app 這個專案為例，他的 base image 是 google 的 distroless，在這個 image 內，除了 java 外，並沒有其他的 command，這時候執行 kubectl cp，就會發生錯誤:
+simple-spring-boot-app: https://github.com/tsunejui/simple-spring-boot-app
+distroless: https://github.com/GoogleContainerTools/distroless
+這時候，我們可能需要到 node 上，透過 container 的管理工具所提供的方法 (cp 指令)，將檔案複製到 container 內，一些工具如下:
+Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- cri-tools: crictl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- nerdctl: nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- 如果 node 上 container 的管理工具並沒有提供 cp 的功能，或者沒有網路安裝 container 的管理工具時，我們也找到該 process (也就是 container) 所使用 mnt namespace，並查看 / 的 mount point，直接將 CLI tool 放置於指定的目錄即可。
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/rhel-automation-platform-install/" rel="bookmark">
 			RHEL Ansible Automation Platform (AAP) Installation
 			</a>
@@ -234,28 +254,13 @@ firewall-cmd --permanent --add-port=3389/tcp &amp;&amp; firewall-cmd --reload �
 連線成功:
 Reference https://linux.how2shout.com/how-to-connect-rocky-linux-8-via-windows-rdp-protocol/ 
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/rocky-install-gui/" rel="bookmark">
-			Install GUI on Rocky Linux 8.7
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		使用環境 Rocky Linux 8.7
-YUN packages 更新 更新安裝包 Update Your Server
-yum update 檢查 Package Groups 我們需要使用 Server with GUI, 請使用 yum group list檢查是否在列表內:
-yum group list 安裝 Server with GUI 執行下面的指令:
-yum groupinstall &#34;Server with GUI&#34; 設定開機進入圖形介面 更改 /etc/systemd/system/default.target 指向的位置：
-systemctl set-default graphical 重開機 reboot 結果 成功啟動圖形介面:
-Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-linux-8/ 
-	</div>
 </article>
 </main>
 
+<div class="pagination">
+	<span class="pagination__item pagination__item--current">1/2</span>
+	<a class="pagination__item pagination__item--next btn" href="/categories/linux/page/2/">»</a>
+</div>
 
 			</div>
 			
@@ -272,6 +277,7 @@ Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-l
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/container-mnt/">Container Note - Mount Namespace</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/aws-security-token-service-example/">AWS Security Token Service (STS) Example</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/openshift-monitoring-prometheus-scale-down/">Scale Down the Prometheus on Openshift Monitoring</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/f5-vip-setting/">F5 VIP Setting</a></li>
@@ -281,7 +287,6 @@ Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-l
 			<li class="widget__item"><a class="widget__link" href="/posts/awx-install/">AWX Installation (Container)</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/samba-install/">Samba 安裝</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/kafka-kraft-install/">Kafka 安裝 - Kraft Mode</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/node-exporter/">Node Exporter</a></li>
 		</ul>
 	</div>
 </div>
@@ -291,6 +296,8 @@ Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-l
 		<ul class="widget__list">
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/aws/">AWS</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/container/">Container</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/devops/">Devops</a></li>
 			<li class="widget__item">

@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>F5 - Rex&#39;s Notes 技術筆記 </title>
+	<title>Linux - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 
 	<link rel="stylesheet" href="/css/style.css">
 	
-	<link rel="alternate" type="application/rss+xml" href="/categories/f5/index.xml" title="Rex's Notes 技術筆記 ">
+	<link rel="alternate" type="application/rss+xml" href="/categories/linux/index.xml" title="Rex's Notes 技術筆記 ">
 
 	<link rel="shortcut icon" href="/favicon.ico">
 		
@@ -55,30 +55,33 @@
 			
 <main class="main list" role="main">
 	<header class="main__header">
-		<h1 class="main__title">F5</h1>
+		<h1 class="main__title">Linux</h1>
 	</header><article class="list__item post">
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
-			<a href="/posts/f5-vip-setting/" rel="bookmark">
-			F5 VIP Setting
+			<a href="/posts/rocky-install-gui/" rel="bookmark">
+			Install GUI on Rocky Linux 8.7
 			</a>
 		</h2>
 		
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 客戶環境需要在 F5 設定 VIP，並分配流量到不同的主機，我需要在公司 Lab 上模擬，由於對 F5 的操作不熟悉，因此撰寫此篇文章作為紀錄 VIP 設定方法。
-請注意，此篇文章是簡易的設定紀錄，我並非 F5 的專業人員，如果錯誤請見諒
-F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
-設定 Name 及 Health Monitors 的方式 (下圖為新增後的編輯畫面):
-到 Local Traffic / Virtual Servers / Virtual Servers List 頁面上新增 Virtual Server:
-到 Properties 頁面上設定 General Properties 及憑證相關資料 (下圖為新增後的編輯畫面):
-到 Resource 頁面上設定 Load Balancing (下圖為新增後的編輯畫面):
-結果 設定完成後便立即生效，在 Local Traffic / Pools : Pool List / &lt;pool-name&gt; 上可以看到 Pool 內的 members 狀況:
+		使用環境 Rocky Linux 8.7
+YUN packages 更新 更新安裝包 Update Your Server
+yum update 檢查 Package Groups 我們需要使用 Server with GUI, 請使用 yum group list檢查是否在列表內:
+yum group list 安裝 Server with GUI 執行下面的指令:
+yum groupinstall &#34;Server with GUI&#34; 設定開機進入圖形介面 更改 /etc/systemd/system/default.target 指向的位置：
+systemctl set-default graphical 重開機 reboot 結果 成功啟動圖形介面:
+Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-linux-8/ 
 	</div>
 </article>
 </main>
 
+<div class="pagination">
+	<a class="pagination__item pagination__item--prev btn" href="/categories/linux/">«</a>
+	<span class="pagination__item pagination__item--current">2/2</span>
+</div>
 
 			</div>
 			

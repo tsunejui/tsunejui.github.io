@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>F5 - Rex&#39;s Notes 技術筆記 </title>
+	<title>Container - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 
 	<link rel="stylesheet" href="/css/style.css">
 	
-	<link rel="alternate" type="application/rss+xml" href="/categories/f5/index.xml" title="Rex's Notes 技術筆記 ">
+	<link rel="alternate" type="application/rss+xml" href="/categories/container/index.xml" title="Rex's Notes 技術筆記 ">
 
 	<link rel="shortcut icon" href="/favicon.ico">
 		
@@ -55,26 +55,26 @@
 			
 <main class="main list" role="main">
 	<header class="main__header">
-		<h1 class="main__title">F5</h1>
+		<h1 class="main__title">Container</h1>
 	</header><article class="list__item post">
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
-			<a href="/posts/f5-vip-setting/" rel="bookmark">
-			F5 VIP Setting
+			<a href="/posts/container-mnt/" rel="bookmark">
+			Container Note - Mount Namespace
 			</a>
 		</h2>
 		
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 客戶環境需要在 F5 設定 VIP，並分配流量到不同的主機，我需要在公司 Lab 上模擬，由於對 F5 的操作不熟悉，因此撰寫此篇文章作為紀錄 VIP 設定方法。
-請注意，此篇文章是簡易的設定紀錄，我並非 F5 的專業人員，如果錯誤請見諒
-F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
-設定 Name 及 Health Monitors 的方式 (下圖為新增後的編輯畫面):
-到 Local Traffic / Virtual Servers / Virtual Servers List 頁面上新增 Virtual Server:
-到 Properties 頁面上設定 General Properties 及憑證相關資料 (下圖為新增後的編輯畫面):
-到 Resource 頁面上設定 Load Balancing (下圖為新增後的編輯畫面):
-結果 設定完成後便立即生效，在 Local Traffic / Pools : Pool List / &lt;pool-name&gt; 上可以看到 Pool 內的 members 狀況:
+		使用環境 Rocky Linux 8.7
+環境描述 維護 kubernetes 時，常常需要透過一些 CLI tool 維護 container，如果 image 本身不提供這些 tool，就會比較麻煩，這時候我們可以透過 kubectl cp 將我們需要為戶的 CLI tool 複製到 container 內，但在官方的說明內有指出，使用 kubectl cp 會需要容器內有安裝 tar 指令，否則會失敗:
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+我以 simple-spring-boot-app 這個專案為例，他的 base image 是 google 的 distroless，在這個 image 內，除了 java 外，並沒有其他的 command，這時候執行 kubectl cp，就會發生錯誤:
+simple-spring-boot-app: https://github.com/tsunejui/simple-spring-boot-app
+distroless: https://github.com/GoogleContainerTools/distroless
+這時候，我們可能需要到 node 上，透過 container 的管理工具所提供的方法 (cp 指令)，將檔案複製到 container 內，一些工具如下:
+Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- cri-tools: crictl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- nerdctl: nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- 如果 node 上 container 的管理工具並沒有提供 cp 的功能，或者沒有網路安裝 container 的管理工具時，我們也找到該 process (也就是 container) 所使用 mnt namespace，並查看 / 的 mount point，直接將 CLI tool 放置於指定的目錄即可。
 	</div>
 </article>
 </main>

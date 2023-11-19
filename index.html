@@ -59,6 +59,26 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/container-mnt/" rel="bookmark">
+			Container Note - Mount Namespace
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		使用環境 Rocky Linux 8.7
+環境描述 維護 kubernetes 時，常常需要透過一些 CLI tool 維護 container，如果 image 本身不提供這些 tool，就會比較麻煩，這時候我們可以透過 kubectl cp 將我們需要為戶的 CLI tool 複製到 container 內，但在官方的說明內有指出，使用 kubectl cp 會需要容器內有安裝 tar 指令，否則會失敗:
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+我以 simple-spring-boot-app 這個專案為例，他的 base image 是 google 的 distroless，在這個 image 內，除了 java 外，並沒有其他的 command，這時候執行 kubectl cp，就會發生錯誤:
+simple-spring-boot-app: https://github.com/tsunejui/simple-spring-boot-app
+distroless: https://github.com/GoogleContainerTools/distroless
+這時候，我們可能需要到 node 上，透過 container 的管理工具所提供的方法 (cp 指令)，將檔案複製到 container 內，一些工具如下:
+Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- cri-tools: crictl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- nerdctl: nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- 如果 node 上 container 的管理工具並沒有提供 cp 的功能，或者沒有網路安裝 container 的管理工具時，我們也找到該 process (也就是 container) 所使用 mnt namespace，並查看 / 的 mount point，直接將 CLI tool 放置於指定的目錄即可。
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/aws-security-token-service-example/" rel="bookmark">
 			AWS Security Token Service (STS) Example
 			</a>
@@ -228,30 +248,6 @@ mkdir /mnt/shared &amp;&amp; chown rex -R /mnt/shared/ 編輯 vi /etc/samba/smb.
 os name ip Rocky Linux 8.8 cns-kafka-0 192.168.50.170 Rocky Linux 8.8 cns-kafka-1 192.168.50.171 Rocky Linux 8.8 cns-kafka-2 192.168.50.172 安裝步驟 設定 hosts (在每個 Node 上執行) 透過以下指令設定 /etc/hosts:
 cat &lt;&lt; EOF &gt;&gt; /etc/hosts 192.168.50.170 cns-kafka-0 192.168.50.171 cns-kafka-1 192.168.50.172 cns-kafka-2 EOF 安裝 OpenJDK 11 (在每個 Node 上執行) To use Corretto RPM repositories with the yum package manager (such as Amazon Linux AMI), import the Corretto public key and then add the repository to the system list.
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/node-exporter/" rel="bookmark">
-			Node Exporter
-			</a>
-		</h2>
-		
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		安裝 node exporter 監控 linux
-使用環境 Rocky Linux 8.7
-操作步驟 下載 binary 檔案 下載 node-exporter
-curl -OL https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz 解壓縮 解壓縮 tar 檔案
-tar -xzf node_exporter-1.6.0.linux-amd64.tar.gz 設定 Binary 位置及權限 新增資料夾
-mkdir /etc/node_exporter 搬移檔案
-mv node_exporter-1.6.0.linux-amd64/node_exporter /etc/node_exporter/node_exporter 賦予權限:
-chmod +x /etc/node_exporter/node_exporter 建立 Service 檔案 vi node_exporter.service 填入以下內容
-[Unit] Description=Node Exporter Wants=network-online.target After=network-online.target [Service] Type=simple ExecStart=/bin/bash -c &#39;/etc/node_exporter/node_exporter&#39; [Install] WantedBy=multi-user.target 搬移到 /etc/systemd/system/
-cp node_exporter.service /etc/systemd/system/ systemd 設定 重啟 daemon
-systemctl daemon-reload 設定開機自動啟動
-systemctl enable node_exporter.
-	</div>
 </article>
 </main>
 
@@ -274,6 +270,7 @@ systemctl enable node_exporter.
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/container-mnt/">Container Note - Mount Namespace</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/aws-security-token-service-example/">AWS Security Token Service (STS) Example</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/openshift-monitoring-prometheus-scale-down/">Scale Down the Prometheus on Openshift Monitoring</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/f5-vip-setting/">F5 VIP Setting</a></li>
@@ -283,7 +280,6 @@ systemctl enable node_exporter.
 			<li class="widget__item"><a class="widget__link" href="/posts/awx-install/">AWX Installation (Container)</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/samba-install/">Samba 安裝</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/kafka-kraft-install/">Kafka 安裝 - Kraft Mode</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/node-exporter/">Node Exporter</a></li>
 		</ul>
 	</div>
 </div>
@@ -293,6 +289,8 @@ systemctl enable node_exporter.
 		<ul class="widget__list">
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/aws/">AWS</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/container/">Container</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/devops/">Devops</a></li>
 			<li class="widget__item">
