@@ -14,7 +14,7 @@
       
       <guid>https://tsunejui.github.io/posts/container-mnt/</guid>
       <description>使用環境 Rocky Linux 8.7
-環境描述 維護 kubernetes 時，常常需要透過一些 CLI tool 維護 container，如果 image 本身不提供這些 tool，就會比較麻煩，這時候我們可以透過 kubectl cp 將我們需要為戶的 CLI tool 複製到 container 內，但在官方的說明內有指出，使用 kubectl cp 會需要容器內有安裝 tar 指令，否則會失敗:
+環境描述 維護 kubernetes 時，常常需要透過一些 CLI tool 維護 container，如果 image 本身不提供這些 tool，就會比較麻煩，這時候我們可以透過 kubectl cp 將我們需要維護的 CLI tool 複製到 container 內，但在官方的說明內有指出，使用 kubectl cp 會需要容器內有安裝 tar 指令，否則會失敗:
 https://kubernetes.io/docs/reference/kubectl/cheatsheet/
 我以 simple-spring-boot-app 這個專案為例，他的 base image 是 google 的 distroless，在這個 image 內，除了 java 外，並沒有其他的 command，這時候執行 kubectl cp，就會發生錯誤:
 simple-spring-boot-app: https://github.com/tsunejui/simple-spring-boot-app

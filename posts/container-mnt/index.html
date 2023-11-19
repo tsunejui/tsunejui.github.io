@@ -63,7 +63,7 @@
 <p>Rocky Linux 8.7</p>
 <p><img src="/rocky-linux-gui/os-release.png" alt="os-release"></p>
 <h3 id="環境描述">環境描述</h3>
-<p>維護 kubernetes 時，常常需要透過一些 CLI tool 維護 container，如果 image 本身不提供這些 tool，就會比較麻煩，這時候我們可以透過 <code>kubectl cp</code> 將我們需要為戶的 CLI tool 複製到 container 內，但在官方的說明內有指出，使用 <code>kubectl cp</code> 會需要容器內有安裝 <code>tar</code> 指令，否則會失敗:</p>
+<p>維護 kubernetes 時，常常需要透過一些 CLI tool 維護 container，如果 image 本身不提供這些 tool，就會比較麻煩，這時候我們可以透過 <code>kubectl cp</code> 將我們需要維護的 CLI tool 複製到 container 內，但在官方的說明內有指出，使用 <code>kubectl cp</code> 會需要容器內有安裝 <code>tar</code> 指令，否則會失敗:</p>
 <blockquote>
 <p><a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">https://kubernetes.io/docs/reference/kubectl/cheatsheet/</a></p>
 </blockquote>
