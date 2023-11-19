@@ -84,6 +84,13 @@
 <p>假設 node 上 container 的管理工具並沒有提供 <code>cp</code> 的功能，或者沒有安裝 container 的管理工具時，可以透過以下測試步驟，找到 process (也就是 container) 所使用的 <code>mnt namespace</code> 的 <code>mountinfo</code>，並查看對應的 mount point，直接將 CLI tool 放置於指定的目錄即可。</p>
 <h2 id="基本介紹">基本介紹</h2>
 <ol>
+<li>建立 POD</li>
+</ol>
+<blockquote>
+<p><a href="https://hub.docker.com/repository/docker/tsunejui/spring-boot-actuator/general">https://hub.docker.com/repository/docker/tsunejui/spring-boot-actuator/general</a></p>
+</blockquote>
+<pre tabindex="0"><code>kubectl run spring-boot-actuator --image=tsunejui/spring-boot-actuator:v0.0.1
+</code></pre><ol start="2">
 <li>準備執行檔</li>
 </ol>
 <p>本次實驗將直接搬移檔案到與 process 相同 mnt namespace 的 mount point 內指定的目錄，並且執行。首先我們先準備一個執行檔，可以透過 C 語言撰寫一個簡單的 hello world 工具: <code>vi hello.c</code></p>
@@ -92,20 +99,20 @@ int main() {
    printf(&#34;Hello, World!&#34;);
    return 0;
 }
-</code></pre><ol start="2">
+</code></pre><ol start="3">
 <li>編譯執行檔</li>
 </ol>
 <blockquote>
 <p>測試環境如果沒有 <code>gcc</code>，可以透過 <code>sudo dnf install gcc-c++</code> 安裝</p>
 </blockquote>
 <pre tabindex="0"><code>gcc -o hello hello.c
-</code></pre><ol start="3">
+</code></pre><ol start="4">
 <li>找到 process number</li>
 </ol>
 <p>在測試環境中，container 所執行的 command 是 <code>java -jar main.jar</code>，因此直接在 linux 上透過 <code>ps</code> 查看:</p>
 <pre tabindex="0"><code>ps -ef | grep &#39;java -jar main.jar&#39;
 </code></pre><p><img src="/container-mnt/process.png" alt="process"></p>
-<ol start="4">
+<ol start="5">
 <li>找到 merged dir</li>
 </ol>
 <p>現在我們知道 container 的 pid 為 <code>2637095</code>，並可以到 <code>/proc/2637095/mountinfo</code> 上找到 <code>/</code> 的 mount point:</p>
@@ -113,12 +120,12 @@ int main() {
 <p>我們可以複製 overlayfs 的 upperdir 目錄，並且使用 <code>findmnt</code> 指令查看所有 mount point，搭配篩選後便能看到 merged dir，以 CRI 是 containerd 的 kubernetes 為例，通常會在 <code>/run/containerd/io.containerd.runtime.v2.task/k8s.io/&lt;container-id&gt;/rootfs</code> 內:</p>
 <pre tabindex="0"><code>findmnt | grep &lt;upperdir&gt;
 </code></pre><p><img src="/container-mnt/top-overlayfs.png" alt="top-overlayfs"></p>
-<ol start="5">
+<ol start="6">
 <li>複製執行檔至 merged dir 內</li>
 </ol>
 <p>將 <code>hello</code> 複製於 merged dir 內:</p>
 <pre tabindex="0"><code>cp hello /run/containerd/io.containerd.runtime.v2.task/k8s.io/&lt;containe-id&gt;/rootfs/bin/
-</code></pre><ol start="6">
+</code></pre><ol start="7">
 <li>使用 <code>kubectl exec</code> 執行 <code>hello</code></li>
 </ol>
 <p>可以看到，執行檔成功執行:</p>
