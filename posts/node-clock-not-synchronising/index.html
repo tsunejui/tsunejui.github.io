@@ -90,9 +90,9 @@ labels:
 <h2 id="客戶環境">客戶環境</h2>
 <p>接下來可至 Observe/Metrics 頁面查看客戶當前的指標，可以發現以下情況:</p>
 <h3 id="node_timex_sync_status-為-0"><code>node_timex_sync_status</code> 為 0</h3>
-<p><img src="/node-clock-not-synchronising/error0.png" alt="error0"></p>
-<h3 id="node_timex_maxerror_secondsjobnode-exporter-為-16"><code>node_timex_maxerror_seconds{job=&quot;node-exporter&quot;}</code> 為 16</h3>
 <p><img src="/node-clock-not-synchronising/error1.png" alt="error1"></p>
+<h3 id="node_timex_maxerror_secondsjobnode-exporter-為-16"><code>node_timex_maxerror_seconds{job=&quot;node-exporter&quot;}</code> 為 16</h3>
+<p><img src="/node-clock-not-synchronising/error0.png" alt="error0"></p>
 <h2 id="調查-metrics-原理">調查 Metrics 原理</h2>
 <p>上述發生在所有node中，由此判斷可能是 NTP 的問題，為了進一步瞭解 metrics 的實際意義，便查看 node_exporter 的源碼:</p>
 <blockquote>
