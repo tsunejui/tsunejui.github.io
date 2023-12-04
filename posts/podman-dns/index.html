@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Podman DNS - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/posts/aboutme/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Podman DNS</h1>
+			
+		</header>
+		<div class="content post__content clearfix">
+			<h3 id="使用環境">使用環境</h3>
+<p>Rocky Linux 8.7</p>
+<p><img src="/rocky-linux-gui/os-release.png" alt="os-release"></p>
+<h3 id="環境描述">環境描述</h3>
+<p>由於部門都是在 LINE 上討論公事，常常造成公私不分，因此想架設一個 <a href="https://www.rocket.chat">Rocket Chat</a> 作為辦公的溝通平台，而 <code>Rocket Chat</code> 也有提供 <code>docker-compose.yaml</code> 讓用戶方便部署：</p>
+<blockquote>
+<p>13個你不應該用Line辦公的理由: <a href="https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html">https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html</a></p>
+<p>Rocket Chat: <a href="https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose">https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose</a></p>
+</blockquote>
+<pre tabindex="0"><code># src: https://github.com/RocketChat/Docker.Official.Image/blob/master/compose.yml
+volumes:
+  mongodb_data: { driver: local }
+
+services:
+  rocketchat:
+    image: registry.rocket.chat/rocketchat/rocket.chat:${RELEASE:-latest}
+    restart: always
+    labels:
+      traefik.enable: &#34;true&#34;
+      traefik.http.routers.rocketchat.rule: Host(`${DOMAIN:-}`)
+      traefik.http.routers.rocketchat.tls: &#34;true&#34;
+      traefik.http.routers.rocketchat.entrypoints: https
+      traefik.http.routers.rocketchat.tls.certresolver: le
+    environment:
+      MONGO_URL: &#34;${MONGO_URL:-\
+        mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\
+        ${MONGODB_DATABASE:-rocketchat}?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&#34;
+      MONGO_OPLOG_URL: &#34;${MONGO_OPLOG_URL:\
+        -mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\
+        local?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&#34;
+      ROOT_URL: ${ROOT_URL:-http://localhost:${HOST_PORT:-3000}}
+      PORT: ${PORT:-3000}
+      DEPLOY_METHOD: docker
+      DEPLOY_PLATFORM: ${DEPLOY_PLATFORM:-}
+      REG_TOKEN: ${REG_TOKEN:-}
+    depends_on:
+      - mongodb
+    expose:
+      - ${PORT:-3000}
+    ports:
+      - &#34;${BIND_IP:-0.0.0.0}:${HOST_PORT:-3000}:${PORT:-3000}&#34;
+
+  mongodb:
+    image: docker.io/bitnami/mongodb:${MONGODB_VERSION:-5.0}
+    restart: always
+    volumes:
+      - mongodb_data:/bitnami/mongodb
+    environment:
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGODB_REPLICA_SET_NAME: ${MONGODB_REPLICA_SET_NAME:-rs0}
+      MONGODB_PORT_NUMBER: ${MONGODB_PORT_NUMBER:-27017}
+      MONGODB_INITIAL_PRIMARY_HOST: ${MONGODB_INITIAL_PRIMARY_HOST:-mongodb}
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: ${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}
+      MONGODB_ADVERTISED_HOSTNAME: ${MONGODB_ADVERTISED_HOSTNAME:-mongodb}
+      MONGODB_ENABLE_JOURNAL: ${MONGODB_ENABLE_JOURNAL:-true}
+      ALLOW_EMPTY_PASSWORD: ${ALLOW_EMPTY_PASSWORD:-yes}
+</code></pre><p>若使用 <code>docker-compose</code> 部署時沒有問題，但如果使用 <code>podman-compose</code> 部署時，便會發生 DNS 無法解析的問題，使得 <code>rocketchat</code> 無法連上 <code>mongodb</code>。</p>
+<blockquote>
+<p>podman-compose: <a href="https://github.com/containers/podman-compose">https://github.com/containers/podman-compose</a></p>
+</blockquote>
+<p>我使用的 <code>podman-compose</code> 版本如下：</p>
+<pre tabindex="0"><code>podman-compose version: 1.0.7
+podman version: 4.4.1
+</code></pre><p><img src="/podman-dns/version.png" alt="version"></p>
+<h3 id="調查結果">調查結果</h3>
+<ol>
+<li>Docker 內建 DNS Server</li>
+</ol>
+<p>經過調查，在 <code>Docker</code> 官方文件中可以得知在 <code>docker-compose</code> 中，DNS Server 是由 <code>Docker daemon</code> 所提供，而他的運作原理剛好在 <strong>COSCUP 2023</strong> 活動中，講者 <a href="https://www.hwchiu.com/public_sharing">hwchiu</a> 有提到，有興趣的話可以參考他的演講:</p>
+<blockquote>
+<p>Docker Network: <a href="https://docs.docker.com/network/">https://docs.docker.com/network/</a></p>
+<p>剖析 KIND(Kubernetes IN Docker) 的實作原理: <a href="https://www.slideshare.net/hongweiqiu/learned-from-kind">https://www.slideshare.net/hongweiqiu/learned-from-kind</a></p>
+</blockquote>
+<pre tabindex="0"><code>Containers that attach to a custom network use Docker&#39;s embedded DNS server. The embedded DNS server forwards external DNS lookups to the DNS servers configured on the host.
+</code></pre><p><img src="/podman-dns/docker-dns.png" alt="version"></p>
+<ol start="2">
+<li>Podman 需要 DNS Plugin</li>
+</ol>
+<p>在 podman 中，因為沒有 Daemon 的關係，需要透過 Plugin 實現 DNS。官方文件中，有這麼一句話: <code>Podman supports two network backends Netavark and CNI. Netavark is the default network backend and was added in Podman version 4.0. CNI is deprecated and will be removed in the next major Podman version 5.0, in preference of Netavark.</code></p>
+<p>我們可以透過以下指令查看當前的 podman network backend:</p>
+<pre tabindex="0"><code>podman info --format {{.Host.NetworkBackend}}
+</code></pre><p><img src="/podman-dns/cni.png" alt="cni"></p>
+<p>如果沒有 Plugin，<code>cni</code> 是無法使用 DNS 的功能，我們可以透過 <code>podman network inspect</code> 查看預設的網路設定:</p>
+<p><img src="/podman-dns/cni-inspect.png" alt="inspect"></p>
+<ol start="3">
+<li>安裝 Plugin</li>
+</ol>
+<p>一開始我以為直接將 network backend 切換為 <code>netavark</code> 就好，因為從官方描述中，看起來像是內建在 podman 4.0 中，但切換後卻得到以下錯誤，這代表電腦並沒有安裝此 Plugin:</p>
+<p><img src="/podman-dns/error.png" alt="error"></p>
+<p>可以透過 <code>dnf</code> 直接安裝 <code>netavark</code>，並重新設定 podman 環境:</p>
+<blockquote>
+<p>過去可以透過 <code>dnf install -y podman-dnsname</code> 安裝 <code>dnsname</code> Plugin，但此專案已經停止維護: <a href="https://github.com/containers/dnsname">https://github.com/containers/dnsname</a></p>
+</blockquote>
+<pre tabindex="0"><code>dnf install -y netavark
+</code></pre><p><img src="/podman-dns/netavark.png" alt="netavark"></p>
+<ol>
+<li>重設 network backend</li>
+</ol>
+<p>以下步驟參考 Oracle Linux 的 <a href="https://docs.oracle.com/en/operating-systems/oracle-linux/podman/podman-ConfiguringNetworkingforPodman.html#topic_owf_d4t_t5b">Podman User&rsquo;s Guide</a>，內容詳細介紹如何切換 network backend。根據 GitHub 上關於 Container 的 Common Library 的描述，Container Engine 預設使用 <code>containers.conf</code> 作為設定檔案，因此第一步先建立設定檔:</p>
+<blockquote>
+<p>Podman Common: <a href="https://github.com/containers/common/blob/main/docs/containers.conf.5.md">https://github.com/containers/common/blob/main/docs/containers.conf.5.md</a></p>
+</blockquote>
+<pre tabindex="0"><code>cp /usr/share/containers/containers.conf /etc/containers/
+</code></pre><p>修改 <code>/etc/containers/containers.conf</code>，將 <code>network_backend</code> 改為 <code>netavark</code>:</p>
+<pre tabindex="0"><code>network_backend = &#34;netavark&#34;
+</code></pre><p>初始化 Podman 設置:</p>
+<pre tabindex="0"><code>podman system reset
+</code></pre><ol start="4">
+<li>驗證 network backend</li>
+</ol>
+<p>再次執行查看指令，可以看到 network backend 已經改為 <code>netavark</code>:</p>
+<pre tabindex="0"><code>podman info --format {{.Host.NetworkBackend}}
+</code></pre><p><img src="/podman-dns/netavark-info.png" alt="netavark-info"></p>
+<p>也可以透過 <code>ss</code> 指令或 <code>ps</code> 指令查看，可以發現 netavark 使用 <code>aardvark-dns</code> 建立一個 dns server，並且佔用 <code>53</code> port:</p>
+<pre tabindex="0"><code>ss -tuanp
+
+ps -ef | grep aardvark-dns
+</code></pre><p><img src="/podman-dns/ps.png" alt="ps"></p>
+<h3 id="執行結果">執行結果</h3>
+<p>修改完 Podman DNS 設定後，<code>Rocket Chat</code> 也成功執行了:</p>
+<p><img src="/podman-dns/start.png" alt="start"></p>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://medium.com/@prajwal.chin/understanding-docker-dns-2ed4b070a0">https://medium.com/@prajwal.chin/understanding-docker-dns-2ed4b070a0</a></li>
+<li><a href="https://www.redhat.com/sysadmin/podman-new-network-stack">https://www.redhat.com/sysadmin/podman-new-network-stack</a></li>
+</ul>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

@@ -6,7 +6,20 @@
     <description>Recent content in Note on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 19 Nov 2023 03:12:13 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/note/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Dec 2023 00:29:01 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/note/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Podman DNS</title>
+      <link>https://tsunejui.github.io/posts/podman-dns/</link>
+      <pubDate>Tue, 05 Dec 2023 00:29:01 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/podman-dns/</guid>
+      <description>使用環境 Rocky Linux 8.7
+環境描述 由於部門都是在 LINE 上討論公事，常常造成公私不分，因此想架設一個 Rocket Chat 作為辦公的溝通平台，而 Rocket Chat 也有提供 docker-compose.yaml 讓用戶方便部署：
+13個你不應該用Line辦公的理由: https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html
+Rocket Chat: https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose
+# src: https://github.com/RocketChat/Docker.Official.Image/blob/master/compose.yml volumes: mongodb_data: { driver: local } services: rocketchat: image: registry.rocket.chat/rocketchat/rocket.chat:${RELEASE:-latest} restart: always labels: traefik.enable: &amp;#34;true&amp;#34; traefik.http.routers.rocketchat.rule: Host(`${DOMAIN:-}`) traefik.http.routers.rocketchat.tls: &amp;#34;true&amp;#34; traefik.http.routers.rocketchat.entrypoints: https traefik.http.routers.rocketchat.tls.certresolver: le environment: MONGO_URL: &amp;#34;${MONGO_URL:-\ mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ ${MONGODB_DATABASE:-rocketchat}?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&amp;#34; MONGO_OPLOG_URL: &amp;#34;${MONGO_OPLOG_URL:\ -mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ local?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&amp;#34; ROOT_URL: ${ROOT_URL:-http://localhost:${HOST_PORT:-3000}} PORT: ${PORT:-3000} DEPLOY_METHOD: docker DEPLOY_PLATFORM: ${DEPLOY_PLATFORM:-} REG_TOKEN: ${REG_TOKEN:-} depends_on: - mongodb expose: - ${PORT:-3000} ports: - &amp;#34;${BIND_IP:-0.</description>
+    </item>
+    
     <item>
       <title>Container Note - Mount Namespace</title>
       <link>https://tsunejui.github.io/posts/container-mnt/</link>

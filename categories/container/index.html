@@ -60,6 +60,23 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/podman-dns/" rel="bookmark">
+			Podman DNS
+			</a>
+		</h2>
+		
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		使用環境 Rocky Linux 8.7
+環境描述 由於部門都是在 LINE 上討論公事，常常造成公私不分，因此想架設一個 Rocket Chat 作為辦公的溝通平台，而 Rocket Chat 也有提供 docker-compose.yaml 讓用戶方便部署：
+13個你不應該用Line辦公的理由: https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html
+Rocket Chat: https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose
+# src: https://github.com/RocketChat/Docker.Official.Image/blob/master/compose.yml volumes: mongodb_data: { driver: local } services: rocketchat: image: registry.rocket.chat/rocketchat/rocket.chat:${RELEASE:-latest} restart: always labels: traefik.enable: &#34;true&#34; traefik.http.routers.rocketchat.rule: Host(`${DOMAIN:-}`) traefik.http.routers.rocketchat.tls: &#34;true&#34; traefik.http.routers.rocketchat.entrypoints: https traefik.http.routers.rocketchat.tls.certresolver: le environment: MONGO_URL: &#34;${MONGO_URL:-\ mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ ${MONGODB_DATABASE:-rocketchat}?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&#34; MONGO_OPLOG_URL: &#34;${MONGO_OPLOG_URL:\ -mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ local?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&#34; ROOT_URL: ${ROOT_URL:-http://localhost:${HOST_PORT:-3000}} PORT: ${PORT:-3000} DEPLOY_METHOD: docker DEPLOY_PLATFORM: ${DEPLOY_PLATFORM:-} REG_TOKEN: ${REG_TOKEN:-} depends_on: - mongodb expose: - ${PORT:-3000} ports: - &#34;${BIND_IP:-0.
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/container-mnt/" rel="bookmark">
 			Container Note - Mount Namespace
 			</a>
@@ -95,6 +112,7 @@ Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OP
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/podman-dns/">Podman DNS</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/container-mnt/">Container Note - Mount Namespace</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/aws-security-token-service-example/">AWS Security Token Service (STS) Example</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/openshift-monitoring-prometheus-scale-down/">Scale Down the Prometheus on Openshift Monitoring</a></li>
@@ -104,7 +122,6 @@ Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OP
 			<li class="widget__item"><a class="widget__link" href="/posts/rhel-automation-platform-install/">RHEL Ansible Automation Platform (AAP) Installation</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/awx-install/">AWX Installation (Container)</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/samba-install/">Samba 安裝</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/kafka-kraft-install/">Kafka 安裝 - Kraft Mode</a></li>
 		</ul>
 	</div>
 </div>
