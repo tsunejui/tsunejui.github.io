@@ -39,7 +39,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -64,14 +64,15 @@
 			NodeClockNotSynchronising alert troubleshooting in Openshift 4
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">NTP Server 不同步事件調查</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-26T01:51:06&#43;08:00">August 26, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		事件經過 某日客戶收到來自 OCP 的 critical 告警，名稱為 NodeClockNotSynchronising，請我們調查原因。
-告警訊息 首先調查告警意義，至 openshoft-monitoring Project 下尋找名為 prometheus-k8s-rulefiles-0 的 ConfigMap，便可看到以下內容
-https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md
-- alert: NodeClockNotSynchronising annotations: description: Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host. runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md summary: Clock not synchronising. expr: | min_over_time(node_timex_sync_status{job=&#34;node-exporter&#34;}[5m]) == 0 and node_timex_maxerror_seconds{job=&#34;node-exporter&#34;} &gt;= 16 for: 10m labels: severity: critical 根據官方文件，我們可以得知以下訊息:
-The NodeClockNotSynchronising alert triggers when a node is affected by issues with the NTP server for that node.
+		<p>這篇文章將探討 NTP (Network Time Protocol) 服務器在 Openshift 發生的同步問題的原因和解決方法。文章將提供故障診斷的內容。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -81,17 +82,15 @@ The NodeClockNotSynchronising alert triggers when a node is affected by issues w
 			NFS on Kubernetes
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">NFS 在 Kubernetes 上的應用筆記</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-14T23:32:13&#43;08:00">May 14, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境設定 項目 內容 NFS Server 10.250.75.111 NFS Path /mnt/nfs_shares 部署 NFS Storage Class 以下步驟將建立 Custom Provisioner，並串接 NFS Server。
-建立 Provisioner 的 Service Account 請參考 here
-建立名為 nfs-client-provisioner 的 Service Account
-kubectl apply -f account.yaml 建立 Provisioner Deployment 請參考 here
-kubernetes-sigs/nfs-subdir-external-provisioner: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
-為了避免出錯，strategy.type 設定為 Recreate，而 replicas 設為 1
-使用 kubernetes-sigs/nfs-subdir-external-provisioner 作為 provisioner，請注意以下環境變數設定:
-- name: PROVISIONER_NAME # storage class 名稱 value: k8s-sigs.io/nfs-subdir-external-provisioner - name: NFS_SERVER # nfs server 位置 value: 10.250.75.111 - name: NFS_PATH # nfs directory 路徑 value: /mnt/nfs_shares 使用 kubectl 部署 nfs-client-provisioner:
+		<p>這篇文章將探討如何在 Kubernetes 環境中使用 NFS (Network File System)。文章將提供一個基本的指南。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -101,13 +100,15 @@ kubernetes-sigs/nfs-subdir-external-provisioner: https://github.com/kubernetes-s
 			Istio Tip
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Istio 安裝後錯誤處理</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-03-08T12:52:25&#43;08:00">March 08, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/istio/" rel="category">Istio</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		istio Init:CrashLoopBackOff 問題 安裝 istio 後會發現所有 POD 顯示 Init:CrashLoopBackOff, 透過查看 log 可以發現錯誤。
-https://github.com/istio/istio/issues/23009
-需要載入以下 mod 修復問題：
-modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_owner; modprobe iptable_nat; modprobe iptable_mangle; modprobe iptable_filter cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/99-istio-modules.conf br_netfilter nf_nat xt_REDIRECT xt_owner iptable_nat iptable_mangle iptable_filter EOF 
+		<p>在本文中，我們將討論在安裝 Istio 服務常見的錯誤，並提供故障排除技巧和解決方案。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -117,13 +118,15 @@ modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_own
 			Kubernetes Tips
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Kubernetes 筆記</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-03-08T12:50:23&#43;08:00">March 08, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		產生新的加入 cluster 指令 建立新的 token
-kubeadm token generate 畫面會顯示新的 token, 便可以使用 kubeadm token create 建立新的 join command
-以 4a4dv5.i31huo1je1e2dler 為例
-kubeadm token create 4a4dv5.i31huo1je1e2dler --print-join-command 
+		<p>本文將紀錄在 Kubernetes 上常見的 <code>kubectl</code> 指令，並且取得 cluster 的各項資訊。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -133,15 +136,15 @@ kubeadm token create 4a4dv5.i31huo1je1e2dler --print-join-command
 			Kubernetes 安裝筆記
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Kubernetes 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-03-08T10:19:24&#43;08:00">March 08, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		安裝 Kubernetes 事前準備 Preparation Before you begin
-Rocky Linux ISO 載點: link
-Kubernetes 安裝建議高於 2 core CPU 及 2 GB or more RAM: link
-準備 5 台 node, OS 選擇 Rocky Linux 8 每台 node 需要 4 core CPU &amp; 8 GB memory (非必要) 6 組 IP (node * 5 + VIP * 1) Kubernetes Interface
-interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
-建議登入每台主機, 並使用 hostnamectl set-hostname xxx 修改 hostname
+		<p>這篇文章將詳細介紹 Kubernetes 的安裝流程。從環境準備到集群配置，本文將為初學者提供一個清晰的安裝指南。</p>
 	</div>
 </article>
 </main>
@@ -197,8 +200,6 @@ interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
 				<a class="widget__link" href="/categories/linux/">Linux</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/openshift/">Openshift</a></li>
-			<li class="widget__item">
-				<a class="widget__link" href="/categories/profile/">Profile</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/prometheus/">Prometheus</a></li>
 			<li class="widget__item">

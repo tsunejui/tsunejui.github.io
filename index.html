@@ -40,7 +40,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -63,14 +63,15 @@
 			Podman DNS
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">解決在 Podman Compose 上 DNS Server 無法使用的問題</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-05T00:29:01&#43;08:00">December 05, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		使用環境 Rocky Linux 8.7
-環境描述 由於部門都是在 LINE 上討論公事，常常造成公私不分，因此想架設一個 Rocket Chat 作為辦公的溝通平台，而 Rocket Chat 也有提供 docker-compose.yaml 讓用戶方便部署：
-13個你不應該用Line辦公的理由: https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html
-Rocket Chat: https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose
-# src: https://github.com/RocketChat/Docker.Official.Image/blob/master/compose.yml volumes: mongodb_data: { driver: local } services: rocketchat: image: registry.rocket.chat/rocketchat/rocket.chat:${RELEASE:-latest} restart: always labels: traefik.enable: &#34;true&#34; traefik.http.routers.rocketchat.rule: Host(`${DOMAIN:-}`) traefik.http.routers.rocketchat.tls: &#34;true&#34; traefik.http.routers.rocketchat.entrypoints: https traefik.http.routers.rocketchat.tls.certresolver: le environment: MONGO_URL: &#34;${MONGO_URL:-\ mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ ${MONGODB_DATABASE:-rocketchat}?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&#34; MONGO_OPLOG_URL: &#34;${MONGO_OPLOG_URL:\ -mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ local?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&#34; ROOT_URL: ${ROOT_URL:-http://localhost:${HOST_PORT:-3000}} PORT: ${PORT:-3000} DEPLOY_METHOD: docker DEPLOY_PLATFORM: ${DEPLOY_PLATFORM:-} REG_TOKEN: ${REG_TOKEN:-} depends_on: - mongodb expose: - ${PORT:-3000} ports: - &#34;${BIND_IP:-0.
+		<p>本文將解析在使用 Podman Compose 時遇到的 DNS 服務器問題，並提供解決方案。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -80,17 +81,15 @@ Rocket Chat: https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-dock
 			Container Note - Mount Namespace
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Mount Namespace 研究</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-19T03:12:13&#43;08:00">November 19, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		使用環境 Rocky Linux 8.7
-環境描述 在 kubernetes 上常常需要透過一些 CLI tool 幫助維護 container，如果 image 本身不提供這些 tool，執行上就會比較麻煩。通常可以透過 kubectl cp 將 CLI tool 複製到 container 內解決問題，需要注意的是，在官方的文件上有指出，如果使用 kubectl cp 則會需要容器內已安裝 tar 指令，否則會失敗:
-https://kubernetes.io/docs/reference/kubectl/cheatsheet/
-以 simple-spring-boot-app 專案為例，base image 是 google 的 distroless，這個 image 內除了 java 外，並沒有其他的 command，在執行 kubectl cp 時會發生錯誤:
-simple-spring-boot-app: https://github.com/tsunejui/simple-spring-boot-app
-distroless: https://github.com/GoogleContainerTools/distroless
-此時需要到 node 上，透過 container 的管理工具所提供的方法 (cp 指令)，將檔案複製到 container 內，一些工具如下:
-Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- cri-tools: crictl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- nerdctl: nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- 假設 node 上 container 的管理工具並沒有提供 cp 的功能，或者沒有安裝 container 的管理工具時，可以透過以下測試步驟，找到 process (也就是 container) 所使用的 mnt namespace 的 mountinfo，並查看對應的 mount point，直接將 CLI tool 放置於指定的目錄即可。
+		<p>本文深入探討 Linux 的 Mount Namespace，這是一種隔離檔案系統的技術。文章將講解其原理、應用場景和如何有效地使用它來提高系統安全性。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -100,13 +99,15 @@ Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OP
 			AWS Security Token Service (STS) Example
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">AWS STS 實驗</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-12T21:33:35&#43;08:00">November 12, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/aws/" rel="category">AWS</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 最近公司需要評估 AWS ROSA 在客戶端導入的可行性，因此需要研究其行為，根據 ROSA 的文件，建立 ROSA 的方式可以分成 with STS 及 without STS，由於之前沒有使用過 AWS STS ，此篇文章作為 STS API 的基本測試步驟：
-基本介紹 根據 AWS 官方介紹，AWS STS API 提供了 trusted users 取得 Temporary security credentials 的方法。在 AWS ROSA 上可以帶來一些好處：
-測試步驟 (請先設定好 ~/.aws/credentials) 建立 User Alice aws iam create-user --user-name Alice 建立 Example Policy 編輯 iam policy 檔案: vi example-policy.json
-{ &#34;Version&#34;: &#34;2012-10-17&#34;, &#34;Statement&#34;: [ { &#34;Sid&#34;: &#34;VisualEditor0&#34;, &#34;Effect&#34;: &#34;Allow&#34;, &#34;Action&#34;: [ &#34;s3:ListStorageLensConfigurations&#34;, &#34;s3:ListAccessPointsForObjectLambda&#34;, &#34;s3:ListBucketMultipartUploads&#34;, &#34;s3:ListAllMyBuckets&#34;, &#34;s3:ListAccessPoints&#34;, &#34;s3:ListJobs&#34;, &#34;s3:ListBucketVersions&#34;, &#34;s3:ListBucket&#34;, &#34;s3:ListMultiRegionAccessPoints&#34;, &#34;s3:ListMultipartUploadParts&#34; ], &#34;Resource&#34;: &#34;*&#34; } ] } 新增 iam policy:
+		<p>本文介紹 AWS Security Token Service (STS) 的使用方法和實驗。STS 提供短期憑證來訪問 AWS 資源，增強安全性和管理方便性。我們將逐步探索 STS 的功能，實現身份驗證和授權。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -116,20 +117,15 @@ Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OP
 			Scale Down the Prometheus on Openshift Monitoring
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Openshift 上對 Prometheus 進行 Scale Down 的方法</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-07T22:29:20&#43;08:00">November 07, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>, <a class="meta__link" href="/categories/prometheus/" rel="category">Prometheus</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 客戶希望可以修改 Openshift 4.12 上 Prometheus 的 Replicas 數量為 0，希望我可以研究。
-研究結果 目前 Openshift 4.12 沒有提供修改 Prometheus 數量的方法。 原本以為修改 Prometheus CRD 就可以更改 Replicas 的數量，但是修改後過沒多久就會被 Operator 改回來。以下是我找到的資料:
-曾經在3.11可以調整replicas的設定，但後來消失了:
-https://github.com/openshift/cluster-monitoring-operator/pull/330/commits/53453691c9d47f5c621a9d538aba12431541a2c8
-我在 cluster-monitoring-operator 的設定上也沒找到參數可以調整，測試 replicas 也無法:
-https://github.com/openshift/cluster-monitoring-operator/blob/master/Documentation/api.md#prometheusk8sconfig
-目前我找到這個 issue，在 2020 年 8 月還不支援
-https://github.com/openshift/cluster-monitoring-operator/issues/896
-解決方法 現在這是我看過最暴力的做法，先透過修改 clusterversion/version ，將 openshift-monitoring 設定為 unmanaged，之後再 scale down 所有 deployment ，親測有效，但很暴力:
-https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b
-oc patch clusterversion/version --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: overrides: - group: apps/v1 kind: Deployment name: cluster-monitoring-operator namespace: openshift-monitoring unmanaged: true EOF )&#34; oc patch prometheus/k8s -n openshift-monitoring --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: replicas: 0 EOF )&#34; oc patch alertmanagers/main -n openshift-monitoring --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: replicas: 0 EOF )&#34; oc scale --replicas=0 deploy/cluster-monitoring-operator -n openshift-monitoring oc scale --replicas=0 deployment.
+		<p>這篇文章將探討在 Openshift 上如何有效地對 Prometheus 進行縮減。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -139,17 +135,15 @@ oc patch clusterversion/version --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- E
 			F5 VIP Setting
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">F5 上 VIP 設定步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-02T15:20:48&#43;08:00">November 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/f5/" rel="category">F5</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 客戶環境需要在 F5 設定 VIP，並分配流量到不同的主機，我需要在公司 Lab 上模擬，由於對 F5 的操作不熟悉，因此撰寫此篇文章作為紀錄 VIP 設定方法。
-請注意，此篇文章是簡易的設定紀錄，我並非 F5 的專業人員，如果錯誤請見諒
-F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
-設定 Name 及 Health Monitors 的方式 (下圖為新增後的編輯畫面):
-到 Local Traffic / Virtual Servers / Virtual Servers List 頁面上新增 Virtual Server:
-到 Properties 頁面上設定 General Properties 及憑證相關資料 (下圖為新增後的編輯畫面):
-到 Resource 頁面上設定 Load Balancing (下圖為新增後的編輯畫面):
-結果 設定完成後便立即生效，在 Local Traffic / Pools : Pool List / &lt;pool-name&gt; 上可以看到 Pool 內的 members 狀況:
+		<p>本文提供在 F5 Load Balancer 上配置虛擬 IP (VIP) 的步驟。利用 F5 提高應用的可用性。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -159,16 +153,15 @@ F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
 			Dex Expiration Time on Openshift Gitops
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">ArgoCD 頁面自動登出設定</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-02T00:13:03&#43;08:00">November 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>, <a class="meta__link" href="/categories/devops/" rel="category">Devops</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		ArgoCD 認證機制:
-修改流程:
-環境描述 近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 GitOps Operator。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。
-從上圖可得知，ArgoCD 的 web 會再登入後產生一把 token 並放到 cookie 內，名為 argocd.token，我們可以透過 jwt.io 解析這把 token，查看 expiration date:
-在沒有做任何設定的情況下，透過 Openshift 帳密使用 SSO 登入機制進入 ArgoCD 畫面，所產生的 token 過期時間應該是 24h 後，這是因為 ArgoCD 在 SSO 認證上是交給 Dex Server 控制，而 Dex Server 的預設過期時間是 24h：
-可以從 ArgoCD 的 Security 文章查看 Dex Server 的說明:
-尋找方法 ArgoCD Operator 會透過 Kind: ArgoCD 的 CRD ，名為 openshift-gitops，產生需要的 components，如 server、applicationSet、grafana&hellip;:
+		<p>本文介紹如何在 ArgoCD 中設置自動登出功能。這有助於提高安全性，避免未經授權的存取。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -178,14 +171,15 @@ F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
 			NodeClockNotSynchronising alert troubleshooting in Openshift 4
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">NTP Server 不同步事件調查</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-26T01:51:06&#43;08:00">August 26, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		事件經過 某日客戶收到來自 OCP 的 critical 告警，名稱為 NodeClockNotSynchronising，請我們調查原因。
-告警訊息 首先調查告警意義，至 openshoft-monitoring Project 下尋找名為 prometheus-k8s-rulefiles-0 的 ConfigMap，便可看到以下內容
-https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md
-- alert: NodeClockNotSynchronising annotations: description: Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host. runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md summary: Clock not synchronising. expr: | min_over_time(node_timex_sync_status{job=&#34;node-exporter&#34;}[5m]) == 0 and node_timex_maxerror_seconds{job=&#34;node-exporter&#34;} &gt;= 16 for: 10m labels: severity: critical 根據官方文件，我們可以得知以下訊息:
-The NodeClockNotSynchronising alert triggers when a node is affected by issues with the NTP server for that node.
+		<p>這篇文章將探討 NTP (Network Time Protocol) 服務器在 Openshift 發生的同步問題的原因和解決方法。文章將提供故障診斷的內容。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -195,14 +189,15 @@ The NodeClockNotSynchronising alert triggers when a node is affected by issues w
 			RHEL Ansible Automation Platform (AAP) Installation
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">AAP 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-24T10:24:53&#43;08:00">August 24, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/devops/" rel="category">Devops</a>, <a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境準備 Linux 的版本為 Red Hat Enterprise Linux 9.1 (Plow):
-下載 tar 檔案 下載 Red Hat Ansible Automation Platform (v. 2.4 for RHEL 9 for x86_64): 至 https://access.redhat.com/downloads/content/480 下載 Ansible Automation Platform 2.4 Setup Bundle
-解壓縮 tar xvzf ansible-automation-platform-setup-&lt;latest-version&gt;.tar.gz 安裝 Red Hat Ansible Automation Platform subscription 取得token 至 https://access.redhat.com/management/api 產生 Token
-在 Redhat 上使用 subscription-manager register 註冊機器 你也可以透過 subscription-manager register --username &lt;username&gt; --password &lt;password&gt; --auto-attach 註冊機器
-subscription-manager register --token &lt;token&gt; --insecure 獲得 Subscription 的 pool_id subscription-manager list --available --all | grep &#34;Ansible Automation Platform&#34; -B 3 -A 6 安裝 Subscription subscription-manager attach --pool=2c94e43f88fcee5b0189010269427636 驗證是否成功 subscription-manager list --consumed 建立 Ansible Automation Platform Database 如果需要自建 AAP 的 Database 則需執行此步驟，不需要請略過。
+		<p>這篇文章將提供 Ansible Automation Platform (AAP) 的安裝指南。從前置條件到安裝過程，文章將幫助讀者順利完成安裝。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -212,21 +207,15 @@ subscription-manager register --token &lt;token&gt; --insecure 獲得 Subscripti
 			AWX Installation (Container)
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">AWX - Container 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-07-17T13:36:31&#43;08:00">July 17, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/devops/" rel="category">Devops</a>, <a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		利用 dokcer 安裝 AWX
-使用環境 Rocky Linux 8.7
-安裝步驟 關閉 SELinux 建議暫時關閉 SELinux 避免安裝中出錯:
-setenforce 0 安裝 docker https://docs.docker.com/engine/install/centos/
-安裝 yum-utils:
-yum install -y yum-utils 加入 repository:
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 安裝 docker
-yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 啟動 docker
-systemctl start docker 下載 AWX 17.1.0 安裝 git:
-dnf install -y git Starting in version 18.0, the AWX Operator is the preferred way to install AWX.
-https://github.com/ansible/awx/blob/devel/INSTALL.md
-git clone -b 17.
+		<p>這篇文章將指導讀者如何在容器環境中安裝和設置 AWX (Ansible 的 Web) 版本。從環境準備到配置設置，本文涵蓋整個安裝過程。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -236,19 +225,15 @@ git clone -b 17.
 			Samba 安裝
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Linux Samba 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-07-01T17:23:23&#43;08:00">July 01, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		使用環境 Rocky Linux 8.7
-安裝步驟 透過 dnf 安裝 samba:
-dnf install samba 設定 systemd 開機自動啟動:
-systemctl enable smb.service 開啟防火牆
-firewall-cmd --permanent --add-service=samba &amp;&amp; firewall-cmd --reload 設定 samba 新增Linux User: rex
-useradd rex 新增 samba 帳號: rex
-smbpasswd -a rex 新增目錄 /mnt/shared 並指派 owner 為 rex:
-mkdir /mnt/shared &amp;&amp; chown rex -R /mnt/shared/ 編輯 vi /etc/samba/smb.conf, 並且加入以下內容:
-設定參數請參考: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
-... [cnssmb] comment = CNS Samba Directory path = /mnt/shared public = yes create mask = 0777 directory mask = 0777 browseable = yes writeable = yes read only = no 設定 SELinux:
+		<p>本文將指導如何在 Linux 系統上安裝和配置 Samba。</p>
 	</div>
 </article>
 </main>
@@ -307,8 +292,6 @@ mkdir /mnt/shared &amp;&amp; chown rex -R /mnt/shared/ 編輯 vi /etc/samba/smb.
 				<a class="widget__link" href="/categories/linux/">Linux</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/openshift/">Openshift</a></li>
-			<li class="widget__item">
-				<a class="widget__link" href="/categories/profile/">Profile</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/prometheus/">Prometheus</a></li>
 			<li class="widget__item">

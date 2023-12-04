@@ -13,11 +13,7 @@
       <pubDate>Tue, 05 Dec 2023 00:29:01 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/podman-dns/</guid>
-      <description>使用環境 Rocky Linux 8.7
-環境描述 由於部門都是在 LINE 上討論公事，常常造成公私不分，因此想架設一個 Rocket Chat 作為辦公的溝通平台，而 Rocket Chat 也有提供 docker-compose.yaml 讓用戶方便部署：
-13個你不應該用Line辦公的理由: https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html
-Rocket Chat: https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose
-# src: https://github.com/RocketChat/Docker.Official.Image/blob/master/compose.yml volumes: mongodb_data: { driver: local } services: rocketchat: image: registry.rocket.chat/rocketchat/rocket.chat:${RELEASE:-latest} restart: always labels: traefik.enable: &amp;#34;true&amp;#34; traefik.http.routers.rocketchat.rule: Host(`${DOMAIN:-}`) traefik.http.routers.rocketchat.tls: &amp;#34;true&amp;#34; traefik.http.routers.rocketchat.entrypoints: https traefik.http.routers.rocketchat.tls.certresolver: le environment: MONGO_URL: &amp;#34;${MONGO_URL:-\ mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ ${MONGODB_DATABASE:-rocketchat}?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&amp;#34; MONGO_OPLOG_URL: &amp;#34;${MONGO_OPLOG_URL:\ -mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ local?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&amp;#34; ROOT_URL: ${ROOT_URL:-http://localhost:${HOST_PORT:-3000}} PORT: ${PORT:-3000} DEPLOY_METHOD: docker DEPLOY_PLATFORM: ${DEPLOY_PLATFORM:-} REG_TOKEN: ${REG_TOKEN:-} depends_on: - mongodb expose: - ${PORT:-3000} ports: - &amp;#34;${BIND_IP:-0.</description>
+      <description>&lt;p&gt;本文將解析在使用 Podman Compose 時遇到的 DNS 服務器問題，並提供解決方案。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -26,14 +22,7 @@ Rocket Chat: https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-dock
       <pubDate>Sun, 19 Nov 2023 03:12:13 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/container-mnt/</guid>
-      <description>使用環境 Rocky Linux 8.7
-環境描述 在 kubernetes 上常常需要透過一些 CLI tool 幫助維護 container，如果 image 本身不提供這些 tool，執行上就會比較麻煩。通常可以透過 kubectl cp 將 CLI tool 複製到 container 內解決問題，需要注意的是，在官方的文件上有指出，如果使用 kubectl cp 則會需要容器內已安裝 tar 指令，否則會失敗:
-https://kubernetes.io/docs/reference/kubectl/cheatsheet/
-以 simple-spring-boot-app 專案為例，base image 是 google 的 distroless，這個 image 內除了 java 外，並沒有其他的 command，在執行 kubectl cp 時會發生錯誤:
-simple-spring-boot-app: https://github.com/tsunejui/simple-spring-boot-app
-distroless: https://github.com/GoogleContainerTools/distroless
-此時需要到 node 上，透過 container 的管理工具所提供的方法 (cp 指令)，將檔案複製到 container 內，一些工具如下:
-Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- cri-tools: crictl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- nerdctl: nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- 假設 node 上 container 的管理工具並沒有提供 cp 的功能，或者沒有安裝 container 的管理工具時，可以透過以下測試步驟，找到 process (也就是 container) 所使用的 mnt namespace 的 mountinfo，並查看對應的 mount point，直接將 CLI tool 放置於指定的目錄即可。</description>
+      <description>&lt;p&gt;本文深入探討 Linux 的 Mount Namespace，這是一種隔離檔案系統的技術。文章將講解其原理、應用場景和如何有效地使用它來提高系統安全性。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -42,14 +31,7 @@ Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OP
       <pubDate>Thu, 02 Nov 2023 15:20:48 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/f5-vip-setting/</guid>
-      <description>環境描述 客戶環境需要在 F5 設定 VIP，並分配流量到不同的主機，我需要在公司 Lab 上模擬，由於對 F5 的操作不熟悉，因此撰寫此篇文章作為紀錄 VIP 設定方法。
-請注意，此篇文章是簡易的設定紀錄，我並非 F5 的專業人員，如果錯誤請見諒
-F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
-設定 Name 及 Health Monitors 的方式 (下圖為新增後的編輯畫面):
-到 Local Traffic / Virtual Servers / Virtual Servers List 頁面上新增 Virtual Server:
-到 Properties 頁面上設定 General Properties 及憑證相關資料 (下圖為新增後的編輯畫面):
-到 Resource 頁面上設定 Load Balancing (下圖為新增後的編輯畫面):
-結果 設定完成後便立即生效，在 Local Traffic / Pools : Pool List / &amp;lt;pool-name&amp;gt; 上可以看到 Pool 內的 members 狀況:</description>
+      <description>&lt;p&gt;本文提供在 F5 Load Balancer 上配置虛擬 IP (VIP) 的步驟。利用 F5 提高應用的可用性。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -58,13 +40,7 @@ F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
       <pubDate>Thu, 02 Nov 2023 00:13:03 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/openshift-gitops-dex-expiration-time/</guid>
-      <description>ArgoCD 認證機制:
-修改流程:
-環境描述 近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 GitOps Operator。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。
-從上圖可得知，ArgoCD 的 web 會再登入後產生一把 token 並放到 cookie 內，名為 argocd.token，我們可以透過 jwt.io 解析這把 token，查看 expiration date:
-在沒有做任何設定的情況下，透過 Openshift 帳密使用 SSO 登入機制進入 ArgoCD 畫面，所產生的 token 過期時間應該是 24h 後，這是因為 ArgoCD 在 SSO 認證上是交給 Dex Server 控制，而 Dex Server 的預設過期時間是 24h：
-可以從 ArgoCD 的 Security 文章查看 Dex Server 的說明:
-尋找方法 ArgoCD Operator 會透過 Kind: ArgoCD 的 CRD ，名為 openshift-gitops，產生需要的 components，如 server、applicationSet、grafana&amp;hellip;:</description>
+      <description>&lt;p&gt;本文介紹如何在 ArgoCD 中設置自動登出功能。這有助於提高安全性，避免未經授權的存取。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -73,11 +49,7 @@ F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
       <pubDate>Sat, 26 Aug 2023 01:51:06 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/node-clock-not-synchronising/</guid>
-      <description>事件經過 某日客戶收到來自 OCP 的 critical 告警，名稱為 NodeClockNotSynchronising，請我們調查原因。
-告警訊息 首先調查告警意義，至 openshoft-monitoring Project 下尋找名為 prometheus-k8s-rulefiles-0 的 ConfigMap，便可看到以下內容
-https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md
-- alert: NodeClockNotSynchronising annotations: description: Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host. runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md summary: Clock not synchronising. expr: | min_over_time(node_timex_sync_status{job=&amp;#34;node-exporter&amp;#34;}[5m]) == 0 and node_timex_maxerror_seconds{job=&amp;#34;node-exporter&amp;#34;} &amp;gt;= 16 for: 10m labels: severity: critical 根據官方文件，我們可以得知以下訊息:
-The NodeClockNotSynchronising alert triggers when a node is affected by issues with the NTP server for that node.</description>
+      <description>&lt;p&gt;這篇文章將探討 NTP (Network Time Protocol) 服務器在 Openshift 發生的同步問題的原因和解決方法。文章將提供故障診斷的內容。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -86,11 +58,7 @@ The NodeClockNotSynchronising alert triggers when a node is affected by issues w
       <pubDate>Thu, 24 Aug 2023 10:24:53 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/rhel-automation-platform-install/</guid>
-      <description>環境準備 Linux 的版本為 Red Hat Enterprise Linux 9.1 (Plow):
-下載 tar 檔案 下載 Red Hat Ansible Automation Platform (v. 2.4 for RHEL 9 for x86_64): 至 https://access.redhat.com/downloads/content/480 下載 Ansible Automation Platform 2.4 Setup Bundle
-解壓縮 tar xvzf ansible-automation-platform-setup-&amp;lt;latest-version&amp;gt;.tar.gz 安裝 Red Hat Ansible Automation Platform subscription 取得token 至 https://access.redhat.com/management/api 產生 Token
-在 Redhat 上使用 subscription-manager register 註冊機器 你也可以透過 subscription-manager register --username &amp;lt;username&amp;gt; --password &amp;lt;password&amp;gt; --auto-attach 註冊機器
-subscription-manager register --token &amp;lt;token&amp;gt; --insecure 獲得 Subscription 的 pool_id subscription-manager list --available --all | grep &amp;#34;Ansible Automation Platform&amp;#34; -B 3 -A 6 安裝 Subscription subscription-manager attach --pool=2c94e43f88fcee5b0189010269427636 驗證是否成功 subscription-manager list --consumed 建立 Ansible Automation Platform Database 如果需要自建 AAP 的 Database 則需執行此步驟，不需要請略過。</description>
+      <description>&lt;p&gt;這篇文章將提供 Ansible Automation Platform (AAP) 的安裝指南。從前置條件到安裝過程，文章將幫助讀者順利完成安裝。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -99,18 +67,7 @@ subscription-manager register --token &amp;lt;token&amp;gt; --insecure 獲得 Su
       <pubDate>Mon, 17 Jul 2023 13:36:31 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/awx-install/</guid>
-      <description>利用 dokcer 安裝 AWX
-使用環境 Rocky Linux 8.7
-安裝步驟 關閉 SELinux 建議暫時關閉 SELinux 避免安裝中出錯:
-setenforce 0 安裝 docker https://docs.docker.com/engine/install/centos/
-安裝 yum-utils:
-yum install -y yum-utils 加入 repository:
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 安裝 docker
-yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 啟動 docker
-systemctl start docker 下載 AWX 17.1.0 安裝 git:
-dnf install -y git Starting in version 18.0, the AWX Operator is the preferred way to install AWX.
-https://github.com/ansible/awx/blob/devel/INSTALL.md
-git clone -b 17.</description>
+      <description>&lt;p&gt;這篇文章將指導讀者如何在容器環境中安裝和設置 AWX (Ansible 的 Web) 版本。從環境準備到配置設置，本文涵蓋整個安裝過程。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -119,16 +76,7 @@ git clone -b 17.</description>
       <pubDate>Sat, 01 Jul 2023 17:23:23 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/samba-install/</guid>
-      <description>使用環境 Rocky Linux 8.7
-安裝步驟 透過 dnf 安裝 samba:
-dnf install samba 設定 systemd 開機自動啟動:
-systemctl enable smb.service 開啟防火牆
-firewall-cmd --permanent --add-service=samba &amp;amp;&amp;amp; firewall-cmd --reload 設定 samba 新增Linux User: rex
-useradd rex 新增 samba 帳號: rex
-smbpasswd -a rex 新增目錄 /mnt/shared 並指派 owner 為 rex:
-mkdir /mnt/shared &amp;amp;&amp;amp; chown rex -R /mnt/shared/ 編輯 vi /etc/samba/smb.conf, 並且加入以下內容:
-設定參數請參考: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
-... [cnssmb] comment = CNS Samba Directory path = /mnt/shared public = yes create mask = 0777 directory mask = 0777 browseable = yes writeable = yes read only = no 設定 SELinux:</description>
+      <description>&lt;p&gt;本文將指導如何在 Linux 系統上安裝和配置 Samba。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -137,9 +85,7 @@ mkdir /mnt/shared &amp;amp;&amp;amp; chown rex -R /mnt/shared/ 編輯 vi /etc/sa
       <pubDate>Wed, 28 Jun 2023 10:43:24 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/kafka-kraft-install/</guid>
-      <description>事前準備 Preparation 準備 3 台 node:
-os name ip Rocky Linux 8.8 cns-kafka-0 192.168.50.170 Rocky Linux 8.8 cns-kafka-1 192.168.50.171 Rocky Linux 8.8 cns-kafka-2 192.168.50.172 安裝步驟 設定 hosts (在每個 Node 上執行) 透過以下指令設定 /etc/hosts:
-cat &amp;lt;&amp;lt; EOF &amp;gt;&amp;gt; /etc/hosts 192.168.50.170 cns-kafka-0 192.168.50.171 cns-kafka-1 192.168.50.172 cns-kafka-2 EOF 安裝 OpenJDK 11 (在每個 Node 上執行) To use Corretto RPM repositories with the yum package manager (such as Amazon Linux AMI), import the Corretto public key and then add the repository to the system list.</description>
+      <description>&lt;p&gt;這篇文章將介紹如何在 Kraft Mode 下安裝和配置 Apache Kafka，這是一種不依賴 Zookeeper 的模式。文章將提供從開始到結束的教學。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -148,18 +94,7 @@ cat &amp;lt;&amp;lt; EOF &amp;gt;&amp;gt; /etc/hosts 192.168.50.170 cns-kafka-0 
       <pubDate>Fri, 16 Jun 2023 09:42:09 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/node-exporter/</guid>
-      <description>安裝 node exporter 監控 linux
-使用環境 Rocky Linux 8.7
-操作步驟 下載 binary 檔案 下載 node-exporter
-curl -OL https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz 解壓縮 解壓縮 tar 檔案
-tar -xzf node_exporter-1.6.0.linux-amd64.tar.gz 設定 Binary 位置及權限 新增資料夾
-mkdir /etc/node_exporter 搬移檔案
-mv node_exporter-1.6.0.linux-amd64/node_exporter /etc/node_exporter/node_exporter 賦予權限:
-chmod +x /etc/node_exporter/node_exporter 建立 Service 檔案 vi node_exporter.service 填入以下內容
-[Unit] Description=Node Exporter Wants=network-online.target After=network-online.target [Service] Type=simple ExecStart=/bin/bash -c &amp;#39;/etc/node_exporter/node_exporter&amp;#39; [Install] WantedBy=multi-user.target 搬移到 /etc/systemd/system/
-cp node_exporter.service /etc/systemd/system/ systemd 設定 重啟 daemon
-systemctl daemon-reload 設定開機自動啟動
-systemctl enable node_exporter.</description>
+      <description>&lt;p&gt;本文介紹如何安裝和配置 Prometheus 的 Node Exporter。文章將涵蓋安裝過程、配置文件設置和數據監控方法。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -168,8 +103,7 @@ systemctl enable node_exporter.</description>
       <pubDate>Sat, 20 May 2023 12:34:03 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/ssh-tunnel/</guid>
-      <description>What is SSH Tunneling SSH Tunneling is a method of creating an encrypted SSH connection between a client and a server machine through which services ports can be relayed, for example:
-Pre-requisites Rocky Linux VM x 2 Install Grafana on one of them vm ip service port VM I (SSH Client) 10.250.75.103 VM II (SSH Server) 10.250.75.147 3000 (Grafana) 確保 /etc/ssh/sshd_config 內的 AllowTcpForwarding 為 yes Get Started 使用 ssh command 在 VM I:</description>
+      <description>&lt;p&gt;在這部分，我們將探討如何在Linux系統中設定SSH Tunnel。SSH Tunnel是一種通過加密的SSH協議來傳輸資料的方法，能有效保護資料免受中間人攻擊，以及測試網路流量。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -178,11 +112,7 @@ Pre-requisites Rocky Linux VM x 2 Install Grafana on one of them vm ip service p
       <pubDate>Tue, 16 May 2023 09:43:12 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/rhel-9-panic/</guid>
-      <description>環境描述 使用 Proxmox 7.2-3:
-問題原因 在 Proxmox 上安裝 RHEL 9 時會發生 Kernel Panic:
-解決方法 在新增 VM 時，CPU type 選擇 host:
-成功啟動 RHEL 9:
-Reference https://access.redhat.com/discussions/6959360 </description>
+      <description>&lt;p&gt;文將探討在 Proxmox 虛擬環境中運行 RHEL 9 時遇到的 Kernel Panic 問題。文章將提供解決步驟。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -191,14 +121,7 @@ Reference https://access.redhat.com/discussions/6959360 </description>
       <pubDate>Sun, 14 May 2023 23:32:13 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/nfs-k8s/</guid>
-      <description>環境設定 項目 內容 NFS Server 10.250.75.111 NFS Path /mnt/nfs_shares 部署 NFS Storage Class 以下步驟將建立 Custom Provisioner，並串接 NFS Server。
-建立 Provisioner 的 Service Account 請參考 here
-建立名為 nfs-client-provisioner 的 Service Account
-kubectl apply -f account.yaml 建立 Provisioner Deployment 請參考 here
-kubernetes-sigs/nfs-subdir-external-provisioner: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
-為了避免出錯，strategy.type 設定為 Recreate，而 replicas 設為 1
-使用 kubernetes-sigs/nfs-subdir-external-provisioner 作為 provisioner，請注意以下環境變數設定:
-- name: PROVISIONER_NAME # storage class 名稱 value: k8s-sigs.io/nfs-subdir-external-provisioner - name: NFS_SERVER # nfs server 位置 value: 10.250.75.111 - name: NFS_PATH # nfs directory 路徑 value: /mnt/nfs_shares 使用 kubectl 部署 nfs-client-provisioner:</description>
+      <description>&lt;p&gt;這篇文章將探討如何在 Kubernetes 環境中使用 NFS (Network File System)。文章將提供一個基本的指南。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -207,12 +130,7 @@ kubernetes-sigs/nfs-subdir-external-provisioner: https://github.com/kubernetes-s
       <pubDate>Sat, 13 May 2023 17:36:21 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/nfs/</guid>
-      <description>什麼是 NFS NFS (Network File System) 是一種分散式檔案系統協議，用於在網路上共享檔案和資源。
-環境設定 id name ip 1 nfs-server 10.250.75.111 2 nfs-client 10.250.75.103 在 NFS Server 上 安裝 nfs 工具包 dnf -y install nfs-utils 啟動 nfs server 並且設定開機自動開啟。 systemctl enable --now nfs-server.service 建立 nfs 目錄 mkdir -p /mnt/nfs_shares 更改 owner 及設定權限 nobody 使用者是一個系統使用者，不擁有任何特殊權限，且通常用於運行低權限的服務或進程。
-chown -R nobody:nobody /mnt/nfs_shares &amp;amp;&amp;amp; chmod -R 777 /mnt/nfs_shares vim /etc/exports /etc/exports 是在 Linux 系統中用於配置 NFS 的設定檔案。NFS 是一種分散式檔案系統，它允許不同的機器透過網路共享檔案。
-rw: 可讀可寫
-sync: 寫入後同步
-no_all_squash: 禁用 all_squash</description>
+      <description>&lt;p&gt;本文將指導讀者如何在 Linux 系統上安裝和配置 NFS。從安裝到設置共享目錄。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -221,16 +139,7 @@ no_all_squash: 禁用 all_squash</description>
       <pubDate>Tue, 02 May 2023 02:02:22 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/proxmox-extend-linux-space/</guid>
-      <description>當 Proxmox 上的 Linux 硬碟可用空間不足時, 可以透過以下方法增加空間。
-使用環境 Rocky Linux 8.7
-Proxmox 重新設定硬碟空間 進入 Proxmox 上 VM 的 Hardware, 編輯 Hard Disk:
-增加硬碟空間:
-透過 lsblk 可以看到, 硬碟 sda 容量有增加。
-lsblk 調整 LVM 我們要調整 rl-root 的容量, 也就是 LV 的大小, 而調整 LV 需要先建立 PV, 再將 PV 加入與 LV 相同的 VG, 如下圖所示:
-https://networklessons.com/uncategorized/extend-lvm-partition
-在建立 PV 之前, 我們需要建立 partition, 透過 parted 指令可以輕鬆的達成:
-如果要操作的硬碟不是 /dev/sda, 你需要下 select /dev/sdb, 請將 /dev/sdb 改成你希望操作的硬碟
-parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:</description>
+      <description>&lt;p&gt;這篇文章將指導如何在 Proxmox 虛擬化環境中為 Linux 虛擬機器增加額外的硬碟空間。從硬碟分配到操作系統配置，文章將提供完整的流程。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -239,14 +148,7 @@ parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:</descript
       <pubDate>Sun, 30 Apr 2023 20:53:09 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/rocky-xrdp/</guid>
-      <description>使用環境 Rocky Linux 8.7
-安裝 xrdp server 安裝 xrdp:
-dnf install xrdp 啟動 server 啟動 xrdp server:
-systemctl start xrdp 設定開機啟動:
-systemctl enable xrdp 打開防火牆 預設 port 為 3389:
-firewall-cmd --permanent --add-port=3389/tcp &amp;amp;&amp;amp; firewall-cmd --reload 測試 使用 Microsoft Remote Desktop 測試連線:
-連線成功:
-Reference https://linux.how2shout.com/how-to-connect-rocky-linux-8-via-windows-rdp-protocol/ </description>
+      <description>&lt;p&gt;這篇文章將介紹如何在 Rocky Linux 上安裝和配置 XRDP，一種遠程桌面協議。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -255,13 +157,7 @@ Reference https://linux.how2shout.com/how-to-connect-rocky-linux-8-via-windows-r
       <pubDate>Sun, 30 Apr 2023 20:14:50 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/rocky-install-gui/</guid>
-      <description>使用環境 Rocky Linux 8.7
-YUN packages 更新 更新安裝包 Update Your Server
-yum update 檢查 Package Groups 我們需要使用 Server with GUI, 請使用 yum group list檢查是否在列表內:
-yum group list 安裝 Server with GUI 執行下面的指令:
-yum groupinstall &amp;#34;Server with GUI&amp;#34; 設定開機進入圖形介面 更改 /etc/systemd/system/default.target 指向的位置：
-systemctl set-default graphical 重開機 reboot 結果 成功啟動圖形介面:
-Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-linux-8/ </description>
+      <description>&lt;p&gt;本文將指導如何在 Rocky Linux 上安裝圖形用戶界面 (GUI)。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -270,8 +166,7 @@ Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-l
       <pubDate>Sun, 12 Mar 2023 17:52:27 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/kafka/</guid>
-      <description>Kafka Installation Kafka official site: https://kafka.apache.org/downloads
-Kafka provides two types of downloads on its official website, namely Source downloads and Binary downloads. The difference between the two is that Source download means Kafka&amp;rsquo;s source code, and users need to compile it themselves after downloading, while Binary Download means pre-compiled binaries that users can download and use directly. Additionally, different versions of Kafka written in different Scala versions are available for download in Binary Download.</description>
+      <description>&lt;p&gt;本文將介紹在傳統的 Zookeeper Mode 下安裝 Kafka 的步驟。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -280,10 +175,7 @@ Kafka provides two types of downloads on its official website, namely Source dow
       <pubDate>Wed, 08 Mar 2023 12:52:25 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/istio-tip/</guid>
-      <description>istio Init:CrashLoopBackOff 問題 安裝 istio 後會發現所有 POD 顯示 Init:CrashLoopBackOff, 透過查看 log 可以發現錯誤。
-https://github.com/istio/istio/issues/23009
-需要載入以下 mod 修復問題：
-modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_owner; modprobe iptable_nat; modprobe iptable_mangle; modprobe iptable_filter cat &amp;lt;&amp;lt;EOF | sudo tee /etc/modules-load.d/99-istio-modules.conf br_netfilter nf_nat xt_REDIRECT xt_owner iptable_nat iptable_mangle iptable_filter EOF </description>
+      <description>&lt;p&gt;在本文中，我們將討論在安裝 Istio 服務常見的錯誤，並提供故障排除技巧和解決方案。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -292,10 +184,7 @@ modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_own
       <pubDate>Wed, 08 Mar 2023 12:50:23 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/kubernetes-tips/</guid>
-      <description>產生新的加入 cluster 指令 建立新的 token
-kubeadm token generate 畫面會顯示新的 token, 便可以使用 kubeadm token create 建立新的 join command
-以 4a4dv5.i31huo1je1e2dler 為例
-kubeadm token create 4a4dv5.i31huo1je1e2dler --print-join-command </description>
+      <description>&lt;p&gt;本文將紀錄在 Kubernetes 上常見的 &lt;code&gt;kubectl&lt;/code&gt; 指令，並且取得 cluster 的各項資訊。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -304,12 +193,7 @@ kubeadm token create 4a4dv5.i31huo1je1e2dler --print-join-command </description>
       <pubDate>Wed, 08 Mar 2023 10:19:24 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/kubernetes-install/</guid>
-      <description>安裝 Kubernetes 事前準備 Preparation Before you begin
-Rocky Linux ISO 載點: link
-Kubernetes 安裝建議高於 2 core CPU 及 2 GB or more RAM: link
-準備 5 台 node, OS 選擇 Rocky Linux 8 每台 node 需要 4 core CPU &amp;amp; 8 GB memory (非必要) 6 組 IP (node * 5 + VIP * 1) Kubernetes Interface
-interface service version CRI containerd 1.6.19 CNI calico 3.25.0 nodes
-建議登入每台主機, 並使用 hostnamectl set-hostname xxx 修改 hostname</description>
+      <description>&lt;p&gt;這篇文章將詳細介紹 Kubernetes 的安裝流程。從環境準備到集群配置，本文將為初學者提供一個清晰的安裝指南。&lt;/p&gt;</description>
     </item>
     
   </channel>

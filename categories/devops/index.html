@@ -39,7 +39,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -64,16 +64,15 @@
 			Dex Expiration Time on Openshift Gitops
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">ArgoCD 頁面自動登出設定</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-02T00:13:03&#43;08:00">November 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>, <a class="meta__link" href="/categories/devops/" rel="category">Devops</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		ArgoCD 認證機制:
-修改流程:
-環境描述 近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 GitOps Operator。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。
-從上圖可得知，ArgoCD 的 web 會再登入後產生一把 token 並放到 cookie 內，名為 argocd.token，我們可以透過 jwt.io 解析這把 token，查看 expiration date:
-在沒有做任何設定的情況下，透過 Openshift 帳密使用 SSO 登入機制進入 ArgoCD 畫面，所產生的 token 過期時間應該是 24h 後，這是因為 ArgoCD 在 SSO 認證上是交給 Dex Server 控制，而 Dex Server 的預設過期時間是 24h：
-可以從 ArgoCD 的 Security 文章查看 Dex Server 的說明:
-尋找方法 ArgoCD Operator 會透過 Kind: ArgoCD 的 CRD ，名為 openshift-gitops，產生需要的 components，如 server、applicationSet、grafana&hellip;:
+		<p>本文介紹如何在 ArgoCD 中設置自動登出功能。這有助於提高安全性，避免未經授權的存取。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -83,14 +82,15 @@
 			RHEL Ansible Automation Platform (AAP) Installation
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">AAP 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-24T10:24:53&#43;08:00">August 24, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/devops/" rel="category">Devops</a>, <a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境準備 Linux 的版本為 Red Hat Enterprise Linux 9.1 (Plow):
-下載 tar 檔案 下載 Red Hat Ansible Automation Platform (v. 2.4 for RHEL 9 for x86_64): 至 https://access.redhat.com/downloads/content/480 下載 Ansible Automation Platform 2.4 Setup Bundle
-解壓縮 tar xvzf ansible-automation-platform-setup-&lt;latest-version&gt;.tar.gz 安裝 Red Hat Ansible Automation Platform subscription 取得token 至 https://access.redhat.com/management/api 產生 Token
-在 Redhat 上使用 subscription-manager register 註冊機器 你也可以透過 subscription-manager register --username &lt;username&gt; --password &lt;password&gt; --auto-attach 註冊機器
-subscription-manager register --token &lt;token&gt; --insecure 獲得 Subscription 的 pool_id subscription-manager list --available --all | grep &#34;Ansible Automation Platform&#34; -B 3 -A 6 安裝 Subscription subscription-manager attach --pool=2c94e43f88fcee5b0189010269427636 驗證是否成功 subscription-manager list --consumed 建立 Ansible Automation Platform Database 如果需要自建 AAP 的 Database 則需執行此步驟，不需要請略過。
+		<p>這篇文章將提供 Ansible Automation Platform (AAP) 的安裝指南。從前置條件到安裝過程，文章將幫助讀者順利完成安裝。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -100,21 +100,15 @@ subscription-manager register --token &lt;token&gt; --insecure 獲得 Subscripti
 			AWX Installation (Container)
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">AWX - Container 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-07-17T13:36:31&#43;08:00">July 17, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/devops/" rel="category">Devops</a>, <a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		利用 dokcer 安裝 AWX
-使用環境 Rocky Linux 8.7
-安裝步驟 關閉 SELinux 建議暫時關閉 SELinux 避免安裝中出錯:
-setenforce 0 安裝 docker https://docs.docker.com/engine/install/centos/
-安裝 yum-utils:
-yum install -y yum-utils 加入 repository:
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 安裝 docker
-yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 啟動 docker
-systemctl start docker 下載 AWX 17.1.0 安裝 git:
-dnf install -y git Starting in version 18.0, the AWX Operator is the preferred way to install AWX.
-https://github.com/ansible/awx/blob/devel/INSTALL.md
-git clone -b 17.
+		<p>這篇文章將指導讀者如何在容器環境中安裝和設置 AWX (Ansible 的 Web) 版本。從環境準備到配置設置，本文涵蓋整個安裝過程。</p>
 	</div>
 </article>
 </main>
@@ -170,8 +164,6 @@ git clone -b 17.
 				<a class="widget__link" href="/categories/linux/">Linux</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/openshift/">Openshift</a></li>
-			<li class="widget__item">
-				<a class="widget__link" href="/categories/profile/">Profile</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/prometheus/">Prometheus</a></li>
 			<li class="widget__item">

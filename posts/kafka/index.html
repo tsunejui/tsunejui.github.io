@@ -38,7 +38,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -56,10 +56,16 @@
 	<article class="post">
 		<header class="post__header">
 			<h1 class="post__title">Kafka 學習筆記</h1>
-			
+			<p class="post__lead">Kafka - Zookeeper Mode 安裝步驟</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-03-12T17:52:27&#43;08:00">March 12, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/kafka/" rel="category">Kafka</a>
+	</span>
+</div></div>
 		</header>
 		<div class="content post__content clearfix">
-			<h3 id="kafka-installation">Kafka Installation</h3>
+			<p>本文將介紹在傳統的 Zookeeper Mode 下安裝 Kafka 的步驟。</p>
+<h3 id="kafka-installation">Kafka Installation</h3>
 <blockquote>
 <p>Kafka official site: <a href="https://kafka.apache.org/downloads">https://kafka.apache.org/downloads</a></p>
 </blockquote>
@@ -102,7 +108,6 @@ source /etc/profile
 <pre tabindex="0"><code>/opt/module/kafka/bin/kafka-server-start.sh -daemon /opt/module/kafka/config/server.properties
 </code></pre><h3 id="關閉-kafka">關閉 Kafka</h3>
 <p>先關閉 Kafka 再關閉 zookeeper。否則會無法關閉 Kafka。</p>
-
 		</div>
 		<footer class="post__footer">
 			

@@ -39,7 +39,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -64,20 +64,15 @@
 			Scale Down the Prometheus on Openshift Monitoring
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Openshift 上對 Prometheus 進行 Scale Down 的方法</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-07T22:29:20&#43;08:00">November 07, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>, <a class="meta__link" href="/categories/prometheus/" rel="category">Prometheus</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 客戶希望可以修改 Openshift 4.12 上 Prometheus 的 Replicas 數量為 0，希望我可以研究。
-研究結果 目前 Openshift 4.12 沒有提供修改 Prometheus 數量的方法。 原本以為修改 Prometheus CRD 就可以更改 Replicas 的數量，但是修改後過沒多久就會被 Operator 改回來。以下是我找到的資料:
-曾經在3.11可以調整replicas的設定，但後來消失了:
-https://github.com/openshift/cluster-monitoring-operator/pull/330/commits/53453691c9d47f5c621a9d538aba12431541a2c8
-我在 cluster-monitoring-operator 的設定上也沒找到參數可以調整，測試 replicas 也無法:
-https://github.com/openshift/cluster-monitoring-operator/blob/master/Documentation/api.md#prometheusk8sconfig
-目前我找到這個 issue，在 2020 年 8 月還不支援
-https://github.com/openshift/cluster-monitoring-operator/issues/896
-解決方法 現在這是我看過最暴力的做法，先透過修改 clusterversion/version ，將 openshift-monitoring 設定為 unmanaged，之後再 scale down 所有 deployment ，親測有效，但很暴力:
-https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b
-oc patch clusterversion/version --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: overrides: - group: apps/v1 kind: Deployment name: cluster-monitoring-operator namespace: openshift-monitoring unmanaged: true EOF )&#34; oc patch prometheus/k8s -n openshift-monitoring --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: replicas: 0 EOF )&#34; oc patch alertmanagers/main -n openshift-monitoring --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: replicas: 0 EOF )&#34; oc scale --replicas=0 deploy/cluster-monitoring-operator -n openshift-monitoring oc scale --replicas=0 deployment.
+		<p>這篇文章將探討在 Openshift 上如何有效地對 Prometheus 進行縮減。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -87,21 +82,15 @@ oc patch clusterversion/version --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- E
 			Node Exporter
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Node Exporter 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-06-16T09:42:09&#43;08:00">June 16, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		安裝 node exporter 監控 linux
-使用環境 Rocky Linux 8.7
-操作步驟 下載 binary 檔案 下載 node-exporter
-curl -OL https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz 解壓縮 解壓縮 tar 檔案
-tar -xzf node_exporter-1.6.0.linux-amd64.tar.gz 設定 Binary 位置及權限 新增資料夾
-mkdir /etc/node_exporter 搬移檔案
-mv node_exporter-1.6.0.linux-amd64/node_exporter /etc/node_exporter/node_exporter 賦予權限:
-chmod +x /etc/node_exporter/node_exporter 建立 Service 檔案 vi node_exporter.service 填入以下內容
-[Unit] Description=Node Exporter Wants=network-online.target After=network-online.target [Service] Type=simple ExecStart=/bin/bash -c &#39;/etc/node_exporter/node_exporter&#39; [Install] WantedBy=multi-user.target 搬移到 /etc/systemd/system/
-cp node_exporter.service /etc/systemd/system/ systemd 設定 重啟 daemon
-systemctl daemon-reload 設定開機自動啟動
-systemctl enable node_exporter.
+		<p>本文介紹如何安裝和配置 Prometheus 的 Node Exporter。文章將涵蓋安裝過程、配置文件設置和數據監控方法。</p>
 	</div>
 </article>
 </main>
@@ -157,8 +146,6 @@ systemctl enable node_exporter.
 				<a class="widget__link" href="/categories/linux/">Linux</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/openshift/">Openshift</a></li>
-			<li class="widget__item">
-				<a class="widget__link" href="/categories/profile/">Profile</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/prometheus/">Prometheus</a></li>
 			<li class="widget__item">

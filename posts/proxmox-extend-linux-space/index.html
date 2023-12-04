@@ -38,7 +38,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -56,10 +56,16 @@
 	<article class="post">
 		<header class="post__header">
 			<h1 class="post__title">Proxmox 增加 Linux 硬碟空間</h1>
-			
+			<p class="post__lead">Proxmox 上針對 Linux VM 增加硬碟的方法</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-02T02:02:22&#43;08:00">May 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 		</header>
 		<div class="content post__content clearfix">
-			<p>當 Proxmox 上的 Linux 硬碟可用空間不足時, 可以透過以下方法增加空間。</p>
+			<p>這篇文章將指導如何在 Proxmox 虛擬化環境中為 Linux 虛擬機器增加額外的硬碟空間。從硬碟分配到操作系統配置，文章將提供完整的流程。</p>
+<p>當 Proxmox 上的 Linux 硬碟可用空間不足時, 可以透過以下方法增加空間。</p>
 <h2 id="使用環境">使用環境</h2>
 <p>Rocky Linux 8.7</p>
 <p><img src="/rocky-linux-gui/os-release.png" alt="os-release"></p>
@@ -133,7 +139,6 @@
 <ul>
 <li><a href="https://serverfault.com/questions/104923/unrecognised-disc-label-when-using-parted-with-qemu-images">https://serverfault.com/questions/104923/unrecognised-disc-label-when-using-parted-with-qemu-images</a></li>
 </ul>
-
 		</div>
 		<footer class="post__footer">
 			

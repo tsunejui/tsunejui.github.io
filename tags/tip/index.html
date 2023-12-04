@@ -39,7 +39,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -64,13 +64,15 @@
 			AWS Security Token Service (STS) Example
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">AWS STS 實驗</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-12T21:33:35&#43;08:00">November 12, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/aws/" rel="category">AWS</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 最近公司需要評估 AWS ROSA 在客戶端導入的可行性，因此需要研究其行為，根據 ROSA 的文件，建立 ROSA 的方式可以分成 with STS 及 without STS，由於之前沒有使用過 AWS STS ，此篇文章作為 STS API 的基本測試步驟：
-基本介紹 根據 AWS 官方介紹，AWS STS API 提供了 trusted users 取得 Temporary security credentials 的方法。在 AWS ROSA 上可以帶來一些好處：
-測試步驟 (請先設定好 ~/.aws/credentials) 建立 User Alice aws iam create-user --user-name Alice 建立 Example Policy 編輯 iam policy 檔案: vi example-policy.json
-{ &#34;Version&#34;: &#34;2012-10-17&#34;, &#34;Statement&#34;: [ { &#34;Sid&#34;: &#34;VisualEditor0&#34;, &#34;Effect&#34;: &#34;Allow&#34;, &#34;Action&#34;: [ &#34;s3:ListStorageLensConfigurations&#34;, &#34;s3:ListAccessPointsForObjectLambda&#34;, &#34;s3:ListBucketMultipartUploads&#34;, &#34;s3:ListAllMyBuckets&#34;, &#34;s3:ListAccessPoints&#34;, &#34;s3:ListJobs&#34;, &#34;s3:ListBucketVersions&#34;, &#34;s3:ListBucket&#34;, &#34;s3:ListMultiRegionAccessPoints&#34;, &#34;s3:ListMultipartUploadParts&#34; ], &#34;Resource&#34;: &#34;*&#34; } ] } 新增 iam policy:
+		<p>本文介紹 AWS Security Token Service (STS) 的使用方法和實驗。STS 提供短期憑證來訪問 AWS 資源，增強安全性和管理方便性。我們將逐步探索 STS 的功能，實現身份驗證和授權。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -80,20 +82,15 @@
 			Scale Down the Prometheus on Openshift Monitoring
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Openshift 上對 Prometheus 進行 Scale Down 的方法</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-07T22:29:20&#43;08:00">November 07, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>, <a class="meta__link" href="/categories/prometheus/" rel="category">Prometheus</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 客戶希望可以修改 Openshift 4.12 上 Prometheus 的 Replicas 數量為 0，希望我可以研究。
-研究結果 目前 Openshift 4.12 沒有提供修改 Prometheus 數量的方法。 原本以為修改 Prometheus CRD 就可以更改 Replicas 的數量，但是修改後過沒多久就會被 Operator 改回來。以下是我找到的資料:
-曾經在3.11可以調整replicas的設定，但後來消失了:
-https://github.com/openshift/cluster-monitoring-operator/pull/330/commits/53453691c9d47f5c621a9d538aba12431541a2c8
-我在 cluster-monitoring-operator 的設定上也沒找到參數可以調整，測試 replicas 也無法:
-https://github.com/openshift/cluster-monitoring-operator/blob/master/Documentation/api.md#prometheusk8sconfig
-目前我找到這個 issue，在 2020 年 8 月還不支援
-https://github.com/openshift/cluster-monitoring-operator/issues/896
-解決方法 現在這是我看過最暴力的做法，先透過修改 clusterversion/version ，將 openshift-monitoring 設定為 unmanaged，之後再 scale down 所有 deployment ，親測有效，但很暴力:
-https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b
-oc patch clusterversion/version --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: overrides: - group: apps/v1 kind: Deployment name: cluster-monitoring-operator namespace: openshift-monitoring unmanaged: true EOF )&#34; oc patch prometheus/k8s -n openshift-monitoring --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: replicas: 0 EOF )&#34; oc patch alertmanagers/main -n openshift-monitoring --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- EOF spec: replicas: 0 EOF )&#34; oc scale --replicas=0 deploy/cluster-monitoring-operator -n openshift-monitoring oc scale --replicas=0 deployment.
+		<p>這篇文章將探討在 Openshift 上如何有效地對 Prometheus 進行縮減。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -103,19 +100,15 @@ oc patch clusterversion/version --type=&#39;merge&#39; -p &#34;$(cat &lt;&lt;- E
 			Samba 安裝
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Linux Samba 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-07-01T17:23:23&#43;08:00">July 01, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		使用環境 Rocky Linux 8.7
-安裝步驟 透過 dnf 安裝 samba:
-dnf install samba 設定 systemd 開機自動啟動:
-systemctl enable smb.service 開啟防火牆
-firewall-cmd --permanent --add-service=samba &amp;&amp; firewall-cmd --reload 設定 samba 新增Linux User: rex
-useradd rex 新增 samba 帳號: rex
-smbpasswd -a rex 新增目錄 /mnt/shared 並指派 owner 為 rex:
-mkdir /mnt/shared &amp;&amp; chown rex -R /mnt/shared/ 編輯 vi /etc/samba/smb.conf, 並且加入以下內容:
-設定參數請參考: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
-... [cnssmb] comment = CNS Samba Directory path = /mnt/shared public = yes create mask = 0777 directory mask = 0777 browseable = yes writeable = yes read only = no 設定 SELinux:
+		<p>本文將指導如何在 Linux 系統上安裝和配置 Samba。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -125,21 +118,15 @@ mkdir /mnt/shared &amp;&amp; chown rex -R /mnt/shared/ 編輯 vi /etc/samba/smb.
 			Node Exporter
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Node Exporter 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-06-16T09:42:09&#43;08:00">June 16, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		安裝 node exporter 監控 linux
-使用環境 Rocky Linux 8.7
-操作步驟 下載 binary 檔案 下載 node-exporter
-curl -OL https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz 解壓縮 解壓縮 tar 檔案
-tar -xzf node_exporter-1.6.0.linux-amd64.tar.gz 設定 Binary 位置及權限 新增資料夾
-mkdir /etc/node_exporter 搬移檔案
-mv node_exporter-1.6.0.linux-amd64/node_exporter /etc/node_exporter/node_exporter 賦予權限:
-chmod +x /etc/node_exporter/node_exporter 建立 Service 檔案 vi node_exporter.service 填入以下內容
-[Unit] Description=Node Exporter Wants=network-online.target After=network-online.target [Service] Type=simple ExecStart=/bin/bash -c &#39;/etc/node_exporter/node_exporter&#39; [Install] WantedBy=multi-user.target 搬移到 /etc/systemd/system/
-cp node_exporter.service /etc/systemd/system/ systemd 設定 重啟 daemon
-systemctl daemon-reload 設定開機自動啟動
-systemctl enable node_exporter.
+		<p>本文介紹如何安裝和配置 Prometheus 的 Node Exporter。文章將涵蓋安裝過程、配置文件設置和數據監控方法。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -149,14 +136,15 @@ systemctl enable node_exporter.
 			RHEL 9 在 Proxmox 上 Kernel Panic
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">RHEL 9 在 Proxmox 上出現 Kernel Panic 的解決方法</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-16T09:43:12&#43;08:00">May 16, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 使用 Proxmox 7.2-3:
-問題原因 在 Proxmox 上安裝 RHEL 9 時會發生 Kernel Panic:
-解決方法 在新增 VM 時，CPU type 選擇 host:
-成功啟動 RHEL 9:
-Reference https://access.redhat.com/discussions/6959360 
+		<p>文將探討在 Proxmox 虛擬環境中運行 RHEL 9 時遇到的 Kernel Panic 問題。文章將提供解決步驟。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -166,19 +154,15 @@ Reference https://access.redhat.com/discussions/6959360
 			Proxmox 增加 Linux 硬碟空間
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Proxmox 上針對 Linux VM 增加硬碟的方法</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-02T02:02:22&#43;08:00">May 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		當 Proxmox 上的 Linux 硬碟可用空間不足時, 可以透過以下方法增加空間。
-使用環境 Rocky Linux 8.7
-Proxmox 重新設定硬碟空間 進入 Proxmox 上 VM 的 Hardware, 編輯 Hard Disk:
-增加硬碟空間:
-透過 lsblk 可以看到, 硬碟 sda 容量有增加。
-lsblk 調整 LVM 我們要調整 rl-root 的容量, 也就是 LV 的大小, 而調整 LV 需要先建立 PV, 再將 PV 加入與 LV 相同的 VG, 如下圖所示:
-https://networklessons.com/uncategorized/extend-lvm-partition
-在建立 PV 之前, 我們需要建立 partition, 透過 parted 指令可以輕鬆的達成:
-如果要操作的硬碟不是 /dev/sda, 你需要下 select /dev/sdb, 請將 /dev/sdb 改成你希望操作的硬碟
-parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:
+		<p>這篇文章將指導如何在 Proxmox 虛擬化環境中為 Linux 虛擬機器增加額外的硬碟空間。從硬碟分配到操作系統配置，文章將提供完整的流程。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -188,13 +172,15 @@ parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:
 			Istio Tip
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Istio 安裝後錯誤處理</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-03-08T12:52:25&#43;08:00">March 08, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/istio/" rel="category">Istio</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		istio Init:CrashLoopBackOff 問題 安裝 istio 後會發現所有 POD 顯示 Init:CrashLoopBackOff, 透過查看 log 可以發現錯誤。
-https://github.com/istio/istio/issues/23009
-需要載入以下 mod 修復問題：
-modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_owner; modprobe iptable_nat; modprobe iptable_mangle; modprobe iptable_filter cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/99-istio-modules.conf br_netfilter nf_nat xt_REDIRECT xt_owner iptable_nat iptable_mangle iptable_filter EOF 
+		<p>在本文中，我們將討論在安裝 Istio 服務常見的錯誤，並提供故障排除技巧和解決方案。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -204,13 +190,15 @@ modprobe br_netfilter ; modprobe nf_nat ; modprobe xt_REDIRECT ; modprobe xt_own
 			Kubernetes Tips
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Kubernetes 筆記</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-03-08T12:50:23&#43;08:00">March 08, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		產生新的加入 cluster 指令 建立新的 token
-kubeadm token generate 畫面會顯示新的 token, 便可以使用 kubeadm token create 建立新的 join command
-以 4a4dv5.i31huo1je1e2dler 為例
-kubeadm token create 4a4dv5.i31huo1je1e2dler --print-join-command 
+		<p>本文將紀錄在 Kubernetes 上常見的 <code>kubectl</code> 指令，並且取得 cluster 的各項資訊。</p>
 	</div>
 </article>
 </main>
@@ -266,8 +254,6 @@ kubeadm token create 4a4dv5.i31huo1je1e2dler --print-join-command
 				<a class="widget__link" href="/categories/linux/">Linux</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/openshift/">Openshift</a></li>
-			<li class="widget__item">
-				<a class="widget__link" href="/categories/profile/">Profile</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/prometheus/">Prometheus</a></li>
 			<li class="widget__item">

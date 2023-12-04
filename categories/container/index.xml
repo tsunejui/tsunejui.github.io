@@ -13,11 +13,7 @@
       <pubDate>Tue, 05 Dec 2023 00:29:01 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/podman-dns/</guid>
-      <description>使用環境 Rocky Linux 8.7
-環境描述 由於部門都是在 LINE 上討論公事，常常造成公私不分，因此想架設一個 Rocket Chat 作為辦公的溝通平台，而 Rocket Chat 也有提供 docker-compose.yaml 讓用戶方便部署：
-13個你不應該用Line辦公的理由: https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html
-Rocket Chat: https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose
-# src: https://github.com/RocketChat/Docker.Official.Image/blob/master/compose.yml volumes: mongodb_data: { driver: local } services: rocketchat: image: registry.rocket.chat/rocketchat/rocket.chat:${RELEASE:-latest} restart: always labels: traefik.enable: &amp;#34;true&amp;#34; traefik.http.routers.rocketchat.rule: Host(`${DOMAIN:-}`) traefik.http.routers.rocketchat.tls: &amp;#34;true&amp;#34; traefik.http.routers.rocketchat.entrypoints: https traefik.http.routers.rocketchat.tls.certresolver: le environment: MONGO_URL: &amp;#34;${MONGO_URL:-\ mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ ${MONGODB_DATABASE:-rocketchat}?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&amp;#34; MONGO_OPLOG_URL: &amp;#34;${MONGO_OPLOG_URL:\ -mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ local?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&amp;#34; ROOT_URL: ${ROOT_URL:-http://localhost:${HOST_PORT:-3000}} PORT: ${PORT:-3000} DEPLOY_METHOD: docker DEPLOY_PLATFORM: ${DEPLOY_PLATFORM:-} REG_TOKEN: ${REG_TOKEN:-} depends_on: - mongodb expose: - ${PORT:-3000} ports: - &amp;#34;${BIND_IP:-0.</description>
+      <description>&lt;p&gt;本文將解析在使用 Podman Compose 時遇到的 DNS 服務器問題，並提供解決方案。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -26,14 +22,7 @@ Rocket Chat: https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-dock
       <pubDate>Sun, 19 Nov 2023 03:12:13 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/container-mnt/</guid>
-      <description>使用環境 Rocky Linux 8.7
-環境描述 在 kubernetes 上常常需要透過一些 CLI tool 幫助維護 container，如果 image 本身不提供這些 tool，執行上就會比較麻煩。通常可以透過 kubectl cp 將 CLI tool 複製到 container 內解決問題，需要注意的是，在官方的文件上有指出，如果使用 kubectl cp 則會需要容器內已安裝 tar 指令，否則會失敗:
-https://kubernetes.io/docs/reference/kubectl/cheatsheet/
-以 simple-spring-boot-app 專案為例，base image 是 google 的 distroless，這個 image 內除了 java 外，並沒有其他的 command，在執行 kubectl cp 時會發生錯誤:
-simple-spring-boot-app: https://github.com/tsunejui/simple-spring-boot-app
-distroless: https://github.com/GoogleContainerTools/distroless
-此時需要到 node 上，透過 container 的管理工具所提供的方法 (cp 指令)，將檔案複製到 container 內，一些工具如下:
-Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- cri-tools: crictl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- nerdctl: nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- 假設 node 上 container 的管理工具並沒有提供 cp 的功能，或者沒有安裝 container 的管理工具時，可以透過以下測試步驟，找到 process (也就是 container) 所使用的 mnt namespace 的 mountinfo，並查看對應的 mount point，直接將 CLI tool 放置於指定的目錄即可。</description>
+      <description>&lt;p&gt;本文深入探討 Linux 的 Mount Namespace，這是一種隔離檔案系統的技術。文章將講解其原理、應用場景和如何有效地使用它來提高系統安全性。&lt;/p&gt;</description>
     </item>
     
   </channel>

@@ -13,17 +13,7 @@
       <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</guid>
-      <description>環境描述 客戶希望可以修改 Openshift 4.12 上 Prometheus 的 Replicas 數量為 0，希望我可以研究。
-研究結果 目前 Openshift 4.12 沒有提供修改 Prometheus 數量的方法。 原本以為修改 Prometheus CRD 就可以更改 Replicas 的數量，但是修改後過沒多久就會被 Operator 改回來。以下是我找到的資料:
-曾經在3.11可以調整replicas的設定，但後來消失了:
-https://github.com/openshift/cluster-monitoring-operator/pull/330/commits/53453691c9d47f5c621a9d538aba12431541a2c8
-我在 cluster-monitoring-operator 的設定上也沒找到參數可以調整，測試 replicas 也無法:
-https://github.com/openshift/cluster-monitoring-operator/blob/master/Documentation/api.md#prometheusk8sconfig
-目前我找到這個 issue，在 2020 年 8 月還不支援
-https://github.com/openshift/cluster-monitoring-operator/issues/896
-解決方法 現在這是我看過最暴力的做法，先透過修改 clusterversion/version ，將 openshift-monitoring 設定為 unmanaged，之後再 scale down 所有 deployment ，親測有效，但很暴力:
-https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b
-oc patch clusterversion/version --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat &amp;lt;&amp;lt;- EOF spec: overrides: - group: apps/v1 kind: Deployment name: cluster-monitoring-operator namespace: openshift-monitoring unmanaged: true EOF )&amp;#34; oc patch prometheus/k8s -n openshift-monitoring --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat &amp;lt;&amp;lt;- EOF spec: replicas: 0 EOF )&amp;#34; oc patch alertmanagers/main -n openshift-monitoring --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat &amp;lt;&amp;lt;- EOF spec: replicas: 0 EOF )&amp;#34; oc scale --replicas=0 deploy/cluster-monitoring-operator -n openshift-monitoring oc scale --replicas=0 deployment.</description>
+      <description>&lt;p&gt;這篇文章將探討在 Openshift 上如何有效地對 Prometheus 進行縮減。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -32,18 +22,7 @@ oc patch clusterversion/version --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat
       <pubDate>Fri, 16 Jun 2023 09:42:09 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/node-exporter/</guid>
-      <description>安裝 node exporter 監控 linux
-使用環境 Rocky Linux 8.7
-操作步驟 下載 binary 檔案 下載 node-exporter
-curl -OL https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz 解壓縮 解壓縮 tar 檔案
-tar -xzf node_exporter-1.6.0.linux-amd64.tar.gz 設定 Binary 位置及權限 新增資料夾
-mkdir /etc/node_exporter 搬移檔案
-mv node_exporter-1.6.0.linux-amd64/node_exporter /etc/node_exporter/node_exporter 賦予權限:
-chmod +x /etc/node_exporter/node_exporter 建立 Service 檔案 vi node_exporter.service 填入以下內容
-[Unit] Description=Node Exporter Wants=network-online.target After=network-online.target [Service] Type=simple ExecStart=/bin/bash -c &amp;#39;/etc/node_exporter/node_exporter&amp;#39; [Install] WantedBy=multi-user.target 搬移到 /etc/systemd/system/
-cp node_exporter.service /etc/systemd/system/ systemd 設定 重啟 daemon
-systemctl daemon-reload 設定開機自動啟動
-systemctl enable node_exporter.</description>
+      <description>&lt;p&gt;本文介紹如何安裝和配置 Prometheus 的 Node Exporter。文章將涵蓋安裝過程、配置文件設置和數據監控方法。&lt;/p&gt;</description>
     </item>
     
   </channel>

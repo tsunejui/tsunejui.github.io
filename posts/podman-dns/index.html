@@ -38,7 +38,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -56,13 +56,23 @@
 	<article class="post">
 		<header class="post__header">
 			<h1 class="post__title">Podman DNS</h1>
-			
+			<p class="post__lead">解決在 Podman Compose 上 DNS Server 無法使用的問題</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-05T00:29:01&#43;08:00">December 05, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>
+	</span>
+</div></div>
 		</header>
 		<div class="content post__content clearfix">
-			<h3 id="使用環境">使用環境</h3>
-<p>Rocky Linux 8.7</p>
+			<p>本文將解析在使用 Podman Compose 時遇到的 DNS 服務器問題，並提供解決方案。</p>
+<h2 id="使用環境">使用環境</h2>
+<p>作業系統為 <code>Rocky Linux 8.7</code>:</p>
 <p><img src="/rocky-linux-gui/os-release.png" alt="os-release"></p>
-<h3 id="環境描述">環境描述</h3>
+<p>工具 <code>podman-compose</code> 版本如下：</p>
+<pre tabindex="0"><code>podman-compose version: 1.0.7
+podman version: 4.4.1
+</code></pre><p><img src="/podman-dns/version.png" alt="version"></p>
+<h2 id="環境描述">環境描述</h2>
 <p>由於部門都是在 LINE 上討論公事，常常造成公私不分，因此想架設一個 <a href="https://www.rocket.chat">Rocket Chat</a> 作為辦公的溝通平台，而 <code>Rocket Chat</code> 也有提供 <code>docker-compose.yaml</code> 讓用戶方便部署：</p>
 <blockquote>
 <p>13個你不應該用Line辦公的理由: <a href="https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html">https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html</a></p>
@@ -75,31 +85,15 @@ volumes:
 services:
   rocketchat:
     image: registry.rocket.chat/rocketchat/rocket.chat:${RELEASE:-latest}
-    restart: always
-    labels:
-      traefik.enable: &#34;true&#34;
-      traefik.http.routers.rocketchat.rule: Host(`${DOMAIN:-}`)
-      traefik.http.routers.rocketchat.tls: &#34;true&#34;
-      traefik.http.routers.rocketchat.entrypoints: https
-      traefik.http.routers.rocketchat.tls.certresolver: le
+
+    ...
+
     environment:
       MONGO_URL: &#34;${MONGO_URL:-\
         mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\
         ${MONGODB_DATABASE:-rocketchat}?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&#34;
-      MONGO_OPLOG_URL: &#34;${MONGO_OPLOG_URL:\
-        -mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\
-        local?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&#34;
-      ROOT_URL: ${ROOT_URL:-http://localhost:${HOST_PORT:-3000}}
-      PORT: ${PORT:-3000}
-      DEPLOY_METHOD: docker
-      DEPLOY_PLATFORM: ${DEPLOY_PLATFORM:-}
-      REG_TOKEN: ${REG_TOKEN:-}
-    depends_on:
-      - mongodb
-    expose:
-      - ${PORT:-3000}
-    ports:
-      - &#34;${BIND_IP:-0.0.0.0}:${HOST_PORT:-3000}:${PORT:-3000}&#34;
+
+    ...
 
   mongodb:
     image: docker.io/bitnami/mongodb:${MONGODB_VERSION:-5.0}
@@ -109,21 +103,13 @@ services:
     environment:
       MONGODB_REPLICA_SET_MODE: primary
       MONGODB_REPLICA_SET_NAME: ${MONGODB_REPLICA_SET_NAME:-rs0}
-      MONGODB_PORT_NUMBER: ${MONGODB_PORT_NUMBER:-27017}
-      MONGODB_INITIAL_PRIMARY_HOST: ${MONGODB_INITIAL_PRIMARY_HOST:-mongodb}
-      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: ${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}
-      MONGODB_ADVERTISED_HOSTNAME: ${MONGODB_ADVERTISED_HOSTNAME:-mongodb}
-      MONGODB_ENABLE_JOURNAL: ${MONGODB_ENABLE_JOURNAL:-true}
-      ALLOW_EMPTY_PASSWORD: ${ALLOW_EMPTY_PASSWORD:-yes}
+
+    ...
 </code></pre><p>若使用 <code>docker-compose</code> 部署時沒有問題，但如果使用 <code>podman-compose</code> 部署時，便會發生 DNS 無法解析的問題，使得 <code>rocketchat</code> 無法連上 <code>mongodb</code>。</p>
 <blockquote>
 <p>podman-compose: <a href="https://github.com/containers/podman-compose">https://github.com/containers/podman-compose</a></p>
 </blockquote>
-<p>我使用的 <code>podman-compose</code> 版本如下：</p>
-<pre tabindex="0"><code>podman-compose version: 1.0.7
-podman version: 4.4.1
-</code></pre><p><img src="/podman-dns/version.png" alt="version"></p>
-<h3 id="調查結果">調查結果</h3>
+<h2 id="調查結果">調查結果</h2>
 <ol>
 <li>Docker 內建 DNS Server</li>
 </ol>
@@ -177,15 +163,14 @@ podman version: 4.4.1
 
 ps -ef | grep aardvark-dns
 </code></pre><p><img src="/podman-dns/ps.png" alt="ps"></p>
-<h3 id="執行結果">執行結果</h3>
+<h2 id="執行結果">執行結果</h2>
 <p>修改完 Podman DNS 設定後，<code>Rocket Chat</code> 也成功執行了:</p>
 <p><img src="/podman-dns/start.png" alt="start"></p>
-<h3 id="reference">Reference</h3>
+<h2 id="reference">Reference</h2>
 <ul>
 <li><a href="https://medium.com/@prajwal.chin/understanding-docker-dns-2ed4b070a0">https://medium.com/@prajwal.chin/understanding-docker-dns-2ed4b070a0</a></li>
 <li><a href="https://www.redhat.com/sysadmin/podman-new-network-stack">https://www.redhat.com/sysadmin/podman-new-network-stack</a></li>
 </ul>
-
 		</div>
 		<footer class="post__footer">
 			

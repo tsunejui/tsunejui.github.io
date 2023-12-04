@@ -40,7 +40,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -63,12 +63,15 @@
 			Kafka 安裝 - Kraft Mode
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Kafka - Kraft Mode 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-06-28T10:43:24&#43;08:00">June 28, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/kafka/" rel="category">Kafka</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		事前準備 Preparation 準備 3 台 node:
-os name ip Rocky Linux 8.8 cns-kafka-0 192.168.50.170 Rocky Linux 8.8 cns-kafka-1 192.168.50.171 Rocky Linux 8.8 cns-kafka-2 192.168.50.172 安裝步驟 設定 hosts (在每個 Node 上執行) 透過以下指令設定 /etc/hosts:
-cat &lt;&lt; EOF &gt;&gt; /etc/hosts 192.168.50.170 cns-kafka-0 192.168.50.171 cns-kafka-1 192.168.50.172 cns-kafka-2 EOF 安裝 OpenJDK 11 (在每個 Node 上執行) To use Corretto RPM repositories with the yum package manager (such as Amazon Linux AMI), import the Corretto public key and then add the repository to the system list.
+		<p>這篇文章將介紹如何在 Kraft Mode 下安裝和配置 Apache Kafka，這是一種不依賴 Zookeeper 的模式。文章將提供從開始到結束的教學。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -78,21 +81,15 @@ cat &lt;&lt; EOF &gt;&gt; /etc/hosts 192.168.50.170 cns-kafka-0 192.168.50.171 c
 			Node Exporter
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Node Exporter 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-06-16T09:42:09&#43;08:00">June 16, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		安裝 node exporter 監控 linux
-使用環境 Rocky Linux 8.7
-操作步驟 下載 binary 檔案 下載 node-exporter
-curl -OL https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz 解壓縮 解壓縮 tar 檔案
-tar -xzf node_exporter-1.6.0.linux-amd64.tar.gz 設定 Binary 位置及權限 新增資料夾
-mkdir /etc/node_exporter 搬移檔案
-mv node_exporter-1.6.0.linux-amd64/node_exporter /etc/node_exporter/node_exporter 賦予權限:
-chmod +x /etc/node_exporter/node_exporter 建立 Service 檔案 vi node_exporter.service 填入以下內容
-[Unit] Description=Node Exporter Wants=network-online.target After=network-online.target [Service] Type=simple ExecStart=/bin/bash -c &#39;/etc/node_exporter/node_exporter&#39; [Install] WantedBy=multi-user.target 搬移到 /etc/systemd/system/
-cp node_exporter.service /etc/systemd/system/ systemd 設定 重啟 daemon
-systemctl daemon-reload 設定開機自動啟動
-systemctl enable node_exporter.
+		<p>本文介紹如何安裝和配置 Prometheus 的 Node Exporter。文章將涵蓋安裝過程、配置文件設置和數據監控方法。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -102,11 +99,15 @@ systemctl enable node_exporter.
 			SSH Tunneling
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Linux SSH Tunnel 設定步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-20T12:34:03&#43;08:00">May 20, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		What is SSH Tunneling SSH Tunneling is a method of creating an encrypted SSH connection between a client and a server machine through which services ports can be relayed, for example:
-Pre-requisites Rocky Linux VM x 2 Install Grafana on one of them vm ip service port VM I (SSH Client) 10.250.75.103 VM II (SSH Server) 10.250.75.147 3000 (Grafana) 確保 /etc/ssh/sshd_config 內的 AllowTcpForwarding 為 yes Get Started 使用 ssh command 在 VM I:
+		<p>在這部分，我們將探討如何在Linux系統中設定SSH Tunnel。SSH Tunnel是一種通過加密的SSH協議來傳輸資料的方法，能有效保護資料免受中間人攻擊，以及測試網路流量。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -116,14 +117,15 @@ Pre-requisites Rocky Linux VM x 2 Install Grafana on one of them vm ip service p
 			RHEL 9 在 Proxmox 上 Kernel Panic
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">RHEL 9 在 Proxmox 上出現 Kernel Panic 的解決方法</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-16T09:43:12&#43;08:00">May 16, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 使用 Proxmox 7.2-3:
-問題原因 在 Proxmox 上安裝 RHEL 9 時會發生 Kernel Panic:
-解決方法 在新增 VM 時，CPU type 選擇 host:
-成功啟動 RHEL 9:
-Reference https://access.redhat.com/discussions/6959360 
+		<p>文將探討在 Proxmox 虛擬環境中運行 RHEL 9 時遇到的 Kernel Panic 問題。文章將提供解決步驟。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -133,17 +135,15 @@ Reference https://access.redhat.com/discussions/6959360
 			NFS on Kubernetes
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">NFS 在 Kubernetes 上的應用筆記</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-14T23:32:13&#43;08:00">May 14, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境設定 項目 內容 NFS Server 10.250.75.111 NFS Path /mnt/nfs_shares 部署 NFS Storage Class 以下步驟將建立 Custom Provisioner，並串接 NFS Server。
-建立 Provisioner 的 Service Account 請參考 here
-建立名為 nfs-client-provisioner 的 Service Account
-kubectl apply -f account.yaml 建立 Provisioner Deployment 請參考 here
-kubernetes-sigs/nfs-subdir-external-provisioner: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
-為了避免出錯，strategy.type 設定為 Recreate，而 replicas 設為 1
-使用 kubernetes-sigs/nfs-subdir-external-provisioner 作為 provisioner，請注意以下環境變數設定:
-- name: PROVISIONER_NAME # storage class 名稱 value: k8s-sigs.io/nfs-subdir-external-provisioner - name: NFS_SERVER # nfs server 位置 value: 10.250.75.111 - name: NFS_PATH # nfs directory 路徑 value: /mnt/nfs_shares 使用 kubectl 部署 nfs-client-provisioner:
+		<p>這篇文章將探討如何在 Kubernetes 環境中使用 NFS (Network File System)。文章將提供一個基本的指南。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -153,15 +153,15 @@ kubernetes-sigs/nfs-subdir-external-provisioner: https://github.com/kubernetes-s
 			NFS on Rocky Linux 8
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Linux NFS 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-13T17:36:21&#43;08:00">May 13, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		什麼是 NFS NFS (Network File System) 是一種分散式檔案系統協議，用於在網路上共享檔案和資源。
-環境設定 id name ip 1 nfs-server 10.250.75.111 2 nfs-client 10.250.75.103 在 NFS Server 上 安裝 nfs 工具包 dnf -y install nfs-utils 啟動 nfs server 並且設定開機自動開啟。 systemctl enable --now nfs-server.service 建立 nfs 目錄 mkdir -p /mnt/nfs_shares 更改 owner 及設定權限 nobody 使用者是一個系統使用者，不擁有任何特殊權限，且通常用於運行低權限的服務或進程。
-chown -R nobody:nobody /mnt/nfs_shares &amp;&amp; chmod -R 777 /mnt/nfs_shares vim /etc/exports /etc/exports 是在 Linux 系統中用於配置 NFS 的設定檔案。NFS 是一種分散式檔案系統，它允許不同的機器透過網路共享檔案。
-rw: 可讀可寫
-sync: 寫入後同步
-no_all_squash: 禁用 all_squash
+		<p>本文將指導讀者如何在 Linux 系統上安裝和配置 NFS。從安裝到設置共享目錄。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -171,19 +171,15 @@ no_all_squash: 禁用 all_squash
 			Proxmox 增加 Linux 硬碟空間
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Proxmox 上針對 Linux VM 增加硬碟的方法</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-02T02:02:22&#43;08:00">May 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		當 Proxmox 上的 Linux 硬碟可用空間不足時, 可以透過以下方法增加空間。
-使用環境 Rocky Linux 8.7
-Proxmox 重新設定硬碟空間 進入 Proxmox 上 VM 的 Hardware, 編輯 Hard Disk:
-增加硬碟空間:
-透過 lsblk 可以看到, 硬碟 sda 容量有增加。
-lsblk 調整 LVM 我們要調整 rl-root 的容量, 也就是 LV 的大小, 而調整 LV 需要先建立 PV, 再將 PV 加入與 LV 相同的 VG, 如下圖所示:
-https://networklessons.com/uncategorized/extend-lvm-partition
-在建立 PV 之前, 我們需要建立 partition, 透過 parted 指令可以輕鬆的達成:
-如果要操作的硬碟不是 /dev/sda, 你需要下 select /dev/sdb, 請將 /dev/sdb 改成你希望操作的硬碟
-parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:
+		<p>這篇文章將指導如何在 Proxmox 虛擬化環境中為 Linux 虛擬機器增加額外的硬碟空間。從硬碟分配到操作系統配置，文章將提供完整的流程。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -193,17 +189,15 @@ parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:
 			Rocky Linux 使用 XRDP
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Rocky Linux XRDP 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-04-30T20:53:09&#43;08:00">April 30, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		使用環境 Rocky Linux 8.7
-安裝 xrdp server 安裝 xrdp:
-dnf install xrdp 啟動 server 啟動 xrdp server:
-systemctl start xrdp 設定開機啟動:
-systemctl enable xrdp 打開防火牆 預設 port 為 3389:
-firewall-cmd --permanent --add-port=3389/tcp &amp;&amp; firewall-cmd --reload 測試 使用 Microsoft Remote Desktop 測試連線:
-連線成功:
-Reference https://linux.how2shout.com/how-to-connect-rocky-linux-8-via-windows-rdp-protocol/ 
+		<p>這篇文章將介紹如何在 Rocky Linux 上安裝和配置 XRDP，一種遠程桌面協議。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -213,16 +207,15 @@ Reference https://linux.how2shout.com/how-to-connect-rocky-linux-8-via-windows-r
 			Install GUI on Rocky Linux 8.7
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Rocky Linux GUI 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-04-30T20:14:50&#43;08:00">April 30, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		使用環境 Rocky Linux 8.7
-YUN packages 更新 更新安裝包 Update Your Server
-yum update 檢查 Package Groups 我們需要使用 Server with GUI, 請使用 yum group list檢查是否在列表內:
-yum group list 安裝 Server with GUI 執行下面的指令:
-yum groupinstall &#34;Server with GUI&#34; 設定開機進入圖形介面 更改 /etc/systemd/system/default.target 指向的位置：
-systemctl set-default graphical 重開機 reboot 結果 成功啟動圖形介面:
-Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-linux-8/ 
+		<p>本文將指導如何在 Rocky Linux 上安裝圖形用戶界面 (GUI)。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -232,11 +225,15 @@ Reference https://www.cyberithub.com/how-to-install-gnome-desktop-gui-on-rocky-l
 			Kafka 學習筆記
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Kafka - Zookeeper Mode 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-03-12T17:52:27&#43;08:00">March 12, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/kafka/" rel="category">Kafka</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		Kafka Installation Kafka official site: https://kafka.apache.org/downloads
-Kafka provides two types of downloads on its official website, namely Source downloads and Binary downloads. The difference between the two is that Source download means Kafka&rsquo;s source code, and users need to compile it themselves after downloading, while Binary Download means pre-compiled binaries that users can download and use directly. Additionally, different versions of Kafka written in different Scala versions are available for download in Binary Download.
+		<p>本文將介紹在傳統的 Zookeeper Mode 下安裝 Kafka 的步驟。</p>
 	</div>
 </article>
 </main>
@@ -296,8 +293,6 @@ Kafka provides two types of downloads on its official website, namely Source dow
 				<a class="widget__link" href="/categories/linux/">Linux</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/openshift/">Openshift</a></li>
-			<li class="widget__item">
-				<a class="widget__link" href="/categories/profile/">Profile</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/prometheus/">Prometheus</a></li>
 			<li class="widget__item">

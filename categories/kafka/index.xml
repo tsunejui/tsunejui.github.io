@@ -13,9 +13,7 @@
       <pubDate>Wed, 28 Jun 2023 10:43:24 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/kafka-kraft-install/</guid>
-      <description>事前準備 Preparation 準備 3 台 node:
-os name ip Rocky Linux 8.8 cns-kafka-0 192.168.50.170 Rocky Linux 8.8 cns-kafka-1 192.168.50.171 Rocky Linux 8.8 cns-kafka-2 192.168.50.172 安裝步驟 設定 hosts (在每個 Node 上執行) 透過以下指令設定 /etc/hosts:
-cat &amp;lt;&amp;lt; EOF &amp;gt;&amp;gt; /etc/hosts 192.168.50.170 cns-kafka-0 192.168.50.171 cns-kafka-1 192.168.50.172 cns-kafka-2 EOF 安裝 OpenJDK 11 (在每個 Node 上執行) To use Corretto RPM repositories with the yum package manager (such as Amazon Linux AMI), import the Corretto public key and then add the repository to the system list.</description>
+      <description>&lt;p&gt;這篇文章將介紹如何在 Kraft Mode 下安裝和配置 Apache Kafka，這是一種不依賴 Zookeeper 的模式。文章將提供從開始到結束的教學。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -24,8 +22,7 @@ cat &amp;lt;&amp;lt; EOF &amp;gt;&amp;gt; /etc/hosts 192.168.50.170 cns-kafka-0 
       <pubDate>Sun, 12 Mar 2023 17:52:27 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/kafka/</guid>
-      <description>Kafka Installation Kafka official site: https://kafka.apache.org/downloads
-Kafka provides two types of downloads on its official website, namely Source downloads and Binary downloads. The difference between the two is that Source download means Kafka&amp;rsquo;s source code, and users need to compile it themselves after downloading, while Binary Download means pre-compiled binaries that users can download and use directly. Additionally, different versions of Kafka written in different Scala versions are available for download in Binary Download.</description>
+      <description>&lt;p&gt;本文將介紹在傳統的 Zookeeper Mode 下安裝 Kafka 的步驟。&lt;/p&gt;</description>
     </item>
     
   </channel>

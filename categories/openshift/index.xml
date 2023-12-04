@@ -13,17 +13,7 @@
       <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</guid>
-      <description>環境描述 客戶希望可以修改 Openshift 4.12 上 Prometheus 的 Replicas 數量為 0，希望我可以研究。
-研究結果 目前 Openshift 4.12 沒有提供修改 Prometheus 數量的方法。 原本以為修改 Prometheus CRD 就可以更改 Replicas 的數量，但是修改後過沒多久就會被 Operator 改回來。以下是我找到的資料:
-曾經在3.11可以調整replicas的設定，但後來消失了:
-https://github.com/openshift/cluster-monitoring-operator/pull/330/commits/53453691c9d47f5c621a9d538aba12431541a2c8
-我在 cluster-monitoring-operator 的設定上也沒找到參數可以調整，測試 replicas 也無法:
-https://github.com/openshift/cluster-monitoring-operator/blob/master/Documentation/api.md#prometheusk8sconfig
-目前我找到這個 issue，在 2020 年 8 月還不支援
-https://github.com/openshift/cluster-monitoring-operator/issues/896
-解決方法 現在這是我看過最暴力的做法，先透過修改 clusterversion/version ，將 openshift-monitoring 設定為 unmanaged，之後再 scale down 所有 deployment ，親測有效，但很暴力:
-https://gist.github.com/waynedovey/cbf23d0a9c798c8de68b5f2043ba945b
-oc patch clusterversion/version --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat &amp;lt;&amp;lt;- EOF spec: overrides: - group: apps/v1 kind: Deployment name: cluster-monitoring-operator namespace: openshift-monitoring unmanaged: true EOF )&amp;#34; oc patch prometheus/k8s -n openshift-monitoring --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat &amp;lt;&amp;lt;- EOF spec: replicas: 0 EOF )&amp;#34; oc patch alertmanagers/main -n openshift-monitoring --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat &amp;lt;&amp;lt;- EOF spec: replicas: 0 EOF )&amp;#34; oc scale --replicas=0 deploy/cluster-monitoring-operator -n openshift-monitoring oc scale --replicas=0 deployment.</description>
+      <description>&lt;p&gt;這篇文章將探討在 Openshift 上如何有效地對 Prometheus 進行縮減。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -32,13 +22,7 @@ oc patch clusterversion/version --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat
       <pubDate>Thu, 02 Nov 2023 00:13:03 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/openshift-gitops-dex-expiration-time/</guid>
-      <description>ArgoCD 認證機制:
-修改流程:
-環境描述 近期由於客戶需要導入 ArgoCD 管理 CRDs，因此在客戶的 Openshift 4.x 上安裝 GitOps Operator。安裝後發現了一個問題，ArgoCD 的 Web 介面需要約 24 小時後才會自動登出，客戶希望調整登出時間。
-從上圖可得知，ArgoCD 的 web 會再登入後產生一把 token 並放到 cookie 內，名為 argocd.token，我們可以透過 jwt.io 解析這把 token，查看 expiration date:
-在沒有做任何設定的情況下，透過 Openshift 帳密使用 SSO 登入機制進入 ArgoCD 畫面，所產生的 token 過期時間應該是 24h 後，這是因為 ArgoCD 在 SSO 認證上是交給 Dex Server 控制，而 Dex Server 的預設過期時間是 24h：
-可以從 ArgoCD 的 Security 文章查看 Dex Server 的說明:
-尋找方法 ArgoCD Operator 會透過 Kind: ArgoCD 的 CRD ，名為 openshift-gitops，產生需要的 components，如 server、applicationSet、grafana&amp;hellip;:</description>
+      <description>&lt;p&gt;本文介紹如何在 ArgoCD 中設置自動登出功能。這有助於提高安全性，避免未經授權的存取。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -47,11 +31,7 @@ oc patch clusterversion/version --type=&amp;#39;merge&amp;#39; -p &amp;#34;$(cat
       <pubDate>Sat, 26 Aug 2023 01:51:06 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/node-clock-not-synchronising/</guid>
-      <description>事件經過 某日客戶收到來自 OCP 的 critical 告警，名稱為 NodeClockNotSynchronising，請我們調查原因。
-告警訊息 首先調查告警意義，至 openshoft-monitoring Project 下尋找名為 prometheus-k8s-rulefiles-0 的 ConfigMap，便可看到以下內容
-https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md
-- alert: NodeClockNotSynchronising annotations: description: Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host. runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md summary: Clock not synchronising. expr: | min_over_time(node_timex_sync_status{job=&amp;#34;node-exporter&amp;#34;}[5m]) == 0 and node_timex_maxerror_seconds{job=&amp;#34;node-exporter&amp;#34;} &amp;gt;= 16 for: 10m labels: severity: critical 根據官方文件，我們可以得知以下訊息:
-The NodeClockNotSynchronising alert triggers when a node is affected by issues with the NTP server for that node.</description>
+      <description>&lt;p&gt;這篇文章將探討 NTP (Network Time Protocol) 服務器在 Openshift 發生的同步問題的原因和解決方法。文章將提供故障診斷的內容。&lt;/p&gt;</description>
     </item>
     
   </channel>

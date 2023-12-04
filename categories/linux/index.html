@@ -39,7 +39,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -64,14 +64,15 @@
 			Podman DNS
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">解決在 Podman Compose 上 DNS Server 無法使用的問題</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-05T00:29:01&#43;08:00">December 05, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		使用環境 Rocky Linux 8.7
-環境描述 由於部門都是在 LINE 上討論公事，常常造成公私不分，因此想架設一個 Rocket Chat 作為辦公的溝通平台，而 Rocket Chat 也有提供 docker-compose.yaml 讓用戶方便部署：
-13個你不應該用Line辦公的理由: https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html
-Rocket Chat: https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose
-# src: https://github.com/RocketChat/Docker.Official.Image/blob/master/compose.yml volumes: mongodb_data: { driver: local } services: rocketchat: image: registry.rocket.chat/rocketchat/rocket.chat:${RELEASE:-latest} restart: always labels: traefik.enable: &#34;true&#34; traefik.http.routers.rocketchat.rule: Host(`${DOMAIN:-}`) traefik.http.routers.rocketchat.tls: &#34;true&#34; traefik.http.routers.rocketchat.entrypoints: https traefik.http.routers.rocketchat.tls.certresolver: le environment: MONGO_URL: &#34;${MONGO_URL:-\ mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ ${MONGODB_DATABASE:-rocketchat}?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&#34; MONGO_OPLOG_URL: &#34;${MONGO_OPLOG_URL:\ -mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\ local?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}&#34; ROOT_URL: ${ROOT_URL:-http://localhost:${HOST_PORT:-3000}} PORT: ${PORT:-3000} DEPLOY_METHOD: docker DEPLOY_PLATFORM: ${DEPLOY_PLATFORM:-} REG_TOKEN: ${REG_TOKEN:-} depends_on: - mongodb expose: - ${PORT:-3000} ports: - &#34;${BIND_IP:-0.
+		<p>本文將解析在使用 Podman Compose 時遇到的 DNS 服務器問題，並提供解決方案。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -81,17 +82,15 @@ Rocket Chat: https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-dock
 			Container Note - Mount Namespace
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Mount Namespace 研究</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-19T03:12:13&#43;08:00">November 19, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		使用環境 Rocky Linux 8.7
-環境描述 在 kubernetes 上常常需要透過一些 CLI tool 幫助維護 container，如果 image 本身不提供這些 tool，執行上就會比較麻煩。通常可以透過 kubectl cp 將 CLI tool 複製到 container 內解決問題，需要注意的是，在官方的文件上有指出，如果使用 kubectl cp 則會需要容器內已安裝 tar 指令，否則會失敗:
-https://kubernetes.io/docs/reference/kubectl/cheatsheet/
-以 simple-spring-boot-app 專案為例，base image 是 google 的 distroless，這個 image 內除了 java 外，並沒有其他的 command，在執行 kubectl cp 時會發生錯誤:
-simple-spring-boot-app: https://github.com/tsunejui/simple-spring-boot-app
-distroless: https://github.com/GoogleContainerTools/distroless
-此時需要到 node 上，透過 container 的管理工具所提供的方法 (cp 指令)，將檔案複製到 container 內，一些工具如下:
-Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- cri-tools: crictl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- nerdctl: nerdctl cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- 假設 node 上 container 的管理工具並沒有提供 cp 的功能，或者沒有安裝 container 的管理工具時，可以透過以下測試步驟，找到 process (也就是 container) 所使用的 mnt namespace 的 mountinfo，並查看對應的 mount point，直接將 CLI tool 放置於指定的目錄即可。
+		<p>本文深入探討 Linux 的 Mount Namespace，這是一種隔離檔案系統的技術。文章將講解其原理、應用場景和如何有效地使用它來提高系統安全性。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -101,14 +100,15 @@ Docker: docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|- Podman: podman cp [OP
 			RHEL Ansible Automation Platform (AAP) Installation
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">AAP 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-24T10:24:53&#43;08:00">August 24, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/devops/" rel="category">Devops</a>, <a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境準備 Linux 的版本為 Red Hat Enterprise Linux 9.1 (Plow):
-下載 tar 檔案 下載 Red Hat Ansible Automation Platform (v. 2.4 for RHEL 9 for x86_64): 至 https://access.redhat.com/downloads/content/480 下載 Ansible Automation Platform 2.4 Setup Bundle
-解壓縮 tar xvzf ansible-automation-platform-setup-&lt;latest-version&gt;.tar.gz 安裝 Red Hat Ansible Automation Platform subscription 取得token 至 https://access.redhat.com/management/api 產生 Token
-在 Redhat 上使用 subscription-manager register 註冊機器 你也可以透過 subscription-manager register --username &lt;username&gt; --password &lt;password&gt; --auto-attach 註冊機器
-subscription-manager register --token &lt;token&gt; --insecure 獲得 Subscription 的 pool_id subscription-manager list --available --all | grep &#34;Ansible Automation Platform&#34; -B 3 -A 6 安裝 Subscription subscription-manager attach --pool=2c94e43f88fcee5b0189010269427636 驗證是否成功 subscription-manager list --consumed 建立 Ansible Automation Platform Database 如果需要自建 AAP 的 Database 則需執行此步驟，不需要請略過。
+		<p>這篇文章將提供 Ansible Automation Platform (AAP) 的安裝指南。從前置條件到安裝過程，文章將幫助讀者順利完成安裝。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -118,21 +118,15 @@ subscription-manager register --token &lt;token&gt; --insecure 獲得 Subscripti
 			AWX Installation (Container)
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">AWX - Container 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-07-17T13:36:31&#43;08:00">July 17, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/devops/" rel="category">Devops</a>, <a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		利用 dokcer 安裝 AWX
-使用環境 Rocky Linux 8.7
-安裝步驟 關閉 SELinux 建議暫時關閉 SELinux 避免安裝中出錯:
-setenforce 0 安裝 docker https://docs.docker.com/engine/install/centos/
-安裝 yum-utils:
-yum install -y yum-utils 加入 repository:
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 安裝 docker
-yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 啟動 docker
-systemctl start docker 下載 AWX 17.1.0 安裝 git:
-dnf install -y git Starting in version 18.0, the AWX Operator is the preferred way to install AWX.
-https://github.com/ansible/awx/blob/devel/INSTALL.md
-git clone -b 17.
+		<p>這篇文章將指導讀者如何在容器環境中安裝和設置 AWX (Ansible 的 Web) 版本。從環境準備到配置設置，本文涵蓋整個安裝過程。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -142,19 +136,15 @@ git clone -b 17.
 			Samba 安裝
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Linux Samba 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-07-01T17:23:23&#43;08:00">July 01, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		使用環境 Rocky Linux 8.7
-安裝步驟 透過 dnf 安裝 samba:
-dnf install samba 設定 systemd 開機自動啟動:
-systemctl enable smb.service 開啟防火牆
-firewall-cmd --permanent --add-service=samba &amp;&amp; firewall-cmd --reload 設定 samba 新增Linux User: rex
-useradd rex 新增 samba 帳號: rex
-smbpasswd -a rex 新增目錄 /mnt/shared 並指派 owner 為 rex:
-mkdir /mnt/shared &amp;&amp; chown rex -R /mnt/shared/ 編輯 vi /etc/samba/smb.conf, 並且加入以下內容:
-設定參數請參考: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
-... [cnssmb] comment = CNS Samba Directory path = /mnt/shared public = yes create mask = 0777 directory mask = 0777 browseable = yes writeable = yes read only = no 設定 SELinux:
+		<p>本文將指導如何在 Linux 系統上安裝和配置 Samba。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -164,21 +154,15 @@ mkdir /mnt/shared &amp;&amp; chown rex -R /mnt/shared/ 編輯 vi /etc/samba/smb.
 			Node Exporter
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Node Exporter 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-06-16T09:42:09&#43;08:00">June 16, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		安裝 node exporter 監控 linux
-使用環境 Rocky Linux 8.7
-操作步驟 下載 binary 檔案 下載 node-exporter
-curl -OL https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz 解壓縮 解壓縮 tar 檔案
-tar -xzf node_exporter-1.6.0.linux-amd64.tar.gz 設定 Binary 位置及權限 新增資料夾
-mkdir /etc/node_exporter 搬移檔案
-mv node_exporter-1.6.0.linux-amd64/node_exporter /etc/node_exporter/node_exporter 賦予權限:
-chmod +x /etc/node_exporter/node_exporter 建立 Service 檔案 vi node_exporter.service 填入以下內容
-[Unit] Description=Node Exporter Wants=network-online.target After=network-online.target [Service] Type=simple ExecStart=/bin/bash -c &#39;/etc/node_exporter/node_exporter&#39; [Install] WantedBy=multi-user.target 搬移到 /etc/systemd/system/
-cp node_exporter.service /etc/systemd/system/ systemd 設定 重啟 daemon
-systemctl daemon-reload 設定開機自動啟動
-systemctl enable node_exporter.
+		<p>本文介紹如何安裝和配置 Prometheus 的 Node Exporter。文章將涵蓋安裝過程、配置文件設置和數據監控方法。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -188,11 +172,15 @@ systemctl enable node_exporter.
 			SSH Tunneling
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Linux SSH Tunnel 設定步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-20T12:34:03&#43;08:00">May 20, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		What is SSH Tunneling SSH Tunneling is a method of creating an encrypted SSH connection between a client and a server machine through which services ports can be relayed, for example:
-Pre-requisites Rocky Linux VM x 2 Install Grafana on one of them vm ip service port VM I (SSH Client) 10.250.75.103 VM II (SSH Server) 10.250.75.147 3000 (Grafana) 確保 /etc/ssh/sshd_config 內的 AllowTcpForwarding 為 yes Get Started 使用 ssh command 在 VM I:
+		<p>在這部分，我們將探討如何在Linux系統中設定SSH Tunnel。SSH Tunnel是一種通過加密的SSH協議來傳輸資料的方法，能有效保護資料免受中間人攻擊，以及測試網路流量。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -202,14 +190,15 @@ Pre-requisites Rocky Linux VM x 2 Install Grafana on one of them vm ip service p
 			RHEL 9 在 Proxmox 上 Kernel Panic
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">RHEL 9 在 Proxmox 上出現 Kernel Panic 的解決方法</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-16T09:43:12&#43;08:00">May 16, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		環境描述 使用 Proxmox 7.2-3:
-問題原因 在 Proxmox 上安裝 RHEL 9 時會發生 Kernel Panic:
-解決方法 在新增 VM 時，CPU type 選擇 host:
-成功啟動 RHEL 9:
-Reference https://access.redhat.com/discussions/6959360 
+		<p>文將探討在 Proxmox 虛擬環境中運行 RHEL 9 時遇到的 Kernel Panic 問題。文章將提供解決步驟。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -219,15 +208,15 @@ Reference https://access.redhat.com/discussions/6959360
 			NFS on Rocky Linux 8
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Linux NFS 安裝步驟</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-13T17:36:21&#43;08:00">May 13, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		什麼是 NFS NFS (Network File System) 是一種分散式檔案系統協議，用於在網路上共享檔案和資源。
-環境設定 id name ip 1 nfs-server 10.250.75.111 2 nfs-client 10.250.75.103 在 NFS Server 上 安裝 nfs 工具包 dnf -y install nfs-utils 啟動 nfs server 並且設定開機自動開啟。 systemctl enable --now nfs-server.service 建立 nfs 目錄 mkdir -p /mnt/nfs_shares 更改 owner 及設定權限 nobody 使用者是一個系統使用者，不擁有任何特殊權限，且通常用於運行低權限的服務或進程。
-chown -R nobody:nobody /mnt/nfs_shares &amp;&amp; chmod -R 777 /mnt/nfs_shares vim /etc/exports /etc/exports 是在 Linux 系統中用於配置 NFS 的設定檔案。NFS 是一種分散式檔案系統，它允許不同的機器透過網路共享檔案。
-rw: 可讀可寫
-sync: 寫入後同步
-no_all_squash: 禁用 all_squash
+		<p>本文將指導讀者如何在 Linux 系統上安裝和配置 NFS。從安裝到設置共享目錄。</p>
 	</div>
 </article><article class="list__item post">
 	
@@ -237,19 +226,15 @@ no_all_squash: 禁用 all_squash
 			Proxmox 增加 Linux 硬碟空間
 			</a>
 		</h2>
-		
+		<p class="list__lead post__lead">Proxmox 上針對 Linux VM 增加硬碟的方法</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-02T02:02:22&#43;08:00">May 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	</span>
+</div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		當 Proxmox 上的 Linux 硬碟可用空間不足時, 可以透過以下方法增加空間。
-使用環境 Rocky Linux 8.7
-Proxmox 重新設定硬碟空間 進入 Proxmox 上 VM 的 Hardware, 編輯 Hard Disk:
-增加硬碟空間:
-透過 lsblk 可以看到, 硬碟 sda 容量有增加。
-lsblk 調整 LVM 我們要調整 rl-root 的容量, 也就是 LV 的大小, 而調整 LV 需要先建立 PV, 再將 PV 加入與 LV 相同的 VG, 如下圖所示:
-https://networklessons.com/uncategorized/extend-lvm-partition
-在建立 PV 之前, 我們需要建立 partition, 透過 parted 指令可以輕鬆的達成:
-如果要操作的硬碟不是 /dev/sda, 你需要下 select /dev/sdb, 請將 /dev/sdb 改成你希望操作的硬碟
-parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:
+		<p>這篇文章將指導如何在 Proxmox 虛擬化環境中為 Linux 虛擬機器增加額外的硬碟空間。從硬碟分配到操作系統配置，文章將提供完整的流程。</p>
 	</div>
 </article>
 </main>
@@ -309,8 +294,6 @@ parted 進入 parted 畫面後, 查看可用空間, 及 Start 和 End:
 				<a class="widget__link" href="/categories/linux/">Linux</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/openshift/">Openshift</a></li>
-			<li class="widget__item">
-				<a class="widget__link" href="/categories/profile/">Profile</a></li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/prometheus/">Prometheus</a></li>
 			<li class="widget__item">

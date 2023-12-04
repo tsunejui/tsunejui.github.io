@@ -13,14 +13,7 @@
       <pubDate>Thu, 02 Nov 2023 15:20:48 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/posts/f5-vip-setting/</guid>
-      <description>環境描述 客戶環境需要在 F5 設定 VIP，並分配流量到不同的主機，我需要在公司 Lab 上模擬，由於對 F5 的操作不熟悉，因此撰寫此篇文章作為紀錄 VIP 設定方法。
-請注意，此篇文章是簡易的設定紀錄，我並非 F5 的專業人員，如果錯誤請見諒
-F5 設定介面 到 Local Traffic / Pools / Pool List 頁面上新增 Pool:
-設定 Name 及 Health Monitors 的方式 (下圖為新增後的編輯畫面):
-到 Local Traffic / Virtual Servers / Virtual Servers List 頁面上新增 Virtual Server:
-到 Properties 頁面上設定 General Properties 及憑證相關資料 (下圖為新增後的編輯畫面):
-到 Resource 頁面上設定 Load Balancing (下圖為新增後的編輯畫面):
-結果 設定完成後便立即生效，在 Local Traffic / Pools : Pool List / &amp;lt;pool-name&amp;gt; 上可以看到 Pool 內的 members 狀況:</description>
+      <description>&lt;p&gt;本文提供在 F5 Load Balancer 上配置虛擬 IP (VIP) 的步驟。利用 F5 提高應用的可用性。&lt;/p&gt;</description>
     </item>
     
   </channel>

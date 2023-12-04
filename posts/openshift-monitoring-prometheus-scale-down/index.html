@@ -38,7 +38,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/posts/aboutme/">
+			<a class="menu__link" href="/about/">
 				
 				<span class="menu__text">About Me</span>
 				
@@ -56,10 +56,16 @@
 	<article class="post">
 		<header class="post__header">
 			<h1 class="post__title">Scale Down the Prometheus on Openshift Monitoring</h1>
-			
+			<p class="post__lead">Openshift 上對 Prometheus 進行 Scale Down 的方法</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-07T22:29:20&#43;08:00">November 07, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>, <a class="meta__link" href="/categories/prometheus/" rel="category">Prometheus</a>
+	</span>
+</div></div>
 		</header>
 		<div class="content post__content clearfix">
-			<h2 id="環境描述">環境描述</h2>
+			<p>這篇文章將探討在 Openshift 上如何有效地對 Prometheus 進行縮減。</p>
+<h2 id="環境描述">環境描述</h2>
 <p>客戶希望可以修改 Openshift 4.12 上 Prometheus 的 Replicas 數量為 0，希望我可以研究。</p>
 <h2 id="研究結果">研究結果</h2>
 <h3 id="目前-openshift-412-沒有提供修改-prometheus-數量的方法">目前 Openshift 4.12 沒有提供修改 Prometheus 數量的方法。</h3>
@@ -120,7 +126,6 @@ oc delete DaemonSet node-exporter -n openshift-monitoring
 <li><a href="https://github.com/openshift/cluster-monitoring-operator">https://github.com/openshift/cluster-monitoring-operator</a></li>
 <li><a href="https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/shards-and-replicas.md">https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/shards-and-replicas.md</a></li>
 </ul>
-
 		</div>
 		<footer class="post__footer">
 			
