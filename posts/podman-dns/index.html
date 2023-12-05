@@ -105,7 +105,7 @@ services:
       MONGODB_REPLICA_SET_NAME: ${MONGODB_REPLICA_SET_NAME:-rs0}
 
     ...
-</code></pre><p>若使用 <code>docker-compose</code> 部署時沒有問題，但如果使用 <code>podman-compose</code> 部署時，便會發生 DNS 無法解析的問題，使得 <code>rocketchat</code> 無法連上 <code>mongodb</code>。</p>
+</code></pre><p>若使用 <code>docker-compose</code> 部署時沒有問題，但使用 <code>podman-compose</code> 部署時，便會發生 DNS 無法解析的問題，使得 <code>rocketchat</code> 無法連上 <code>mongodb</code>。</p>
 <blockquote>
 <p>podman-compose: <a href="https://github.com/containers/podman-compose">https://github.com/containers/podman-compose</a></p>
 </blockquote>
@@ -132,7 +132,7 @@ services:
 <ol start="3">
 <li>安裝 Plugin</li>
 </ol>
-<p>一開始我以為直接將 network backend 切換為 <code>netavark</code> 就好，因為從官方描述中，看起來像是內建在 podman 4.0 中，但切換後卻得到以下錯誤，這代表電腦並沒有安裝此 Plugin:</p>
+<p>一開始我以為直接將 network backend 切換為 <code>netavark</code> 就好，因為從官方描述中，看起來像是內建在 podman 4.0 中，但切換後卻得到以下錯誤，這代表主機並沒有安裝此 Plugin:</p>
 <p><img src="/podman-dns/error.png" alt="error"></p>
 <p>可以透過 <code>dnf</code> 直接安裝 <code>netavark</code>，並重新設定 podman 環境:</p>
 <blockquote>
