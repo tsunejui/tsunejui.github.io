@@ -67,6 +67,7 @@
 <h2 id="環境描述">環境描述</h2>
 <p>客戶需要我進行 Openshift 上網路架構的教育訓練，我決定在課堂上建立一個簡單的 Lab，向他們展現 CNI 的在 Node 上的操作:</p>
 <p><img src="/vxlan-tunnel/vxlan-lab.png" alt="lab"></p>
+<p>以下是 vm 的 IP 地址，在這個實驗將展示如何透過 <code>vxlan</code> 讓不同 VM 上的 <code>busybox</code> 能夠訪問 <code>nginx</code>:</p>
 <table>
 <thead>
 <tr>
@@ -79,12 +80,12 @@
 <tr>
 <td>vm-1</td>
 <td>10.250.75.150</td>
-<td></td>
+<td>建立 <code>buxybox</code> container</td>
 </tr>
 <tr>
 <td>vm-2</td>
 <td>192.168.50.225</td>
-<td></td>
+<td>建立 <code>nginx</code> container</td>
 </tr>
 </tbody>
 </table>
