@@ -6,7 +6,16 @@
     <description>Recent content in Linux on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 05 Dec 2023 00:29:01 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 25 Dec 2023 13:40:52 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VXLAN Lab</title>
+      <link>https://tsunejui.github.io/posts/vxlan-lab/</link>
+      <pubDate>Mon, 25 Dec 2023 13:40:52 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/vxlan-lab/</guid>
+      <description>&lt;p&gt;本文將進行在 Linux 系統上建立 &lt;code&gt;VXLAN Tunnel&lt;/code&gt;，並且讓不同 Node 上的 Container 可以彼此溝通。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Podman DNS</title>
       <link>https://tsunejui.github.io/posts/podman-dns/</link>

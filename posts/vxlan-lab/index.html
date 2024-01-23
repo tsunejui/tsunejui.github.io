@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>VXLAN Lab - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">VXLAN Lab</h1>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-25T13:40:52&#43;08:00">December 25, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>, <a class="meta__link" href="/categories/network/" rel="category">Network</a>
+	</span>
+</div></div>
+		</header>
+		<div class="content post__content clearfix">
+			<p>本文將進行在 Linux 系統上建立 <code>VXLAN Tunnel</code>，並且讓不同 Node 上的 Container 可以彼此溝通。</p>
+<h2 id="環境描述">環境描述</h2>
+<p>客戶需要我進行 Openshift 上網路架構的教育訓練，我決定在課堂上建立一個簡單的 Lab，向他們展現 CNI 的在 Node 上的操作:</p>
+<p><img src="/vxlan-tunnel/vxlan-lab.png" alt="lab"></p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>ip</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vm-1</td>
+<td>10.250.75.150</td>
+<td></td>
+</tr>
+<tr>
+<td>vm-2</td>
+<td>192.168.50.225</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="先決條件">先決條件</h2>
+<ol>
+<li>每台VM都需要安裝 <code>podman</code>:</li>
+</ol>
+<pre tabindex="0"><code>dnf install -y podman
+</code></pre><ol start="2">
+<li>兩台機器需要能互相溝通, 可以用 <code>ping</code> 進行測試。</li>
+</ol>
+<h3 id="vm-i-1025075150">VM I (10.250.75.150)</h3>
+<ol>
+<li>Display network device</li>
+</ol>
+<pre tabindex="0"><code>[root@vxlan-vm-1 ~]# ip link
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: ens192: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether 00:50:56:9b:c9:02 brd ff:ff:ff:ff:ff:ff
+    altname enp11s0
+</code></pre><ol start="2">
+<li>Create vxlan tunnel</li>
+</ol>
+<pre tabindex="0"><code>ip link add vxlan10 type vxlan id 10 remote 192.168.50.225 dstport 4789 dev ens192
+ip link set vxlan10 up
+</code></pre><ol start="3">
+<li>Set up <code>podman</code> network</li>
+</ol>
+<pre tabindex="0"><code>podman network create --subnet=192.55.0.0/24 vxlan-network
+</code></pre><ol start="4">
+<li>Verify <code>podman</code> network</li>
+</ol>
+<pre tabindex="0"><code>[root@vxlan-vm-1 ~]# podman network inspect vxlan-network
+[
+     {
+          &#34;name&#34;: &#34;vxlan-network&#34;,
+          &#34;id&#34;: &#34;3485353416f185295472508fa4c5ca081a7aeaf4edf54cf76dd881f6e33e5d26&#34;,
+          &#34;driver&#34;: &#34;bridge&#34;,
+          &#34;network_interface&#34;: &#34;cni-podman1&#34;,
+          &#34;created&#34;: &#34;2024-01-23T14:01:40.175212102+08:00&#34;,
+          &#34;subnets&#34;: [
+               {
+                    &#34;subnet&#34;: &#34;192.55.0.0/24&#34;,
+                    &#34;gateway&#34;: &#34;192.55.0.1&#34;
+               }
+          ],
+          &#34;ipv6_enabled&#34;: false,
+          &#34;internal&#34;: false,
+          &#34;dns_enabled&#34;: true,
+          &#34;ipam_options&#34;: {
+               &#34;driver&#34;: &#34;host-local&#34;
+          }
+     }
+]
+</code></pre><ol start="5">
+<li>Create a <code>busybox:1.35.0</code> container</li>
+</ol>
+<pre tabindex="0"><code>podman run -d --net vxlan-network --name=busybox --ip=192.55.0.2 busybox:1.35.0 tail -f /dev/null
+</code></pre><ol start="6">
+<li>Add <code>vxlan10</code> into bridge <code>cni-podman1</code></li>
+</ol>
+<pre tabindex="0"><code>ip link set vxlan10 master cni-podman1
+</code></pre><ol start="7">
+<li>Open a port <code>4789</code> on the firewall</li>
+</ol>
+<pre tabindex="0"><code>firewall-cmd --add-port=4789/udp --permanent &amp;&amp; firewall-cmd --reload
+</code></pre><h3 id="vm-ii-19216850225">VM II (192.168.50.225)</h3>
+<ol>
+<li>Display network device</li>
+</ol>
+<pre tabindex="0"><code>[root@vxlan-vm-2 ~]# ip link
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: ens18: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
+    link/ether 4e:ec:39:b2:a8:11 brd ff:ff:ff:ff:ff:ff
+    altname enp0s18
+</code></pre><ol start="2">
+<li>Create vxlan tunnel</li>
+</ol>
+<pre tabindex="0"><code>ip link add vxlan10 type vxlan id 10 remote 10.250.75.150 dstport 4789 dev ens18
+ip link set vxlan10 up
+</code></pre><ol start="3">
+<li>Set up <code>podman</code> network</li>
+</ol>
+<pre tabindex="0"><code>podman network create --subnet=192.55.0.0/24 vxlan-network
+</code></pre><ol start="4">
+<li>Verify <code>podman</code> network</li>
+</ol>
+<pre tabindex="0"><code>[root@vxlan-vm-2 ~]# podman network inspect vxlan-network
+[
+     {
+          &#34;name&#34;: &#34;vxlan-network&#34;,
+          &#34;id&#34;: &#34;3485353416f185295472508fa4c5ca081a7aeaf4edf54cf76dd881f6e33e5d26&#34;,
+          &#34;driver&#34;: &#34;bridge&#34;,
+          &#34;network_interface&#34;: &#34;cni-podman1&#34;,
+          &#34;created&#34;: &#34;2024-01-23T06:53:17.309468616-05:00&#34;,
+          &#34;subnets&#34;: [
+               {
+                    &#34;subnet&#34;: &#34;192.55.0.0/24&#34;,
+                    &#34;gateway&#34;: &#34;192.55.0.1&#34;
+               }
+          ],
+          &#34;ipv6_enabled&#34;: false,
+          &#34;internal&#34;: false,
+          &#34;dns_enabled&#34;: true,
+          &#34;ipam_options&#34;: {
+               &#34;driver&#34;: &#34;host-local&#34;
+          }
+     }
+]
+</code></pre><ol start="5">
+<li>Create a <code>nginx:1.25.3</code> container</li>
+</ol>
+<pre tabindex="0"><code>podman run -d --net vxlan-network --name nginx --ip=192.55.0.3 nginx:1.25.3
+</code></pre><ol start="6">
+<li>Add <code>vxlan10</code> into bridge <code>cni-podman1</code></li>
+</ol>
+<pre tabindex="0"><code>ip link set vxlan10 master cni-podman1
+</code></pre><ol start="7">
+<li>Open a port <code>4789</code> on the firewall</li>
+</ol>
+<pre tabindex="0"><code>firewall-cmd --add-port=4789/udp --permanent &amp;&amp; firewall-cmd --reload
+</code></pre><h3 id="verify-the-connection">Verify the connection</h3>
+<ol>
+<li>Access <code>nginx</code> on <code>VM II</code> from <code>busybox</code> on <code>VM I</code> using <code>wget</code></li>
+</ol>
+<pre tabindex="0"><code>podman exec busybox wget -qO- http://192.55.0.3
+</code></pre><ol start="2">
+<li>Verify the response <code>index.html</code></li>
+</ol>
+<pre tabindex="0"><code>[root@vxlan-vm-1 ~]# podman exec busybox wget -qO- http://192.55.0.3
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+&lt;style&gt;
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;
+&lt;p&gt;If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.&lt;/p&gt;
+
+&lt;p&gt;For online documentation and support please refer to
+&lt;a href=&#34;http://nginx.org/&#34;&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;
+Commercial support is available at
+&lt;a href=&#34;http://nginx.com/&#34;&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Thank you for using nginx.&lt;/em&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>以上就是讓身處 2 個不同 VM 上的 container 間透過 <code>vxlan</code> 互相溝通的實驗。</p>
+<h2 id="結果">結果</h2>
+<p>以下是在 <code>VM I</code> container 上使用 <code>wget</code> 訪問 <code>VM II</code> container 的結果:</p>
+<p><img src="/vxlan-tunnel/wget.png" alt="wget"></p>
+<h3 id="手動建立-bridge-及-veth-的實驗">手動建立 Bridge 及 VETH 的實驗</h3>
+<p>我們也可以在不同 VM 上建立 <code>veth</code>，模擬 Container 的情況，請先參考上面的步驟，在兩台 VM 上建立 <code>vxlan</code> 的 link</p>
+<ol>
+<li>Create <code>bridge</code> device on <code>VM I</code> &amp; <code>VM II</code></li>
+</ol>
+<pre tabindex="0"><code>ip link add name br-vx type bridge
+ip link set br-vx up
+</code></pre><ol start="4">
+<li>Create VETH Pair</li>
+</ol>
+<pre tabindex="0"><code>ip link add type veth
+</code></pre><ol start="5">
+<li>Add <code>veth0</code> into bridge <code>br-vx</code></li>
+</ol>
+<pre tabindex="0"><code>ip link set veth0 master br-vx
+ip link set veth0 up
+</code></pre><ol start="6">
+<li>Add <code>vxlan10</code> into bridge <code>br-vx</code></li>
+</ol>
+<pre tabindex="0"><code>ip link set vxlan10 master br-vx
+</code></pre><ol start="7">
+<li>Configure <code>veth1</code> IP address (on <code>VM I</code>)</li>
+</ol>
+<pre tabindex="0"><code>ip addr add 192.66.0.1/24 dev veth1
+ip link set veth1 up
+</code></pre><ol start="8">
+<li>Configure <code>veth1</code> IP address (on <code>VM II</code>)</li>
+</ol>
+<pre tabindex="0"><code>ip addr add 192.66.0.2/24 dev veth1
+ip link set veth1 up
+</code></pre><ol start="9">
+<li>在 <code>VM I</code> 上測試</li>
+</ol>
+<pre tabindex="0"><code>[root@vxlan-vm-1 ~]# ping 192.66.0.2
+PING 192.66.0.2 (192.66.0.2) 56(84) bytes of data.
+64 bytes from 192.66.0.2: icmp_seq=1 ttl=64 time=0.933 ms
+64 bytes from 192.66.0.2: icmp_seq=2 ttl=64 time=0.914 ms
+64 bytes from 192.66.0.2: icmp_seq=3 ttl=64 time=0.988 ms
+64 bytes from 192.66.0.2: icmp_seq=4 ttl=64 time=0.895 ms
+64 bytes from 192.66.0.2: icmp_seq=5 ttl=64 time=1.05 ms
+</code></pre><ol start="10">
+<li>在 <code>VM II</code> 上測試</li>
+</ol>
+<pre tabindex="0"><code>[root@vxlan-vm-2 ~]# ping 192.66.0.1
+PING 192.66.0.1 (192.66.0.1) 56(84) bytes of data.
+64 bytes from 192.66.0.1: icmp_seq=1 ttl=64 time=1.04 ms
+64 bytes from 192.66.0.1: icmp_seq=2 ttl=64 time=0.924 ms
+64 bytes from 192.66.0.1: icmp_seq=3 ttl=64 time=0.846 ms
+64 bytes from 192.66.0.1: icmp_seq=4 ttl=64 time=1.25 ms
+64 bytes from 192.66.0.1: icmp_seq=5 ttl=64 time=1.36 ms
+</code></pre>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2024 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
