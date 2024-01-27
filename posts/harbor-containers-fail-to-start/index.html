@@ -104,7 +104,7 @@ harbor-log
 2024-01-24T01:45:43Z [ERROR] [/pkg/config/rest/rest.go:50]: Failed on load rest config err:invalid character &#39;&lt;&#39; looking for beginning of value, url:http://core:8080/api/v2.0/internalconfig
 2024-01-24T01:45:43Z [ERROR] [/jobservice/job/impl/context.go:75]: Job context initialization error: failed to load rest config
 2024-01-24T01:45:43Z [FATAL] [/jobservice/main.go:87]: initialize job context error: job context initialization error: failed to load rest config (5 times tried)
-</code></pre><p>從錯誤訊息中，大概可以看出，<code>harbor-jobservice</code> 不斷嘗試訪問 <code>http://core:8080/api/v2.0/internalconfig</code>，但卻發生 <code> Failed on load</code> 無法讀取的問題，無法讀取的原因與回傳的內容有關，可能有包含 <code>&gt;</code>:</p>
+</code></pre><p>從錯誤訊息中，大概可以看出，<code>harbor-jobservice</code> 不斷嘗試訪問 <code>http://core:8080/api/v2.0/internalconfig</code>，但卻發生 <code> Failed on load</code> 無法讀取的問題，原因與 response 的內容有關，可能有包含 <code>&gt;</code>:</p>
 <pre tabindex="0"><code>invalid character &#39;&lt;&#39; looking for beginning of value
 </code></pre><h3 id="調查-api-問題">調查 API 問題</h3>
 <p>為了精準定位錯誤，需要先調查 container 的行為，透過 <code>cat docker-compose.yaml</code> 查看 container 的設定:</p>
