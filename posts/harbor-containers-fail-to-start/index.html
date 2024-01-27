@@ -71,7 +71,7 @@
 <p>客戶的 <code>Harbor</code> 版本為 <code>v2.5.6</code>。</p>
 <h2 id="調查經過">調查經過</h2>
 <h3 id="調查-container-狀態">調查 container 狀態</h3>
-<p><code>Harbor</code> 的啟動方式是透過 <code>docker-compose</code> 工具，搭配安裝時 <code>install.sh</code> 所生成的 <code>docker-compose.yaml</code> 設定檔案，啟動以下的幾個服務，可以透過 <code>docker ps</code> 查看 container 的狀態:</p>
+<p><code>Harbor</code> 的啟動方式是透過 <code>docker-compose</code> 工具，設定檔為 <code>install.sh</code> 所生成的 <code>docker-compose.yaml</code>，啟動時會建立以下的幾個服務，可以透過 <code>docker ps</code> 查看 container 的狀態:</p>
 <pre tabindex="0"><code>harbor-jobservice
 nginx
 harbor-core
