@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Harbor Containers Fail to Start - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Harbor Containers Fail to Start</h1>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-01-27T14:04:45&#43;08:00">January 27, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/harbor/" rel="category">Harbor</a>
+	</span>
+</div></div>
+		</header>
+		<div class="content post__content clearfix">
+			<p>這篇文章將介紹客戶端 <code>Harbor</code> 啟動時有機率發生錯誤的紀錄，並說明調查步驟及結果。</p>
+<h2 id="事件經過">事件經過</h2>
+<p>某日客戶通報一個 issue，他們在啟動 <code>Harbor</code> 時，有機率會在啟動後，部分的 API 無法使用，可以透過訪問 <code>80</code> port 看到 web 介面，但登入後點擊部分連結，卻會回覆 500 error。在錯誤發生後，經過多次重啟 container，有機率會恢復正常，否則就需要重安裝 <code>Harbor</code>。</p>
+<p>客戶詢問我這是不是 <code>Harbor</code> 的一個 bug，是否可以升級 <code>Harbor</code> 版本來解決，但我在 github 上沒有看到相關的 issue。</p>
+<p>客戶的 <code>Harbor</code> 版本為 <code>v2.5.6</code>。</p>
+<h2 id="調查經過">調查經過</h2>
+<h3 id="調查-container-狀態">調查 container 狀態</h3>
+<p><code>Harbor</code> 的啟動方式是透過 <code>docker</code> 並使用 <code>docker-compose</code> 等工具，搭配安裝時 <code>install.sh</code> 所生成的 <code>docker-compose.yaml</code> 設定檔案，啟動以下的幾個服務，可以透過 <code>docker ps</code> 查看 container 的狀態:</p>
+<pre tabindex="0"><code>harbor-jobservice
+nginx
+harbor-core
+registry
+harbor-db
+redis
+harbor-portal
+registryctl
+harbor-log
+</code></pre><p>我們發現 <code>harbor-jobservice</code> 一直處於 <code>restart</code> 的狀態，透過 <code>docker logs -f harbor-jobservice</code> 查看 logs 後，發現如下的錯誤訊息:</p>
+<pre tabindex="0"><code>2024-01-24T01:44:33Z [ERROR] [/pkg/config/rest/rest.go:50]: Failed on load rest config err:invalid character &#39;&lt;&#39; looking for beginning of value, url:http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:44:33Z [INFO] [/pkg/config/rest/rest.go:47]: get configuration from url: http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:44:33Z [INFO] [/jobservice/logger/sweeper_controller.go:97]: 0 outdated log entries are sweepped by sweeper *sweeper.FileSweeper
+2024-01-24T01:44:33Z [ERROR] [/pkg/config/rest/rest.go:50]: Failed on load rest config err:invalid character &#39;&lt;&#39; looking for beginning of value, url:http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:44:33Z [ERROR] [/jobservice/job/impl/context.go:75]: Job context initialization error: failed to load rest config
+2024-01-24T01:44:33Z [INFO] [/jobservice/job/impl/context.go:78]: Retry in 9 seconds
+2024-01-24T01:44:42Z [INFO] [/pkg/config/rest/rest.go:47]: get configuration from url: http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:44:42Z [ERROR] [/pkg/config/rest/rest.go:50]: Failed on load rest config err:invalid character &#39;&lt;&#39; looking for beginning of value, url:http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:44:42Z [ERROR] [/jobservice/job/impl/context.go:75]: Job context initialization error: failed to load rest config
+2024-01-24T01:44:42Z [INFO] [/jobservice/job/impl/context.go:78]: Retry in 13 seconds
+2024-01-24T01:44:55Z [INFO] [/pkg/config/rest/rest.go:47]: get configuration from url: http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:44:55Z [ERROR] [/pkg/config/rest/rest.go:50]: Failed on load rest config err:invalid character &#39;&lt;&#39; looking for beginning of value, url:http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:44:55Z [ERROR] [/jobservice/job/impl/context.go:75]: Job context initialization error: failed to load rest config
+2024-01-24T01:44:55Z [INFO] [/jobservice/job/impl/context.go:78]: Retry in 19 seconds
+2024-01-24T01:45:14Z [INFO] [/pkg/config/rest/rest.go:47]: get configuration from url: http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:45:14Z [ERROR] [/pkg/config/rest/rest.go:50]: Failed on load rest config err:invalid character &#39;&lt;&#39; looking for beginning of value, url:http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:45:14Z [ERROR] [/jobservice/job/impl/context.go:75]: Job context initialization error: failed to load rest config
+2024-01-24T01:45:14Z [INFO] [/jobservice/job/impl/context.go:78]: Retry in 29 seconds
+2024-01-24T01:45:43Z [INFO] [/pkg/config/rest/rest.go:47]: get configuration from url: http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:45:43Z [ERROR] [/pkg/config/rest/rest.go:50]: Failed on load rest config err:invalid character &#39;&lt;&#39; looking for beginning of value, url:http://core:8080/api/v2.0/internalconfig
+2024-01-24T01:45:43Z [ERROR] [/jobservice/job/impl/context.go:75]: Job context initialization error: failed to load rest config
+2024-01-24T01:45:43Z [FATAL] [/jobservice/main.go:87]: initialize job context error: job context initialization error: failed to load rest config (5 times tried)
+</code></pre><p>從錯誤訊息中，大概可以看出，<code>harbor-jobservice</code> 不斷嘗試訪問 <code>http://core:8080/api/v2.0/internalconfig</code>，但卻發生 <code> Failed on load</code> 無法讀取的問題，無法讀取的原因與回傳的內容有關，可能有包含 <code>&gt;</code>:</p>
+<pre tabindex="0"><code>invalid character &#39;&lt;&#39; looking for beginning of value
+</code></pre><h3 id="調查-api-問題">調查 API 問題</h3>
+<p>為了精準定位錯誤，需要先調查 container 的行為，透過 <code>cat docker-compose.yaml</code> 查看 container 的設定:</p>
+<pre tabindex="0"><code>...
+core:
+    image: goharbor/harbor-core:v2.5.6
+    container_name: harbor-core
+    env_file:
+      - ./common/config/core/env
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+    volumes:
+      - /data/ca_download/:/etc/core/ca/:z
+      - /data/:/data/:z
+      - ./common/config/core/certificates/:/etc/core/certificates/:z
+      - type: bind
+        source: ./common/config/core/app.conf
+        target: /etc/core/app.conf
+      - type: bind
+        source: /data/secret/core/private_key.pem
+        target: /etc/core/private_key.pem
+      - type: bind
+        source: /data/secret/keys/secretkey
+        target: /etc/core/key
+      - type: bind
+        source: ./common/config/shared/trust-certificates
+        target: /harbor_cust_cert
+    networks:
+      harbor:
+    depends_on:
+      - log
+      - registry
+      - redis
+      - postgresql
+    logging:
+      driver: &#34;syslog&#34;
+      options:
+        syslog-address: &#34;tcp://localhost:1514&#34;
+        tag: &#34;core&#34;
+...
+jobservice:
+    image: goharbor/harbor-jobservice:v2.5.6
+    container_name: harbor-jobservice
+    env_file:
+      - ./common/config/jobservice/env
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    volumes:
+      - /data/job_logs:/var/log/jobs:z
+      - type: bind
+        source: ./common/config/jobservice/config.yml
+        target: /etc/jobservice/config.yml
+      - type: bind
+        source: ./common/config/shared/trust-certificates
+        target: /harbor_cust_cert
+    networks:
+      - harbor
+    depends_on:
+      - core
+    logging:
+      driver: &#34;syslog&#34;
+      options:
+        syslog-address: &#34;tcp://localhost:1514&#34;
+        tag: &#34;jobservice&#34;
+...
+</code></pre><p>透過以下指令，調查 <code>harbor-jobservice</code> 的 entrypoint，可以得知 container 在啟動時執行 <code>/harbor/entrypoint.sh</code>:</p>
+<pre tabindex="0"><code>docker inspect -f &#39;{{.Config.Entrypoint}}&#39; harbor-jobservice
+[/harbor/entrypoint.sh]
+</code></pre><p>嘗試使用與 <code>harbor-jobservice</code> 相同 namespace 的環境，查看 <code>/harbor/entrypoint.sh</code> 的內容:</p>
+<pre tabindex="0"><code>docker exec harbor-jobservice cat /harbor/entrypoint.sh
+#!/bin/sh
+
+set -e
+
+/harbor/install_cert.sh
+
+exec /harbor/harbor_jobservice -c /etc/jobservice/config.yml
+</code></pre><p>從 <code>/harbor/entrypoint.sh</code> 猜測 container 的行為，<code>/harbor/harbor_jobservice</code> 存取 <code>http://core:8080/api/v2.0/internalconfig</code> 時，發生了非預期的錯誤，導致啟動失敗:</p>
+<p><img src="/harbor-containers-fail-to-start/harbor-jobservice-fail-call.png" alt="harbor-jobservice-fail-call"></p>
+<p>透過 <code>curl</code> 指令存取 <code>http://core:8080/api/v2.0/internalconfig</code>，或許能看到回傳的內容:</p>
+<pre tabindex="0"><code>docker exec harbor-jobservice curl http://core:8080/api/v2.0/internalconfig
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    99  100    99    0     0  12895      0 --:--:-- --:--:-- --:--:-- 14142
+{&#34;errors&#34;:[{&#34;code&#34;:&#34;UNAUTHORIZED&#34;,&#34;message&#34;:&#34;only internal service is allowed to call this API&#34;}]}
+</code></pre><p>可以看到 <code>core:8080</code> 回傳一段 JSON format 的 response 內容，並沒有 character <code>&gt;</code>，由於 <code>harbor-jobservice</code> 呼叫 API 時會帶入 token，透過 package document 得知，呼叫 API 時需要加入 header <code>Authorization : Harbor-Secret &lt;secret&gt;</code>，而 token 則被記錄在 <code>common/config/jobservice/env</code> 上:</p>
+<blockquote>
+<p><a href="https://pkg.go.dev/github.com/goharbor/harbor/src/jobservice#section-readme">https://pkg.go.dev/github.com/goharbor/harbor/src/jobservice#section-readme</a></p>
+</blockquote>
+<p><img src="/harbor-containers-fail-to-start/job-service-env.png" alt="job-service-env"></p>
+<p>存取 <code>./common/config/jobservice/env</code> ，透過查看變數 <code>JOBSERVICE_SECRET</code> 獲取 token，重新使用 <code>curl</code>:</p>
+<blockquote>
+<p>請將 <code>&lt;secret&gt;</code> 替換為 token 內容</p>
+</blockquote>
+<pre tabindex="0"><code>docker exec harbor-jobservice curl -H &#34;Authorization: Harbor-Secret &lt;secret&gt;&#34; http://core:8080/api/v2.0/internalconfig
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  3962    0  3962    0     0  1029k      0 --:--:-- --:--:-- --:--:-- 1289k
+{&#34;admin_initial_password&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;Admin12345&#34;},&#34;auth_mode&#34;:{&#34;editable&#34;:false,&#34;value&#34;:&#34;ldap_auth&#34;},&#34;cache_enabled&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;cache_expire_hours&#34;:{&#34;editable&#34;:true,&#34;value&#34;:24},&#34;core_local_url&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;http://127.0.0.1:8080&#34;},&#34;core_url&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;http://core:8080&#34;},&#34;database_type&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;postgresql&#34;},&#34;execution_status_refresh_interval_seconds&#34;:{&#34;editable&#34;:true,&#34;value&#34;:30},&#34;ext_endpoint&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;https://harbor.cnsdomain.com&#34;},&#34;gdpr_delete_user&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;http_authproxy_skip_search&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;http_authproxy_verify_cert&#34;:{&#34;editable&#34;:true,&#34;value&#34;:true},&#34;jobservice_url&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;http://jobservice:8080&#34;},&#34;ldap_base_dn&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;DC=ad,DC=cnsdomain,DC=com&#34;},&#34;ldap_group_membership_attribute&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;memberof&#34;},&#34;ldap_group_search_scope&#34;:{&#34;editable&#34;:true,&#34;value&#34;:2},&#34;ldap_scope&#34;:{&#34;editable&#34;:true,&#34;value&#34;:2},&#34;ldap_search_dn&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;CN=Administrator,CN=Users,DC=ad,DC=cnsdomain,DC=com&#34;},&#34;ldap_search_password&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;Admin12345&#34;},&#34;ldap_timeout&#34;:{&#34;editable&#34;:true,&#34;value&#34;:5},&#34;ldap_uid&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;cn&#34;},&#34;ldap_url&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;192.168.50.35&#34;},&#34;ldap_verify_cert&#34;:{&#34;editable&#34;:true,&#34;value&#34;:true},&#34;max_job_workers&#34;:{&#34;editable&#34;:true,&#34;value&#34;:10},&#34;metric_enable&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;metric_path&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;/metrics&#34;},&#34;metric_port&#34;:{&#34;editable&#34;:true,&#34;value&#34;:9090},&#34;notary_url&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;http://notary-server:4443&#34;},&#34;notification_enable&#34;:{&#34;editable&#34;:true,&#34;value&#34;:true},&#34;oidc_auto_onboard&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;oidc_extra_redirect_parms&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;{}&#34;},&#34;oidc_verify_cert&#34;:{&#34;editable&#34;:true,&#34;value&#34;:true},&#34;postgresql_conn_max_idle_time&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;0&#34;},&#34;postgresql_conn_max_lifetime&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;5m&#34;},&#34;postgresql_database&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;registry&#34;},&#34;postgresql_host&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;postgresql&#34;},&#34;postgresql_max_idle_conns&#34;:{&#34;editable&#34;:true,&#34;value&#34;:100},&#34;postgresql_max_open_conns&#34;:{&#34;editable&#34;:true,&#34;value&#34;:900},&#34;postgresql_password&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;root123&#34;},&#34;postgresql_port&#34;:{&#34;editable&#34;:true,&#34;value&#34;:5432},&#34;postgresql_sslmode&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;disable&#34;},&#34;postgresql_username&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;postgres&#34;},&#34;primary_auth_mode&#34;:{&#34;editable&#34;:true,&#34;value&#34;:true},&#34;project_creation_restriction&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;everyone&#34;},&#34;pull_audit_log_disable&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;pull_count_update_disable&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;pull_time_update_disable&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;quota_per_project_enable&#34;:{&#34;editable&#34;:true,&#34;value&#34;:true},&#34;read_only&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;registry_controller_url&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;http://registryctl:8080&#34;},&#34;registry_storage_provider_name&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;filesystem&#34;},&#34;registry_url&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;http://registry:5000&#34;},&#34;robot_name_prefix&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;robot$&#34;},&#34;robot_scanner_name_prefix&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;H8T9ACT4&#34;},&#34;robot_token_duration&#34;:{&#34;editable&#34;:true,&#34;value&#34;:30},&#34;scanner_skip_update_pulltime&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;self_registration&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;session_timeout&#34;:{&#34;editable&#34;:true,&#34;value&#34;:60},&#34;skip_audit_log_database&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;storage_per_project&#34;:{&#34;editable&#34;:true,&#34;value&#34;:-1},&#34;token_expiration&#34;:{&#34;editable&#34;:true,&#34;value&#34;:30},&#34;token_service_url&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;http://core:8080/service/token&#34;},&#34;trace_enabled&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;trace_jaeger_agent_port&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;6831&#34;},&#34;trace_sample_rate&#34;:{&#34;editable&#34;:true,&#34;value&#34;:1},&#34;trivy_adapter_url&#34;:{&#34;editable&#34;:true,&#34;value&#34;:&#34;http://trivy-adapter:8080&#34;},&#34;uaa_verify_cert&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;with_notary&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false},&#34;with_trivy&#34;:{&#34;editable&#34;:true,&#34;value&#34;:false}}
+</code></pre><p>由於 response 的內容也沒有出現 character <code>&gt;</code>，因此我們懷疑 <code>curl</code> 與 <code>harbor-jobservice</code> 在 call API 時的行為不一樣，需要錄製封包才能得知兩者的差異。</p>
+<h3 id="錄製封包">錄製封包</h3>
+<p>可以透過 <code>tcpdump</code> 指定固定的 <code>veth</code>，但 container 不斷地 restart，會使 <code>docker</code> 不斷更換 <code>veth</code>。為了使 <code>veth</code> 固定，需要改寫 container 的 entrypoint，修改 <code>docker-compose.yaml</code> 並加入 <code>entrypoint</code>，透過 <code>docker-compose up -d</code> 重啟 container:</p>
+<pre tabindex="0"><code>...
+jobservice:
+    image: goharbor/harbor-jobservice:v2.5.6
+    container_name: harbor-jobservice
+    entrypoint: tail -f /dev/null
+...
+</code></pre><p>查看 container 在 node 上的 namespace 的 <code>veth</code> id:</p>
+<pre tabindex="0"><code>docker exec harbor-jobservice cat /sys/class/net/eth0/iflink
+&lt;ifid&gt;
+</code></pre><p>透過 <code>ip link</code> 可以查看 node 上的 network interface，找到與 <code>&lt;ifid&gt;</code> 相同 id 的 <code>veth</code> 後，複製名稱，使用 <code>tcpdump</code> 指令錄製封包，並加入背景執行 <code>&amp;</code>，結果存放至 <code>/tmp/network1.pcap</code>:</p>
+<blockquote>
+<p>請替換 <code>&lt;veth-name&gt;</code> 為 <code>veth</code> 的名稱</p>
+</blockquote>
+<pre tabindex="0"><code>tcpdump -i &lt;veth-name&gt; -w /tmp/network1.pcap &amp;
+</code></pre><p>執行 <code>harbor-jobservice</code> 後按下 <code>ctrl+c</code> 關閉 session，然後執行 <code>fg</code> 後按下 <code>ctrl+c</code> 結束 process:</p>
+<pre tabindex="0"><code>docker exec harbor-jobservice /harbor/harbor_jobservice -c /etc/jobservice/config.yml
+</code></pre><p>重複以上作業，將錄製目錄改為 <code>/tmp/network2.pcap</code>，執行 <code>curl</code> 後錄製封包，然後執行 <code>fg</code> 後按下 <code>ctrl+c</code> 結束 process:</p>
+<pre tabindex="0"><code>docker exec harbor-jobservice curl -H &#34;Authorization: Harbor-Secret &lt;secret&gt;&#34; http://core:8080/api/v2.0/internalconfig
+</code></pre><p>可以使用 <code>tcpdump</code> 讀取 <code>pcap</code> 檔案:</p>
+<blockquote>
+<p><code>-nn</code> 將 port 從 name 轉換成 number</p>
+</blockquote>
+<pre tabindex="0"><code>tcpdump -nn -r /tmp/network1.pcap
+tcpdump -nn -r /tmp/network2.pcap
+</code></pre><p>以下是 <code>/tmp/network1.pcap</code> 的內容，透過 <code>wireshark</code> 打開:</p>
+<p><img src="/harbor-containers-fail-to-start/network1.png" alt="network1"></p>
+<p>以下是 <code>/tmp/network2.pcap</code> 的內容，透過 <code>wireshark</code> 打開:</p>
+<p><img src="/harbor-containers-fail-to-start/network2.png" alt="network2"></p>
+<p>從 <code>pcap</code> 的內容可以看到，<code>harbor-jobservice</code> 與 <code>curl</code> 呼叫 API 的 IP 地址不同，<code>curl</code> 訪問的是 <code>docker dns</code> 解析後的 container IP，但 <code>harbor-jobservice</code> 卻訪問 <code>HTTP_PROXY</code> 的 IP，這不應該發生，因為 <code>common/config/jobservice/env</code> 上會設定 <code>NO_PROXY</code> 為 container 的名稱，如下所示:</p>
+<pre tabindex="0"><code>NO_PROXY=.internal,127.0.0.1,localhost,registry,registryctl,exporter,nginx,trivy-adapter,redis,notary-signer,notary-server,db,.local,postgresql,jobservice,core,portal,log
+</code></pre><p>透過 <code>docker inspect</code> 查看 <code>harbor-jobservice</code> 的 env ，發現 <code>NO_PROXY</code> 的內容與 <code>env_file</code> 不符:</p>
+<pre tabindex="0"><code>docker inspect -f &#39;{{.Config.Env}}&#39; harbor-jobservice
+</code></pre><p><img src="/harbor-containers-fail-to-start/env.png" alt="env"></p>
+<h3 id="docker-compose-bug">Docker Compose Bug</h3>
+<p>查看 container 的 env 後發現，所使用的 env 是 node 上的 env，而啟動 container 的方式是透過 <code>docker-compose up</code>。</p>
+<p>換句話說 <code>docker-compose</code> 本來應該在新增 container 時，賦予 container 的 config 的 env 為 <code>env_file</code> 的設定，但卻優先讀取 node 上的 env variable，且這個問題時好時壞的，並不是每次發生。我在 <code>docker-compose</code> 的 github 上並沒有看到相關的 issue，而客戶所使用的 <code>docker-compose</code> 版本為 <code>v2.6.0</code>。</p>
+<pre tabindex="0"><code>https://github.com/docker/compose/releases/tag/v2.6.0
+</code></pre><p>在我使用相同版本的 <code>docker-compose</code> 測試後，成功復現優先讀取 node 上的 env 的行為，我認為<strong>這是 <code>docker-compose</code> 的 bug</strong>。</p>
+<h2 id="結論">結論</h2>
+<p>客戶環境並沒有安裝 <code>docker-compose-plugin</code>，新版本的 <code>docker</code> 已經可以安裝 <code>docker-compose-plugin</code> 使包含 <code>compose</code> 的指令，且不會有沒有讀取 <code>env_file</code> 的行為，因此我建議客戶透過 <strong>升級 docker 版本</strong> 來啟動 container，這個問題也與 <code>Harbor</code> 無關，因此即使升級 <code>Harbor</code> 也可能發生這個問題。</p>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2024 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

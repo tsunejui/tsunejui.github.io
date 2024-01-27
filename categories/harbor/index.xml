@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Harbor on Rex&#39;s Notes 技術筆記 </title>
+    <link>https://tsunejui.github.io/categories/harbor/</link>
+    <description>Recent content in Harbor on Rex&#39;s Notes 技術筆記 </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 27 Jan 2024 14:04:45 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/harbor/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Harbor Containers Fail to Start</title>
+      <link>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</link>
+      <pubDate>Sat, 27 Jan 2024 14:04:45 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</guid>
+      <description>&lt;p&gt;這篇文章將介紹客戶端 &lt;code&gt;Harbor&lt;/code&gt; 啟動時有機率發生錯誤的紀錄，並說明調查步驟及結果。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
