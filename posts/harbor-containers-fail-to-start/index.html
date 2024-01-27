@@ -245,7 +245,7 @@ tcpdump -nn -r /tmp/network2.pcap
 <p><img src="/harbor-containers-fail-to-start/network1.png" alt="network1"></p>
 <p>以下是 <code>/tmp/network2.pcap</code> 的內容，透過 <code>wireshark</code> 打開:</p>
 <p><img src="/harbor-containers-fail-to-start/network2.png" alt="network2"></p>
-<p>從 <code>pcap</code> 的內容可以看到，<code>harbor-jobservice</code> 與 <code>curl</code> 呼叫 API 的 IP 地址不同，<code>curl</code> 訪問的是 <code>docker dns</code> 解析後的 container IP，但 <code>harbor-jobservice</code> 卻訪問 <code>HTTP_PROXY</code> 的 IP，這不應該發生，因為 <code>common/config/jobservice/env</code> 上會設定 <code>NO_PROXY</code> 為 container 的名稱，如下所示:</p>
+<p>從 <code>pcap</code> 的內容可以看到，<code>harbor-jobservice</code> 與 <code>curl</code> 呼叫 API 的 IP 地址不同，雖然都是訪問 <code>core:8080</code>，但 <code>curl</code> 訪問的是 <code>docker dns</code> 解析後的 container IP，但 <code>harbor-jobservice</code> 卻訪問 <code>HTTP_PROXY</code> 的 IP，這不應該發生，因為 <code>common/config/jobservice/env</code> 上會設定 <code>NO_PROXY</code> 為 container 的名稱，如下所示:</p>
 <pre tabindex="0"><code>NO_PROXY=.internal,127.0.0.1,localhost,registry,registryctl,exporter,nginx,trivy-adapter,redis,notary-signer,notary-server,db,.local,postgresql,jobservice,core,portal,log
 </code></pre><p>透過 <code>docker inspect</code> 查看 <code>harbor-jobservice</code> 的 env ，發現 <code>NO_PROXY</code> 的內容與 <code>env_file</code> 不符:</p>
 <pre tabindex="0"><code>docker inspect -f &#39;{{.Config.Env}}&#39; harbor-jobservice
