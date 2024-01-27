@@ -81,7 +81,7 @@ redis
 harbor-portal
 registryctl
 harbor-log
-</code></pre><p>我們發現 <code>harbor-jobservice</code> 一直處於 <code>restart</code> 的狀態，透過 <code>docker logs -f harbor-jobservice</code> 查看 logs 後，發現如下的錯誤訊息:</p>
+</code></pre><p>我發現 <code>harbor-jobservice</code> 一直處於 <code>restart</code> 的狀態，透過 <code>docker logs -f harbor-jobservice</code> 查看 logs 後，發現如下的錯誤訊息:</p>
 <pre tabindex="0"><code>2024-01-24T01:44:33Z [ERROR] [/pkg/config/rest/rest.go:50]: Failed on load rest config err:invalid character &#39;&lt;&#39; looking for beginning of value, url:http://core:8080/api/v2.0/internalconfig
 2024-01-24T01:44:33Z [INFO] [/pkg/config/rest/rest.go:47]: get configuration from url: http://core:8080/api/v2.0/internalconfig
 2024-01-24T01:44:33Z [INFO] [/jobservice/logger/sweeper_controller.go:97]: 0 outdated log entries are sweepped by sweeper *sweeper.FileSweeper
