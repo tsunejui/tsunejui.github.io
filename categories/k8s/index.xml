@@ -6,7 +6,16 @@
     <description>Recent content in K8S on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 26 Aug 2023 01:51:06 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/k8s/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Mar 2024 14:56:30 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/k8s/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Prometheus Remote Write Performance Issue</title>
+      <link>https://tsunejui.github.io/posts/prometheus-remote-write-performance-issue/</link>
+      <pubDate>Wed, 06 Mar 2024 14:56:30 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/prometheus-remote-write-performance-issue/</guid>
+      <description>&lt;p&gt;這篇文章將作為 Prometheus 開啟 Remote Write 後會產生的 Memory 大幅上升的 Issue 調查紀錄。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>NodeClockNotSynchronising alert troubleshooting in Openshift 4</title>
       <link>https://tsunejui.github.io/posts/node-clock-not-synchronising/</link>

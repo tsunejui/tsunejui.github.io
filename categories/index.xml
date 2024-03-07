@@ -6,7 +6,34 @@
     <description>Recent content in Categories on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Jan 2024 14:04:45 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Mar 2024 14:56:30 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>K8S</title>
+      <link>https://tsunejui.github.io/categories/k8s/</link>
+      <pubDate>Wed, 06 Mar 2024 14:56:30 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/k8s/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Openshift</title>
+      <link>https://tsunejui.github.io/categories/openshift/</link>
+      <pubDate>Wed, 06 Mar 2024 14:56:30 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/openshift/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SRE</title>
+      <link>https://tsunejui.github.io/categories/sre/</link>
+      <pubDate>Wed, 06 Mar 2024 14:56:30 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/sre/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Container</title>
       <link>https://tsunejui.github.io/categories/container/</link>
@@ -53,29 +80,11 @@
     </item>
     
     <item>
-      <title>Openshift</title>
-      <link>https://tsunejui.github.io/categories/openshift/</link>
-      <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
-      
-      <guid>https://tsunejui.github.io/categories/openshift/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Prometheus</title>
       <link>https://tsunejui.github.io/categories/prometheus/</link>
       <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/categories/prometheus/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>SRE</title>
-      <link>https://tsunejui.github.io/categories/sre/</link>
-      <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
-      
-      <guid>https://tsunejui.github.io/categories/sre/</guid>
       <description></description>
     </item>
     
@@ -94,15 +103,6 @@
       <pubDate>Thu, 02 Nov 2023 00:13:03 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/categories/devops/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>K8S</title>
-      <link>https://tsunejui.github.io/categories/k8s/</link>
-      <pubDate>Sat, 26 Aug 2023 01:51:06 +0800</pubDate>
-      
-      <guid>https://tsunejui.github.io/categories/k8s/</guid>
       <description></description>
     </item>
     

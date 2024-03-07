@@ -60,6 +60,24 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/prometheus-remote-write-performance-issue/" rel="bookmark">
+			Prometheus Remote Write Performance Issue
+			</a>
+		</h2>
+		<p class="list__lead post__lead">Prometheus 開啟 Remote Write 後會造成整體 Memory 上升</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-03-06T14:56:30&#43;08:00">March 06, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>
+	</span>
+</div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		<p>這篇文章將作為 Prometheus 開啟 Remote Write 後會產生的 Memory 大幅上升的 Issue 調查紀錄。</p>
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/harbor-containers-fail-to-start/" rel="bookmark">
 			Harbor Containers Fail to Start
 			</a>
@@ -128,29 +146,11 @@
 	<div class="content list__excerpt post__content clearfix">
 		<p>本文探討 Linux 的 Mount Namespace，這是一種隔離檔案系統的技術。文章將講解其原理、應用場景和如何有效地使用它來提高系統安全性。</p>
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/aws-security-token-service-example/" rel="bookmark">
-			AWS Security Token Service (STS) Example
-			</a>
-		</h2>
-		<p class="list__lead post__lead">AWS STS 實驗</p>
-		<div class="list__meta meta">
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-12T21:33:35&#43;08:00">November 12, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/aws/" rel="category">AWS</a>
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		<p>本文介紹 AWS Security Token Service (STS) 的使用方法和實驗。STS 提供短期憑證來訪問 AWS 資源，增強安全性和管理方便性。我們將逐步探索 STS 的功能，實現身份驗證和授權。</p>
-	</div>
 </article>
 </main>
 
 <div class="pagination">
-	<span class="pagination__item pagination__item--current">1/5</span>
+	<span class="pagination__item pagination__item--current">1/6</span>
 	<a class="pagination__item pagination__item--next btn" href="/posts/page/2/">»</a>
 </div>
 
@@ -169,11 +169,11 @@
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/prometheus-remote-write-performance-issue/">Prometheus Remote Write Performance Issue</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/harbor-containers-fail-to-start/">Harbor Containers Fail to Start</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/vxlan-lab/">VXLAN Lab</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/podman-dns/">Podman DNS</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/container-mnt/">Container Note - Mount Namespace</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/aws-security-token-service-example/">AWS Security Token Service (STS) Example</a></li>
 		</ul>
 	</div>
 </div>
@@ -207,7 +207,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/k8s/">K8S</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">5</span>
+				<span class="widget__counter widget__counter--bubble">6</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/kafka/">Kafka</a>&nbsp;
@@ -223,7 +223,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/openshift/">Openshift</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">3</span>
+				<span class="widget__counter widget__counter--bubble">4</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/prometheus/">Prometheus</a>&nbsp;
@@ -231,7 +231,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/sre/">SRE</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">2</span>
+				<span class="widget__counter widget__counter--bubble">3</span>
 				</li>
 		</ul>
 	</div>
