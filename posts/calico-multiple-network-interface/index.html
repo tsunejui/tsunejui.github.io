@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Calico Multiple Network Interface - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Calico Multiple Network Interface</h1>
+			<p class="post__lead">在使用 Calico CNI 的 k8s node 上加入多個 network interface</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-02-22T16:03:03&#43;08:00">February 22, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	</span>
+</div></div>
+		</header>
+		<div class="content post__content clearfix">
+			<p>這篇文章將介紹客戶端的 Kubernetes Cluster 上遇到的網路問題，調查後發現是 Calico CNI 在多個 network interface 的 node 上，需要進行特別的設定。</p>
+<h2 id="事件經過">事件經過</h2>
+<p>某日客戶回報 Kubernetes Cluster 上，一些 pod 溝通時會發生 connection timeout，調查後發現似乎與 DNS 異常有關係，但並沒有找到具體的原因。</p>
+<h2 id="調查經過">調查經過</h2>
+<p>客戶在使用 ArgoCD 時，發現許多 repository 無法正常 connect，在調查 Pod <code>argocd-repo-server</code> 的 logs 中，出現以下的 error message:</p>
+<pre tabindex="0"><code>Failed to resync revoked tokens. retrying again in 1 minute: dial tcp: lookup argocd-redis on 10.96.0.10:53
+</code></pre><p>IP <code>10.96.0.10</code> 是 <code>CoreDNS</code> 預設的 IP，而 <code>argocd-redis</code> 是 ArgoCD 所部署的一個服務，從 error message 可以看出，<code>argocd-repo-server</code> 無法與 <code>argocd-redis</code> 溝通，但背後的 IP 是 <code>CoreDNS</code>，換句話說，<code>argocd-repo-server</code> 無法連上 <code>CoreDNS</code>。</p>
+<p><img src="/calico-multiple-network-interface/calico-network-issue-argo.png" alt="issue"></p>
+<p>進一步調查後，發現整個 cluster 存在以下幾點事實:</p>
+<ol>
+<li>大部分需要訪問 <code>CoreDNS</code> 的服務會有連線 timeout 的問題，無法與 dns 溝通。</li>
+<li>不需要訪問 <code>CoreDNS</code> 的服務皆正常。</li>
+<li>若服務與 <code>CoreDNS</code> 相同節點的服務，無論是否需要與 <code>CoreDNS</code>溝通，皆正常。</li>
+<li>node 與 node 間可以互相溝通，包含 <code>CoreDNS</code> 所在的 node。</li>
+<li>pod 與 pod 間可以互相溝通，但 <code>CoreDNS</code> 所在的 node 上面的 pod，如果不是設定 <code>hostNetwork: true</code>，就無法與其他 pod 溝通。</li>
+</ol>
+<p>問題是突然發生的，有詢問客戶是否在問題發生的前後時間點，對 Kubernetes 做任何調整，結果是<strong>沒有</strong>。於是我嘗試進行以下的操作，但仍然無法解決問題:</p>
+<ol>
+<li>重新設定 kube-proxy</li>
+<li>重起 CNI DaemonSet Pods</li>
+</ol>
+<p>經過各種測試及排查，基本上可以判定，此問題與 IPVS, IPTables, Network Policy 等設定無關，而在 calico 的 DaemonSet Pods 重啟後，可能會發生以下問題，需要手動刪除 calico 在 node 上加入的 network interface，才可以正常 Running:</p>
+<p><img src="/calico-multiple-network-interface/calico-node.png" alt="calico-node"></p>
+<p>在手動刪除 network interface 時發現一件事， <code>CoreDNS</code> 所在的 node 相較於其他 node，多出了一個 network interface，而客戶所使用的 Hypervisor 是 Proxmox，在 GUI 上可以看到，確實 node 被加入新的 Network Device:</p>
+<p><img src="/calico-multiple-network-interface/proxmox.jpeg" alt="proxmox"></p>
+<p>換句話說，node 現在有多張網卡，可能就是錯誤發生的原因。</p>
+<h2 id="解決問題">解決問題</h2>
+<p>與客戶同步後，確認這個 Network Device 是客戶為了連線到不同網段的設備而加入，且不同網段間，是無法互相溝通的，這可能是造成這次事件的原因，客戶確實沒有調整 Kubernetes 的設定，而是直接<strong>更動設備</strong>。</p>
+<p>閱讀 Calico 的文件後，可以從以下架構得知，calico 會在多個節點上，設定 IP 建立 BGP route sharing:</p>
+<blockquote>
+<p><a href="https://docs.tigera.io/calico/latest/reference/architecture/overview">https://docs.tigera.io/calico/latest/reference/architecture/overview</a></p>
+</blockquote>
+<p><img src="/calico-multiple-network-interface/arch.png" alt="arch"></p>
+<p>如果 node 上有多個 network interface，則需要在 DaemonSet Pod 上修改 env <code>IP_AUTODETECTION_METHOD</code>，否則預設的 <code>first-found</code> 會使用程式第一個找到的 network interface 所設定的 IP 建立 BGP route sharing，目前遇到的問題看起來是 Calico 使用<strong>錯誤的IP</strong>:</p>
+<blockquote>
+<p><a href="https://docs.tigera.io/calico/latest/reference/configure-calico-node#configuring-bgp-networking">https://docs.tigera.io/calico/latest/reference/configure-calico-node#configuring-bgp-networking</a></p>
+</blockquote>
+<p><img src="/calico-multiple-network-interface/env.png" alt="env"></p>
+<p>可以透過 <a href="https://docs.tigera.io/calico/latest/networking/ipam/ip-autodetection#autodetecting-node-ip-address-and-subnet">官方教學</a> 在 Calico 的 CRD <code>Installation</code> 上設定 <code>nodeAddressAutodetectionV4</code> 為 <code>NodeInternalIP</code>，這樣就會在 DaemonSet Pod 上加入 <code>IP_AUTODETECTION_METHOD</code> 設定，使用當初建立 Kubernetes 的 Node IP 建立 BGP route sharing:</p>
+<p><img src="/calico-multiple-network-interface/fix.jpeg" alt="fix"></p>
+<h2 id="結論">結論</h2>
+<p>事件發生的原因是，客戶增加了一張網卡在 node 上，導致 Calico 抓取錯誤的 IP 建立 BGP route sharing，由於環境設定，不同網段的 IP 無法溝通，且 <code>CoreDNS</code> 剛好在這台 node 上，這影響所有需要使用 DNS 的服務，與 <code>CoreDNS</code> 同一個 node 上的服務則因為不需要與其他 node 溝通，因此不受影響，另外，有設定 <code>hostNetwork: true</code> 的 Pod ，因為是使用與 node 相同的 network namespace，可以透過正確的 network interface 與其他 node 溝通，也不受事件影響，這大大增加排錯的難度。</p>
+<p>未來遇到突發狀況時，除了調查事件發生的時間點前後，Kubernetes 的操作外，也要調查 device 是否有改變。</p>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2024 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

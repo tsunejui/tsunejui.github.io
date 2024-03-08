@@ -17,6 +17,15 @@
     </item>
     
     <item>
+      <title>Calico Multiple Network Interface</title>
+      <link>https://tsunejui.github.io/posts/calico-multiple-network-interface/</link>
+      <pubDate>Thu, 22 Feb 2024 16:03:03 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/calico-multiple-network-interface/</guid>
+      <description>&lt;p&gt;這篇文章將介紹客戶端的 Kubernetes Cluster 上遇到的網路問題，調查後發現是 Calico CNI 在多個 network interface 的 node 上，需要進行特別的設定。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>NodeClockNotSynchronising alert troubleshooting in Openshift 4</title>
       <link>https://tsunejui.github.io/posts/node-clock-not-synchronising/</link>
       <pubDate>Sat, 26 Aug 2023 01:51:06 +0800</pubDate>
