@@ -112,11 +112,11 @@ spec:
 <ol>
 <li>壓測前 (CPU: 1% / 50%, Memory: 26% / 80%, replica: 1)</li>
 </ol>
-<p><img src="/hpa-to-not-scale-correctly/scale-0.png" alt="scale-0"></p>
+<p><img src="/hpa-to-not-scale-correctly/scale-0.jpeg" alt="scale-0"></p>
 <ol start="2">
 <li>壓測前 (CPU: 102% / 50%, Memory: 41% / 80%, replica: 3 (still scaling&hellip;))</li>
 </ol>
-<p><img src="/hpa-to-not-scale-correctly/scale-1.png" alt="scale-1"></p>
+<p><img src="/hpa-to-not-scale-correctly/scale-1.jpeg" alt="scale-1"></p>
 <h2 id="結論">結論</h2>
 <p>後續有找到相關的 issue: <a href="https://github.com/kubernetes/kubernetes/issues/116898">Overlapping Deployment matchLabels causes HPA to not scale correctly</a>, 我相信我遇到的 bug 正如底下的留言有關，是由於 HPA 的行為所導致。</p>
 <p><img src="/hpa-to-not-scale-correctly/work.png" alt="work"></p>
