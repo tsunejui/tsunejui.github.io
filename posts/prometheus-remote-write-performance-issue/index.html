@@ -65,7 +65,7 @@
 		</header>
 		<div class="content post__content clearfix">
 			<p>這篇文章將作為 Prometheus 開啟 Remote Write 後會產生的 Memory 大幅上升的 Issue 調查紀錄。</p>
-<h2 id="事件經過">事件經過</h2>
+<h2 id="事件發生">事件發生</h2>
 <p>客戶的 Openshift 需要 metrics data 支援 long-term storage，請我們協助。而根據官方的設定文件，Openshift 的 Monitoring 架構上，可以看到 default 部署的 resource 中，有安裝 Thanos 服務:</p>
 <p><img src="/prometheus-remote-write-performance-issue/arch.png" alt="arch"></p>
 <p>一開始，我希望透過設定 <code>Thanos Sidecar</code> 的 configuration，將資料上傳到 <code>S3 buckets</code>，因為 Openshift monitoring stack 與 Prometheus Operator 上有相似的的設定，而 <a href="https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#monitoring.coreos.com/v1.ThanosSpec">Prometheus Operator</a> 可以透過調整 <code>configmap</code> 來改變 thanos 的設定，但調查後發現，直到撰寫本文的今天，Openshift 尚未開放 Thanos 的設定:</p>

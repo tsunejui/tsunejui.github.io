@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 06 Mar 2024 14:56:30 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 23 Mar 2024 09:29:59 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HPA to not scale correctly</title>
+      <link>https://tsunejui.github.io/posts/hpa-to-not-scale-correctly/</link>
+      <pubDate>Sat, 23 Mar 2024 09:29:59 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/hpa-to-not-scale-correctly/</guid>
+      <description>&lt;p&gt;這篇文章將介紹我們在客戶端的 GKE 上使用 HPA 時遭遇到的 Bug。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Prometheus Remote Write Performance Issue</title>
       <link>https://tsunejui.github.io/posts/prometheus-remote-write-performance-issue/</link>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>HPA to not scale correctly - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">HPA to not scale correctly</h1>
+			<p class="post__lead">HPA 無法正確 Auto Scaling</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-03-23T09:29:59&#43;08:00">March 23, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	</span>
+</div></div>
+		</header>
+		<div class="content post__content clearfix">
+			<p>這篇文章將介紹我們在客戶端的 GKE 上使用 HPA 時遭遇到的 Bug。</p>
+<h2 id="環境描述">環境描述</h2>
+<p>Kubernetes version: <code>1.27.8-gke.1067004</code></p>
+<h2 id="事件發生">事件發生</h2>
+<p>客戶的 GKE 上遭遇一個十分詭異的問題，部署 HPA 後，無論 resource usage 是否到達 threshold，會馬上 scale up 到 max replica count，並且<strong>永遠不會</strong> scale down，從 HPA 的 event 上看來，HPA controller 確實認為 resource usage 超過 threshold:</p>
+<pre tabindex="0"><code>New size: 3; reason: memory resource utilization (percentage of request) above target
+</code></pre><p>以下是 HPA 設定:</p>
+<pre tabindex="0"><code>apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-server
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: api-server
+    apiVersion: apps/v1
+  minReplicas: 1
+  maxReplicas: 3
+  metrics: 
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+</code></pre><p>在 GKE 上的 workload 查看 HPA 的狀態，當前的 memory usage 是 33%，threshold 則是 80%:</p>
+<p><img src="/hpa-to-not-scale-correctly/gke-hpa-0.png" alt="gke-hpa-0"></p>
+<p>很明顯的，current value 明明沒有到達 target value，但是 HPA 仍然將 replica count 升到 3:</p>
+<p><img src="/hpa-to-not-scale-correctly/gke-hpa-1.png" alt="gke-hpa-1"></p>
+<h2 id="調查經過">調查經過</h2>
+<p>一開始認為是 metrics server 的問題，但又覺得十分不合理，假設 metrics server 回傳值是錯誤的，那 HPA 畫面上顯示的值是怎麼來的。透過以下API，可以獲得當前 metrics value:</p>
+<pre tabindex="0"><code>kubectl get --raw &#34;/apis/metrics.k8s.io/v1beta1/namespaces/&lt;namespace&gt;/pods/&lt;pod-name&gt;&#34;
+</code></pre><p>再來調查相關 issue 及 kubernetes 在 1.27 版本的 change log，但很遺憾的，所有情境都與現在 <strong>不相符</strong>:</p>
+<ul>
+<li><a href="https://github.com/kubernetes/kubernetes/issues/78761">HPA doesn&rsquo;t scale down to minReplicas even though metric is under target</a></li>
+<li><a href="https://stackoverflow.com/questions/58535208/hpa-scale-down-not-happening-properly">HPA scale down not happening properly</a></li>
+</ul>
+<p>於是我棄用了 <code>type: Resource</code>，改用 <code>external metrics</code> 功能，透過 HPA 存取 Prometheus 提供 metrics API 進行 autoscaling ，但是問題 <strong>仍然發生</strong>:</p>
+<p><img src="/hpa-to-not-scale-correctly/hpa-keda.png" alt="hpa-keda"></p>
+<p>我還發現，如果調高 threshold 到一個很大的值，例如 memory 我調整為 <strong>400%</strong>，則 HPA 會下降 replica count 為 <strong>2</strong>，我推測 HPA 顯示的值與實際計算的內容不相符。</p>
+<h2 id="問題解決">問題解決</h2>
+<p>後來我在相同 Kubernetes 版本的 GKE 上部署一個全新的服務進行測試，所有 Demo codes 都來自 <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/">Kubernetes HorizontalPodAutoscaler Walkthrough</a>，結果十分正常，證實這個 k8s 版本的 HPA 是可運作的，於是我開始調查 Demo codes 與 客戶端服務的差異。</p>
+<p>最後發現，客戶服務中的 Deployment 中的 <code>selector.matchlabels</code> 有重複的情況，而重複的 <code>selector.matchlabels</code> 可能會導致 HPA 產生 bug:</p>
+<p><img src="/hpa-to-not-scale-correctly/deployment.png" alt="deployment"></p>
+<p>將其改為不同的 <code>selector.matchlabels</code> 後，HPA 的行為就完全符合預期了:</p>
+<ol>
+<li>壓測前 (CPU: 1% / 50%, Memory: 26% / 80%, replica: 1)</li>
+</ol>
+<p><img src="/hpa-to-not-scale-correctly/scale-0.png" alt="scale-0"></p>
+<ol start="2">
+<li>壓測前 (CPU: 102% / 50%, Memory: 41% / 80%, replica: 3 (still scaling&hellip;))</li>
+</ol>
+<p><img src="/hpa-to-not-scale-correctly/scale-1.png" alt="scale-1"></p>
+<h2 id="結論">結論</h2>
+<p>後續有找到相關的 issue: <a href="https://github.com/kubernetes/kubernetes/issues/116898">Overlapping Deployment matchLabels causes HPA to not scale correctly</a>, 我相信我遇到的 bug 正如底下的留言有關，是由於 HPA 的行為所導致。</p>
+<p><img src="/hpa-to-not-scale-correctly/work.png" alt="work"></p>
+<p>我沒有官方文件中看到相關的文章，也沒有證實 HPA 工作行為是否跟這則留言相符，不過確實在改變 <code>selector.matchlabels</code> 後，問題再也沒有發生。</p>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2024 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

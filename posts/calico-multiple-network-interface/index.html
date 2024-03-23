@@ -65,7 +65,7 @@
 		</header>
 		<div class="content post__content clearfix">
 			<p>這篇文章將介紹客戶端的 Kubernetes Cluster 上遇到的網路問題，調查後發現是 Calico CNI 在多個 network interface 的 node 上，需要進行特別的設定。</p>
-<h2 id="事件經過">事件經過</h2>
+<h2 id="事件發生">事件發生</h2>
 <p>某日客戶回報 Kubernetes Cluster 上，一些 pod 溝通時會發生 connection timeout，調查後發現似乎與 DNS 異常有關係，但並沒有找到具體的原因。</p>
 <h2 id="調查經過">調查經過</h2>
 <p>客戶在使用 ArgoCD 時，發現許多 repository 無法正常 connect，在調查 Pod <code>argocd-repo-server</code> 的 logs 中，出現以下的 error message:</p>

@@ -60,6 +60,24 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/hpa-to-not-scale-correctly/" rel="bookmark">
+			HPA to not scale correctly
+			</a>
+		</h2>
+		<p class="list__lead post__lead">HPA 無法正確 Auto Scaling</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-03-23T09:29:59&#43;08:00">March 23, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	</span>
+</div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		<p>這篇文章將介紹我們在客戶端的 GKE 上使用 HPA 時遭遇到的 Bug。</p>
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/prometheus-remote-write-performance-issue/" rel="bookmark">
 			Prometheus Remote Write Performance Issue
 			</a>
@@ -128,24 +146,6 @@
 	<div class="content list__excerpt post__content clearfix">
 		<p>這篇文章將探討如何在 Kubernetes 環境中使用 NFS (Network File System)。文章將提供一個基本的指南。</p>
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/istio-tip/" rel="bookmark">
-			Istio Tip
-			</a>
-		</h2>
-		<p class="list__lead post__lead">Istio 安裝後錯誤處理</p>
-		<div class="list__meta meta">
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-03-08T12:52:25&#43;08:00">March 08, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/istio/" rel="category">Istio</a>
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		<p>在本文中，我們將討論在安裝 Istio 服務常見的錯誤，並提供故障排除技巧和解決方案。</p>
-	</div>
 </article>
 </main>
 
@@ -169,11 +169,11 @@
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/hpa-to-not-scale-correctly/">HPA to not scale correctly</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/prometheus-remote-write-performance-issue/">Prometheus Remote Write Performance Issue</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/calico-multiple-network-interface/">Calico Multiple Network Interface</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/harbor-containers-fail-to-start/">Harbor Containers Fail to Start</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/vxlan-lab/">VXLAN Lab</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/podman-dns/">Podman DNS</a></li>
 		</ul>
 	</div>
 </div>
@@ -207,7 +207,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/k8s/">K8S</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">7</span>
+				<span class="widget__counter widget__counter--bubble">8</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/kafka/">Kafka</a>&nbsp;

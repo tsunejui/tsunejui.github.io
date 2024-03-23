@@ -65,7 +65,7 @@
 		</header>
 		<div class="content post__content clearfix">
 			<p>這篇文章將介紹客戶端 <code>Harbor</code> 啟動時有機率發生錯誤的紀錄，並說明調查步驟及結果。</p>
-<h2 id="事件經過">事件經過</h2>
+<h2 id="事件發生">事件發生</h2>
 <p>某日客戶通報一個 issue，他們在啟動 <code>Harbor</code> 時，有機率會在啟動後，部分的 API 無法使用，可以透過訪問 <code>80</code> port 看到 web 介面，但登入後點擊部分連結，卻會回覆 500 error。在錯誤發生後，經過多次重啟 container，有機率會恢復正常，否則就需要重安裝 <code>Harbor</code>。</p>
 <p>客戶詢問我這是不是 <code>Harbor</code> 的一個 bug，是否可以升級 <code>Harbor</code> 版本來解決，但我在 github 上沒有看到相關的 issue。</p>
 <p>客戶的 <code>Harbor</code> 版本為 <code>v2.5.6</code>。</p>
