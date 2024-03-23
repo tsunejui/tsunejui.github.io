@@ -6,7 +6,34 @@
     <description>Recent content in Debug on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 26 Aug 2023 01:51:06 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/debug/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 23 Mar 2024 09:29:59 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/debug/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HPA to not scale correctly</title>
+      <link>https://tsunejui.github.io/posts/hpa-to-not-scale-correctly/</link>
+      <pubDate>Sat, 23 Mar 2024 09:29:59 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/hpa-to-not-scale-correctly/</guid>
+      <description>&lt;p&gt;這篇文章將介紹我們在客戶端的 GKE 上使用 HPA 時遭遇到的 Bug。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Calico Multiple Network Interface</title>
+      <link>https://tsunejui.github.io/posts/calico-multiple-network-interface/</link>
+      <pubDate>Thu, 22 Feb 2024 16:03:03 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/calico-multiple-network-interface/</guid>
+      <description>&lt;p&gt;這篇文章將介紹客戶端的 Kubernetes Cluster 上遇到的網路問題，調查後發現是 Calico CNI 在多個 network interface 的 node 上，需要進行特別的設定。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Harbor Containers Fail to Start</title>
+      <link>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</link>
+      <pubDate>Sat, 27 Jan 2024 14:04:45 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</guid>
+      <description>&lt;p&gt;這篇文章將介紹客戶端 &lt;code&gt;Harbor&lt;/code&gt; 啟動時有機率發生錯誤的紀錄，並說明調查步驟及結果。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>NodeClockNotSynchronising alert troubleshooting in Openshift 4</title>
       <link>https://tsunejui.github.io/posts/node-clock-not-synchronising/</link>

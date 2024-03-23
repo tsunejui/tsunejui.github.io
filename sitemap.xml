@@ -5,6 +5,9 @@
     <loc>https://tsunejui.github.io/categories/</loc>
     <lastmod>2024-03-23T09:29:59+08:00</lastmod>
   </url><url>
+    <loc>https://tsunejui.github.io/tags/debug/</loc>
+    <lastmod>2024-03-23T09:29:59+08:00</lastmod>
+  </url><url>
     <loc>https://tsunejui.github.io/posts/hpa-to-not-scale-correctly/</loc>
     <lastmod>2024-03-23T09:29:59+08:00</lastmod>
   </url><url>
@@ -85,9 +88,6 @@
   </url><url>
     <loc>https://tsunejui.github.io/posts/openshift-gitops-dex-expiration-time/</loc>
     <lastmod>2023-11-02T00:13:03+08:00</lastmod>
-  </url><url>
-    <loc>https://tsunejui.github.io/tags/debug/</loc>
-    <lastmod>2023-08-26T01:51:06+08:00</lastmod>
   </url><url>
     <loc>https://tsunejui.github.io/posts/node-clock-not-synchronising/</loc>
     <lastmod>2023-08-26T01:51:06+08:00</lastmod>
