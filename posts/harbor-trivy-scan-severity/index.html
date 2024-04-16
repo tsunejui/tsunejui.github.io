@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Severity of container image from Trivy Scan on Harbor - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Severity of container image from Trivy Scan on Harbor</h1>
+			<p class="post__lead">gcsFuse 實驗</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-04-16T15:17:56&#43;08:00">April 16, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/harbor/" rel="category">Harbor</a>, <a class="meta__link" href="/categories/trivy/" rel="category">Trivy</a>
+	</span>
+</div></div>
+		</header>
+		<div class="content post__content clearfix">
+			<p>這篇文章將紀錄 <code>Harbor</code> 搭配 <code>vulnerabilities Scanning</code> 功能後，在 UI 呈現 Image 的 Severity 與 Score 的關係。</p>
+<h2 id="事件發生">事件發生</h2>
+<p>客戶環境的 <code>Harbor</code> 有使用 <a href="https://goharbor.io/docs/2.0.0/administration/vulnerability-scanning/">Vulnerability Scanning</a> 功能，並搭配 <code>Trivy</code>，因此可以在 <code>Harbor</code> UI 上看到每個 image 的 CVE，如下圖所式:</p>
+<p><img src="/harbor-trivy-scan-severity/network2.png" alt="harbor"></p>
+<p>由於 UI 可以看到 <code>CVSS3</code> 及 <code>Severity</code>，但是常常發生分數和 <code>Severity</code> 無法匹配的情況，例如上圖：</p>
+<blockquote>
+<p>CVSS3: <a href="https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator">https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator</a></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>CVE</th>
+<th>CVSS3</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CVE-2024-20945</td>
+<td>redhat: 4.7</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>CVE-2022-43552</td>
+<td>nvd: 5.9 <!-- raw HTML omitted --> redhat: 5.9</td>
+<td>Low</td>
+</tr>
+</tbody>
+</table>
+<p>客戶希望我們能向他們說明，上面的嚴重等級，是如何計算的，</p>
+<h2 id="調查經過">調查經過</h2>
+<p><code>Harbor</code> UI 是前後端分離的架構，透過 chrome 的 inspect tool 可以看到所 invoke 的 API: <code>/api/v2.0/projects/library/repositories/openjdk/artifacts/&lt;sha&gt;/additions/vulnerabilities</code>，他的 resource json 如下:</p>
+<pre tabindex="0"><code>{
+    &#34;application/vnd.security.vulnerability.report; version=1.1&#34;: {
+        &#34;generated_at&#34;: &#34;2024-04-10T06:32:48.449316778Z&#34;,
+        &#34;scanner&#34;: {
+            &#34;name&#34;: &#34;Trivy&#34;,
+            &#34;vendor&#34;: &#34;Aqua Security&#34;,
+            &#34;version&#34;: &#34;v0.47.0&#34;
+        },
+        &#34;severity&#34;: &#34;High&#34;,
+        &#34;vulnerabilities&#34;: [
+            {
+                &#34;id&#34;: &#34;CVE-2022-43552&#34;,
+                &#34;package&#34;: &#34;curl&#34;,
+                &#34;version&#34;: &#34;7.29.0-59.el7_9.1&#34;,
+                &#34;fix_version&#34;: &#34;7.29.0-59.el7_9.2&#34;,
+                &#34;severity&#34;: &#34;Low&#34;,
+                &#34;description&#34;: &#34;A use after free vulnerability exists in curl \u003c7.87.0. Curl can be asked to *tunnel* virtually all protocols it supports through an HTTP proxy. HTTP proxies can (and often do) deny such tunnel operations. When getting denied to tunnel the specific protocols SMB or TELNET, curl would use a heap-allocated struct after it had been freed, in its transfer shutdown code path.&#34;,
+                &#34;links&#34;: [
+                    &#34;https://avd.aquasec.com/nvd/cve-2022-43552&#34;
+                ],
+                &#34;artifact_digests&#34;: [
+                    &#34;sha256:f1d3fb84b984705a72ca7f4017bb2884c84db90651819aad87052d722aa14226&#34;
+                ],
+                &#34;preferred_cvss&#34;: {
+                    &#34;score_v3&#34;: 5.9,
+                    &#34;score_v2&#34;: null,
+                    &#34;vector_v3&#34;: &#34;&#34;,
+                    &#34;vector_v2&#34;: &#34;&#34;
+                },
+                &#34;cwe_ids&#34;: [
+                    &#34;CWE-416&#34;
+                ],
+                &#34;vendor_attributes&#34;: {
+                    &#34;CVSS&#34;: {
+                        &#34;nvd&#34;: {
+                            &#34;V3Score&#34;: 5.9,
+                            &#34;V3Vector&#34;: &#34;CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H&#34;
+                        },
+                        &#34;redhat&#34;: {
+                            &#34;V3Score&#34;: 5.9,
+                            &#34;V3Vector&#34;: &#34;CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H&#34;
+                        }
+                    }
+                }
+            },
+        ...
+        ]
+    }
+}
+</code></pre><p>我從 <code>Harbor</code> 的 source code 找到以下內容，<code>job.go</code> 會將 vulnerability data 寫入 db，並且將:</p>
+<blockquote>
+<p><a href="https://github.com/goharbor/harbor/blob/main/src/pkg/scan/job.go#L301C30-L301C38">https://github.com/goharbor/harbor/blob/main/src/pkg/scan/job.go#L301C30-L301C38</a></p>
+</blockquote>
+<pre tabindex="0"><code>...
+reportData, err := handler.PostScan(ctx, req, rp, rawReports[i], startTime, robotAccount)
+if err != nil {
+    myLogger.Errorf(&#34;Failed to convert vulnerability data to new schema for report %s, error %v&#34;, rp.UUID, err)
+    return err
+}
+...
+</code></pre><p>而 API <code>/additions/vulnerabilities</code> 則會讀取 db 的內容，並且直接回傳，其中就包含 Severity:</p>
+<blockquote>
+<p><a href="https://github.com/goharbor/harbor/blob/main/src/pkg/securityhub/dao/security.go#L310">https://github.com/goharbor/harbor/blob/main/src/pkg/securityhub/dao/security.go#L310</a></p>
+</blockquote>
+<pre tabindex="0"><code>...
+func (d *dao) ListVulnerabilities(ctx context.Context, registrationUUID string, _ int64, query *q.Query) ([]*model.VulnerabilityItem, error) {
+	o, err := orm.FromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+	sqlStr := vulnerabilitySQL
+	params := []interface{}{registrationUUID}
+	if err := checkQFilter(query, filterMap); err != nil {
+		return nil, err
+	}
+	sqlStr, params = applyVulFilter(ctx, sqlStr, query, params)
+	sqlStr, params = applyVulPagination(sqlStr, query, params)
+	vulnRecs := make([]*model.VulnerabilityItem, 0)
+	_, err = o.Raw(sqlStr, params).QueryRows(&amp;vulnRecs)
+	return vulnRecs, err
+}
+...
+</code></pre><p>查看 vulnerability data 的來源，也就是 <code>Trivy</code> 的 source code，在<code>FillInfo()</code> 的內容上，一開始會透過 <code>getVendorSeverity()</code> 取得 severity，接下來判斷 <a href="https://aquasecurity.github.io/trivy/v0.19.2/vulnerability/detection/data-source/">datasource</a> 是否有提供自己的 severity，如果有，則覆蓋 <code>severity</code> 並直接回傳:</p>
+<blockquote>
+<p><a href="https://github.com/aquasecurity/trivy/blob/main/pkg/vulnerability/vulnerability.go#L86">https://github.com/aquasecurity/trivy/blob/main/pkg/vulnerability/vulnerability.go#L86</a></p>
+</blockquote>
+<pre tabindex="0"><code>...
+// Select the severity according to the detected source.
+severity, severitySource := c.getVendorSeverity(vulnID, &amp;vuln, source)
+
+// The vendor might provide package-specific severity like Debian.
+// For example, CVE-2015-2328 in Debian has &#34;unimportant&#34; for mongodb and &#34;low&#34; for pcre3.
+// In that case, we keep the severity as is.
+if vulns[i].SeveritySource != &#34;&#34; {
+    severity = vulns[i].Severity
+    severitySource = vulns[i].SeveritySource
+
+    // Store package-specific severity in vendor severities
+    if vuln.VendorSeverity == nil {
+        vuln.VendorSeverity = make(dbTypes.VendorSeverity)
+    }
+    s, _ := dbTypes.NewSeverity(severity) // skip error handling because `SeverityUnknown` will be returned in case of error
+    vuln.VendorSeverity[severitySource] = s
+}
+
+// Add the vulnerability detail
+vulns[i].Vulnerability = vuln
+
+vulns[i].Severity = severity
+vulns[i].SeveritySource = severitySource
+vulns[i].PrimaryURL = c.getPrimaryURL(vulnID, vuln.References, source)
+...
+</code></pre><p>從 source code 上也可以得知，Severity 與 CVSS 的 Score 沒有關係。</p>
+<h2 id="結論">結論</h2>
+<p>以 CVE: <code>CVE-2022-43552</code> 為例，在 <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-43552">NVD</a> 上的 Severity 是 <code>5.9 MEDIUM</code>，在 <a href="https://access.redhat.com/security/cve/CVE-2022-43552">RedHat</a> 上的 Severity 是 <code>Low</code>，根據 <code>Trivy</code> 的規則，會顯示 <code>Low</code>:</p>
+<p><img src="/harbor-trivy-scan-severity/result.png" alt="result"></p>
+<p>在 <code>Trivy</code> 的官方文件上有寫描述 Severity 的邏輯，會優先選擇 vendor 所提供的資訊，如果沒有提供，則根據 CVSS Score 計算:</p>
+<blockquote>
+<p><a href="https://aquasecurity.github.io/trivy/v0.50/docs/scanner/vulnerability/">https://aquasecurity.github.io/trivy/v0.50/docs/scanner/vulnerability/</a></p>
+</blockquote>
+<p><img src="/harbor-trivy-scan-severity/score.png" alt="score"></p>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tip/" rel="tag">Tip</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2024 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

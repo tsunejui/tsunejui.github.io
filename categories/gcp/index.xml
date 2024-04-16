@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GCP on Rex&#39;s Notes 技術筆記 </title>
+    <link>https://tsunejui.github.io/categories/gcp/</link>
+    <description>Recent content in GCP on Rex&#39;s Notes 技術筆記 </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 24 Mar 2024 12:01:35 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/gcp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Google Cloud Storage Fuse Csi Driver</title>
+      <link>https://tsunejui.github.io/posts/google-cloud-storage-fuse-csi-driver/</link>
+      <pubDate>Sun, 24 Mar 2024 12:01:35 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/google-cloud-storage-fuse-csi-driver/</guid>
+      <description>&lt;p&gt;本文介紹 &lt;code&gt;GcsFuseCsiDriver&lt;/code&gt; 的使用方法和實驗。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

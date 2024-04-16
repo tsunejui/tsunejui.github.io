@@ -6,7 +6,16 @@
     <description>Recent content in Linux on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Jan 2024 14:04:45 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Severity of container image from Trivy Scan on Harbor</title>
+      <link>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</link>
+      <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</guid>
+      <description>&lt;p&gt;這篇文章將紀錄 &lt;code&gt;Harbor&lt;/code&gt; 搭配 &lt;code&gt;vulnerabilities Scanning&lt;/code&gt; 功能後，在 UI 呈現 Image 的 Severity 與 Score 的關係。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Harbor Containers Fail to Start</title>
       <link>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</link>

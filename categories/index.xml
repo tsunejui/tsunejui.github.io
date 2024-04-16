@@ -6,7 +6,43 @@
     <description>Recent content in Categories on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 23 Mar 2024 09:29:59 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Harbor</title>
+      <link>https://tsunejui.github.io/categories/harbor/</link>
+      <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/harbor/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Linux</title>
+      <link>https://tsunejui.github.io/categories/linux/</link>
+      <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Trivy</title>
+      <link>https://tsunejui.github.io/categories/trivy/</link>
+      <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/trivy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GCP</title>
+      <link>https://tsunejui.github.io/categories/gcp/</link>
+      <pubDate>Sun, 24 Mar 2024 12:01:35 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/gcp/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>K8S</title>
       <link>https://tsunejui.github.io/categories/k8s/</link>
@@ -40,24 +76,6 @@
       <pubDate>Sat, 27 Jan 2024 14:04:45 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/categories/container/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Harbor</title>
-      <link>https://tsunejui.github.io/categories/harbor/</link>
-      <pubDate>Sat, 27 Jan 2024 14:04:45 +0800</pubDate>
-      
-      <guid>https://tsunejui.github.io/categories/harbor/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Linux</title>
-      <link>https://tsunejui.github.io/categories/linux/</link>
-      <pubDate>Sat, 27 Jan 2024 14:04:45 +0800</pubDate>
-      
-      <guid>https://tsunejui.github.io/categories/linux/</guid>
       <description></description>
     </item>
     

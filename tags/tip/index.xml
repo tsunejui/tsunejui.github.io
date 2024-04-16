@@ -6,7 +6,25 @@
     <description>Recent content in Tip on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 12 Nov 2023 21:33:35 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/tip/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/tip/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Severity of container image from Trivy Scan on Harbor</title>
+      <link>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</link>
+      <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</guid>
+      <description>&lt;p&gt;這篇文章將紀錄 &lt;code&gt;Harbor&lt;/code&gt; 搭配 &lt;code&gt;vulnerabilities Scanning&lt;/code&gt; 功能後，在 UI 呈現 Image 的 Severity 與 Score 的關係。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Google Cloud Storage Fuse Csi Driver</title>
+      <link>https://tsunejui.github.io/posts/google-cloud-storage-fuse-csi-driver/</link>
+      <pubDate>Sun, 24 Mar 2024 12:01:35 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/google-cloud-storage-fuse-csi-driver/</guid>
+      <description>&lt;p&gt;本文介紹 &lt;code&gt;GcsFuseCsiDriver&lt;/code&gt; 的使用方法和實驗。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>AWS Security Token Service (STS) Example</title>
       <link>https://tsunejui.github.io/posts/aws-security-token-service-example/</link>

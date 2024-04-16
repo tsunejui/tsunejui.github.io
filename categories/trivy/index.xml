@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Trivy on Rex&#39;s Notes 技術筆記 </title>
+    <link>https://tsunejui.github.io/categories/trivy/</link>
+    <description>Recent content in Trivy on Rex&#39;s Notes 技術筆記 </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/trivy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Severity of container image from Trivy Scan on Harbor</title>
+      <link>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</link>
+      <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</guid>
+      <description>&lt;p&gt;這篇文章將紀錄 &lt;code&gt;Harbor&lt;/code&gt; 搭配 &lt;code&gt;vulnerabilities Scanning&lt;/code&gt; 功能後，在 UI 呈現 Image 的 Severity 與 Score 的關係。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
