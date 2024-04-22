@@ -66,14 +66,21 @@
 		<div class="content post__content clearfix">
 			<p>本文介紹 <code>GcsFuseCsiDriver</code> 的使用方法和實驗。</p>
 <h2 id="環境描述">環境描述</h2>
+<p><img src="/google-cloud-storage-fuse-csi-driver/gcs-fuse-csi-driver.png" alt="arch"></p>
 <p>客戶在 GKE 上安裝壓測工具 <code>K6 Operator</code>，並希望將壓測報告上傳到 Google Cloud Storage，方便隨時取閱。本篇文章將會紀錄 <code>gcs-fuse-csi-driver</code> 的安裝及使用，並測試看看是否正常運作。</p>
 <p>Kubernetes version: <code>1.27.8-gke.1067004</code></p>
+<h2 id="前置作業">前置作業</h2>
+<p>需要先安裝 K6 Operator 在 Kubernetes 內:</p>
+<blockquote>
+<p><a href="https://github.com/grafana/k6-operator">https://github.com/grafana/k6-operator</a></p>
+</blockquote>
 <h2 id="測試步驟">測試步驟</h2>
 <ol>
 <li>啟動 <code>GcsFuseCsiDriver</code></li>
 </ol>
 <blockquote>
 <p>此步驟會等非常久，超過 20 分鐘</p>
+<p>請替換 <code>&lt;cluster-name&gt;</code></p>
 </blockquote>
 <pre tabindex="0"><code>gcloud beta container clusters update &lt;cluster-name&gt; \
     --update-addons GcsFuseCsiDriver=ENABLED \
@@ -83,9 +90,153 @@
 </ol>
 <blockquote>
 <p>locations: <a href="https://cloud.google.com/storage/docs/locations#location-r">https://cloud.google.com/storage/docs/locations#location-r</a></p>
+<p>請替換 <code>&lt;bucket-name&gt;</code> 及 <code>&lt;region&gt;</code></p>
 </blockquote>
 <pre tabindex="0"><code>gcloud storage buckets create gs://&lt;bucket-name&gt; --location=&lt;region&gt;
-</code></pre><h2 id="reference">Reference</h2>
+</code></pre><ol start="3">
+<li>確認是否開啟 <code>gke-metadata-server</code> 功能</li>
+</ol>
+<p><img src="/google-cloud-storage-fuse-csi-driver/meta.png" alt="meta"></p>
+<ol>
+<li>建立 IAM &amp; Kubernetes 的 service account，並且 assign role，可以使用以下腳本:</li>
+</ol>
+<blockquote>
+<p>請替換 <code>&lt;bucket-name&gt;</code> 及 <code>&lt;project-id&gt;</code></p>
+</blockquote>
+<p><img src="/google-cloud-storage-fuse-csi-driver/gcs-fuse-csi-driver-account.png" alt="account"></p>
+<pre tabindex="0"><code>#!/bin/bash
+# export GCS_BUCKET=&#34;&lt;bucket-name&gt;&#34; \
+# export PROJECT_ID=&#34;&lt;project-id&gt;&#34; \
+# export GCP_SA_NAME=&#34;gcs-sa&#34; \
+# export K8S_SA_NAME=&#34;k8s-gcs-sa&#34; \
+# export K8S_NAMESPACE=&#34;k6&#34;
+
+service_account=${GCP_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
+# roles=(&#34;roles/storage.objectAdmin&#34; &#34;roles/storage.admin&#34;)
+roles=(&#34;roles/storage.objectAdmin&#34;)
+
+echo &#34;service account: ${service_account}&#34;
+
+# Create a GCP service account in the Cloud Storage bucket project.
+gcloud iam service-accounts create ${GCP_SA_NAME} --project=${PROJECT_ID}
+
+for role in ${roles[@]}; do
+    echo &#34;assign permission role: ${role}&#34;
+    gcloud storage buckets add-iam-policy-binding gs://${GCS_BUCKET} \
+        --member &#34;serviceAccount:${service_account}&#34; \
+        --role &#34;${role}&#34;
+done
+#kubectl create ns ${K8S_NAMESPACE}
+kubectl create sa ${K8S_SA_NAME} -n ${K8S_NAMESPACE}
+gcloud iam service-accounts add-iam-policy-binding ${service_account} \
+    --role roles/iam.workloadIdentityUser \
+    --member &#34;serviceAccount:${PROJECT_ID}.svc.id.goog[${K8S_NAMESPACE}/${K8S_SA_NAME}]&#34;
+
+kubectl annotate serviceaccount ${K8S_SA_NAME} \
+    --namespace ${K8S_NAMESPACE} \
+    iam.gke.io/gcp-service-account=${service_account}
+</code></pre><ol start="6">
+<li>(Option) 按造 <a href="https://github.com/GoogleCloudPlatform/gcs-fuse-csi-driver/blob/main/docs/authentication.md#validate-the-service-account-setup-optional">Configure access to Cloud Storage buckets using GKE Workload Identity Federation</a> 步驟進行權限測試:</li>
+</ol>
+<blockquote>
+<p><a href="https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/cloud-storage-fuse-csi-driver#authentication">https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/cloud-storage-fuse-csi-driver#authentication</a></p>
+</blockquote>
+<ol start="7">
+<li>參考以下範例，建立測試用 k6 程式 <code>k6.js</code>:</li>
+</ol>
+<blockquote>
+<p>以下範例程式將在 <code>60s</code> 內使用 100 個 virtual users 對 <code>http://${__ENV.SERVICE_NAME}/heathly</code> 進行壓力測試</p>
+</blockquote>
+<pre tabindex="0"><code>import http from &#34;k6/http&#34;;
+import { check } from &#34;k6&#34;;
+
+// Test configuration
+export const options = {
+  vus: 100,
+  duration: &#39;60s&#39;
+};
+
+// Simulated user behavior
+export default function () {
+  let res = http.get(`http://${__ENV.SERVICE_NAME}/heathly`, {});
+  // Validate response status
+  check(res, { &#34;status was 200&#34;: (r) =&gt; r.status == 200 });
+}
+</code></pre><ol start="8">
+<li>建立 <code>configmap</code>:</li>
+</ol>
+<pre tabindex="0"><code>kubectl create configmap k6-stress --from-file k6.js -n k6
+</code></pre><ol start="9">
+<li>參考以下範例，建立K6 <code>TestRun</code>:</li>
+</ol>
+<blockquote>
+<p>以下設定將建立 <code>4</code> 個 Testing Job 進行壓力測試，產生報告時，以 <code>name</code> 欄位命名</p>
+<p>撰寫本教學文章時，K6 Operator 在 TestRun 預設的 Image 尚未支援 <a href="https://github.com/grafana/k6/releases/tag/v0.49.0">Dashboard Report</a> 的功能，因此需要指定 image: <code>0.49.0</code></p>
+<p>請替換 <code>&lt;bucket-name&gt;</code>, <code>&lt;service-account&gt;</code> 及 <code>&lt;end-point&gt;</code></p>
+<p><code>12345</code> 是 k6 Dockerfile 使用的 UID: <a href="https://github.com/grafana/k6/blob/master/Dockerfile#L11">https://github.com/grafana/k6/blob/master/Dockerfile#L11</a></p>
+</blockquote>
+<p><img src="/google-cloud-storage-fuse-csi-driver/gcs-fuse-csi-driver-k6.png" alt="k6"></p>
+<pre tabindex="0"><code>cat &lt;&lt;EOF | kubectl create -n k6 -f -
+apiVersion: k6.io/v1alpha1
+kind: TestRun
+metadata:
+  name: stress
+  namespace: k6
+spec:
+  parallelism: 4
+  script:
+    configMap:
+      name: k6-stress
+      file: k6.js
+  runner:
+    image: grafana/k6:0.49.0
+    securityContext:
+      fsGroup: 12345
+    metadata:
+      annotations:
+        gke-gcsfuse/volumes: &#34;true&#34;
+    nodeSelector:
+      role: sre
+    env:
+      - name: SERVICE_NAME
+        value: &lt;end-point&gt;
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: K6_WEB_DASHBOARD_EXPORT
+        value: &#34;/k6-report/report-\$(POD_NAME).html&#34;
+      - name: K6_WEB_DASHBOARD
+        value: &#34;true&#34;
+    serviceAccountName: &lt;service-account&gt;
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 1000Mi
+      requests:
+        cpu: 500m
+        memory: 500Mi
+    volumeMounts:
+    - mountPath: /k6-report
+      name: gcs-fuse-csi-ephemeral
+    volumes:
+    - name: gcs-fuse-csi-ephemeral
+      csi:
+        driver: gcsfuse.csi.storage.gke.io
+        volumeAttributes:
+          bucketName: &lt;bucket-name&gt;
+          mountOptions: &#34;implicit-dirs&#34;
+</code></pre><h2 id="運行結果">運行結果</h2>
+<ol>
+<li>查看 Google Cloud Storage</li>
+</ol>
+<p>運行成功後，將在 Google Cloud Storage 看到如以下的 report files:</p>
+<p><img src="/google-cloud-storage-fuse-csi-driver/report.png" alt="report"></p>
+<ol start="2">
+<li>查看 Report 內容</li>
+</ol>
+<p><img src="/google-cloud-storage-fuse-csi-driver/content.png" alt="content"></p>
+<h2 id="reference">Reference</h2>
 <ul>
 <li><a href="https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/cloud-storage-fuse-csi-driver">Access Cloud Storage buckets with the Cloud Storage FUSE CSI driver</a></li>
 <li><a href="https://github.com/GoogleCloudPlatform/gcs-fuse-csi-driver/blob/main/docs/authentication.md#validate-the-service-account-setup-optional">Configure access to Cloud Storage buckets using GKE Workload Identity</a></li>
