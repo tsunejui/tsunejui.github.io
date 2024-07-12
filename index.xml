@@ -8,6 +8,17 @@
     <language>en-us</language>
     <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Diagram</title>
+      <link>https://tsunejui.github.io/diagram/</link>
+      <pubDate>Tue, 11 Jun 2024 14:00:00 +0000</pubDate>
+      
+      <guid>https://tsunejui.github.io/diagram/</guid>
+      <description>以下是不錯的架構、教學圖，歡迎參考：
+Iptables Linux Performance https://www.brendangregg.com/linuxperf.html
+Group Diagram Tuning Performance BPF </description>
+    </item>
+    
+    <item>
       <title>Slides Share</title>
       <link>https://tsunejui.github.io/slides/</link>
       <pubDate>Tue, 11 Jun 2024 14:00:00 +0000</pubDate>
@@ -15,17 +26,6 @@
       <guid>https://tsunejui.github.io/slides/</guid>
       <description>Hi, 歡迎來到我的 Slides Share，歡迎各位下載：
 Name Description Link SRE Conference 2024 我參與 SRE Conference 2024 的心得 - Google Cloud Security Forum 2024 我參與 Google Cloud Security Forum 2024 的心得 - </description>
-    </item>
-    
-    <item>
-      <title>Tools</title>
-      <link>https://tsunejui.github.io/tools/</link>
-      <pubDate>Tue, 11 Jun 2024 14:00:00 +0000</pubDate>
-      
-      <guid>https://tsunejui.github.io/tools/</guid>
-      <description>以下是不錯的工具、架構、教學圖，歡迎參考：
-Linux Performance https://www.brendangregg.com/linuxperf.html
-Group Tools Tuning Performance BPF </description>
     </item>
     
     <item>
