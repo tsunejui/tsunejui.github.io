@@ -14,7 +14,8 @@
       
       <guid>https://tsunejui.github.io/diagram/</guid>
       <description>以下是不錯的架構、教學圖，歡迎參考：
-Iptables Linux Performance https://www.brendangregg.com/linuxperf.html
+Iptables http://xkr47.outerspace.dyndns.org/netfilter/packet_flow/
+Linux Performance https://www.brendangregg.com/linuxperf.html
 Group Diagram Tuning Performance BPF </description>
     </item>
     
