@@ -93,7 +93,7 @@
 <pre tabindex="0"><code>OCP console &gt; Observe &gt; Metrics
 </code></pre><p>經過調查，我們發現 Prometheus 是突然抓取不到 metrics，抓取不到的原因則是 HAProxy 並未 export metrics</p>
 <h2 id="調查結果">調查結果</h2>
-<p>我觀測到，HAProxy 的 metrics 消失時，其 endpoints 剛好超過 <em>500</em>。注意，這裡指的 endpoint 是 Openshift Ingress Controller 會將 Route 轉換為 haproxy 的 endpoint，可以透過以下2種方法取得當前的 endpoints 數量:</p>
+<p>觀測到，HAProxy 的 metrics 消失時，其 endpoints 剛好超過 <em>500</em>，推斷為造成這次事件的原因。而這裡指的 endpoint，是指 Openshift Ingress Controller 將 Route 轉換為 haproxy 的 endpoint，並非 Kubernetes 的 <code>Endpoint</code>，可以透過以下2種方法取得當前的 endpoints 數量:</p>
 <ol>
 <li>查看 haproxy.conf</li>
 </ol>
@@ -103,7 +103,7 @@
 <li>查詢以下 metrics</li>
 </ol>
 <pre tabindex="0"><code>Query haproxy_server_up metrics 
-</code></pre><p>我在 Openshift 的 GitHub 上找到原因，當 endpoints 數量超過 threshold 時，HAProxy 可能為了不影響效能，將停止 export metrics，這也是客戶的 Dashboard 所觀測到的現象:</p>
+</code></pre><p>透過分析 Openshift 在 GitHub 上的 source codes，當 endpoints 數量超過 threshold 時，HAProxy 可能為了不影響效能，將停止 export metrics，這也是客戶的 Dashboard 所觀測到的現象:</p>
 <blockquote>
 <p><a href="https://github.com/openshift/router/blob/master/pkg/router/metrics/haproxy/haproxy.go#L458">https://github.com/openshift/router/blob/master/pkg/router/metrics/haproxy/haproxy.go#L458</a></p>
 </blockquote>
