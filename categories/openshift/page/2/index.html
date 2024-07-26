@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Note - Rex&#39;s Notes 技術筆記 </title>
+	<title>Openshift - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 
 	<link rel="stylesheet" href="/css/style.css">
 	
-	<link rel="alternate" type="application/rss+xml" href="/tags/note/index.xml" title="Rex's Notes 技術筆記 ">
+	<link rel="alternate" type="application/rss+xml" href="/categories/openshift/index.xml" title="Rex's Notes 技術筆記 ">
 
 	<link rel="shortcut icon" href="/favicon.ico">
 		
@@ -69,104 +69,31 @@
 			
 <main class="main list" role="main">
 	<header class="main__header">
-		<h1 class="main__title">Note</h1>
+		<h1 class="main__title">Openshift</h1>
 	</header><article class="list__item post">
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
-			<a href="/posts/harbor-containers-fail-to-start/" rel="bookmark">
-			Harbor Containers Fail to Start
+			<a href="/posts/node-clock-not-synchronising/" rel="bookmark">
+			NodeClockNotSynchronising alert troubleshooting in Openshift 4
 			</a>
 		</h2>
-		<p class="list__lead post__lead">Harbor 啟動失敗調查</p>
+		<p class="list__lead post__lead">NTP Server 不同步事件調查</p>
 		<div class="list__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-01-27T14:04:45&#43;08:00">January 27, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/harbor/" rel="category">Harbor</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-26T01:51:06&#43;08:00">August 26, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
 	</span>
 </div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		<p>這篇文章將介紹客戶端 <code>Harbor</code> 啟動時有機率發生錯誤的紀錄，並說明調查步驟及結果。</p>
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/vxlan-lab/" rel="bookmark">
-			VXLAN Lab
-			</a>
-		</h2>
-		<p class="list__lead post__lead">VXLAN 教育訓練</p>
-		<div class="list__meta meta">
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-25T13:40:52&#43;08:00">December 25, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>, <a class="meta__link" href="/categories/network/" rel="category">Network</a>
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		<p>本文將進行在 Linux 系統上建立 <code>VXLAN Tunnel</code>，並且讓不同 Node 上的 Container 可以彼此溝通。</p>
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/podman-dns/" rel="bookmark">
-			Podman DNS
-			</a>
-		</h2>
-		<p class="list__lead post__lead">解決在 Podman Compose 上 DNS Server 無法使用的問題</p>
-		<div class="list__meta meta">
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-05T00:29:01&#43;08:00">December 05, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		<p>本文將解析在使用 Podman Compose 時遇到的 DNS 服務器問題，並提供解決方案。</p>
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/container-mnt/" rel="bookmark">
-			Container Note - Mount Namespace
-			</a>
-		</h2>
-		<p class="list__lead post__lead">Mount Namespace 研究</p>
-		<div class="list__meta meta">
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-19T03:12:13&#43;08:00">November 19, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		<p>本文探討 Linux 的 Mount Namespace，這是一種隔離檔案系統的技術。文章將講解其原理、應用場景和如何有效地使用它來提高系統安全性。</p>
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/f5-vip-setting/" rel="bookmark">
-			F5 VIP Setting
-			</a>
-		</h2>
-		<p class="list__lead post__lead">F5 上 VIP 設定步驟</p>
-		<div class="list__meta meta">
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-02T15:20:48&#43;08:00">November 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/f5/" rel="category">F5</a>
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		<p>本文提供在 F5 Load Balancer 上配置虛擬 IP (VIP) 的步驟。利用 F5 提高應用的可用性。</p>
+		<p>這篇文章將探討 NTP (Network Time Protocol) 服務器在 Openshift 發生的同步問題的原因和解決方法。文章將提供故障診斷的內容。</p>
 	</div>
 </article>
 </main>
 
 <div class="pagination">
-	<a class="pagination__item pagination__item--prev btn" href="/tags/note/">«</a>
-	<span class="pagination__item pagination__item--current">2/6</span>
-	<a class="pagination__item pagination__item--next btn" href="/tags/note/page/3/">»</a>
+	<a class="pagination__item pagination__item--prev btn" href="/categories/openshift/">«</a>
+	<span class="pagination__item pagination__item--current">2/2</span>
 </div>
 
 			</div>

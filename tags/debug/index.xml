@@ -6,7 +6,16 @@
     <description>Recent content in Debug on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 20 Jul 2024 16:09:41 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/debug/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 26 Jul 2024 15:41:22 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/debug/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Missing HAProxy Metrics</title>
+      <link>https://tsunejui.github.io/posts/missing-haproxy-metrics/</link>
+      <pubDate>Fri, 26 Jul 2024 15:41:22 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/missing-haproxy-metrics/</guid>
+      <description>&lt;p&gt;這篇文章將分析在 Openshift 環境中遇到的一個 HAProxy 相關 Bug。我們將討論 Bug 的成因、影響範圍以及解決方案。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>CoreDNS UDP Bufsize Restricted to 512</title>
       <link>https://tsunejui.github.io/posts/coredns-udp-bufsize-restricted-to-512/</link>

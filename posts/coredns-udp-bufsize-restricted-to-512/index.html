@@ -84,7 +84,7 @@
 <p>經過調查，我們發現是 DNS 問題，當封包大小超過 512 bytes 時，預設的 CoreDNS 會回傳 <code>SERVFAIL</code>，而這個問題也被收錄於 RedHat 的 Known issues: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1949361">https://bugzilla.redhat.com/show_bug.cgi?id=1949361</a></p>
 <p><img src="/dns-issue/issue.png" alt="issue"></p>
 <p>而 <code>512 bytes size limit</code> 可能源自於過去的約定成俗 (可以參考: <a href="https://serverfault.com/q/587625">https://serverfault.com/q/587625</a>)，公司內的 DNS Server 經過好幾層的解析，已經超過 512 bytes，在 <a href="https://www.dnsflagday.net/2020/">DNS flag day 2020</a> 中，建議 size limit 為 <strong>1232</strong>:</p>
-<p><img src="/dns-issue/size.png" alt="issue"></p>
+<p><img src="/dns-issue/size.png" alt="size"></p>
 <h2 id="調查過程">調查過程</h2>
 <p>以下是與 RedHat Support 調查所使用到的工具及命令，提供參考:</p>
 <ol>
