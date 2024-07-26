@@ -147,6 +147,15 @@ Name Description Link SRE Conference 2024 我參與 SRE Conference 2024 的心�
     </item>
     
     <item>
+      <title>CoreDNS UDP Bufsize Restricted to 512</title>
+      <link>https://tsunejui.github.io/posts/coredns-udp-bufsize-restricted-to-512/</link>
+      <pubDate>Wed, 30 Aug 2023 16:09:41 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/coredns-udp-bufsize-restricted-to-512/</guid>
+      <description>&lt;p&gt;這篇文章將分析在 Openshift 環境中遇到的一個 CoreDNS 相關 Bug。我們將討論 Bug 的成因、影響範圍以及解決方案。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>NodeClockNotSynchronising alert troubleshooting in Openshift 4</title>
       <link>https://tsunejui.github.io/posts/node-clock-not-synchronising/</link>
       <pubDate>Sat, 26 Aug 2023 01:51:06 +0800</pubDate>

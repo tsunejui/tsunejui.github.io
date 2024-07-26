@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>CoreDNS UDP Bufsize Restricted to 512 - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/diagram/">
+				
+				<span class="menu__text">Diagram</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/slides/">
+				
+				<span class="menu__text">Slides Share</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">CoreDNS UDP Bufsize Restricted to 512</h1>
+			<p class="post__lead">CoreDNS 在 Openshift 上的 Bug</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-30T16:09:41&#43;08:00">August 30, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
+	</span>
+</div></div>
+		</header>
+		<div class="content post__content clearfix">
+			<p>這篇文章將分析在 Openshift 環境中遇到的一個 CoreDNS 相關 Bug。我們將討論 Bug 的成因、影響範圍以及解決方案。</p>
+<h3 id="問題描述">問題描述</h3>
+<p>公司的同事最近發現了一個詭異的問題，我們的 Openshift 4.12 常常發生服務中斷的現象，且時好時壞。</p>
+<p>經過調查，我們發現是 DNS 問題，當封包大小超過 512 bytes 時，預設的 CoreDNS 會回傳 <code>SERVFAIL</code>，而這個問題也被收錄於 RedHat 的 Known issues: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1949361">https://bugzilla.redhat.com/show_bug.cgi?id=1949361</a></p>
+<p><img src="/dns-issue/issue.png" alt="issue"></p>
+<p>而 <code>512 bytes size limit</code> 可能源自於過去的約定成俗 (可以參考: <a href="https://serverfault.com/q/587625">https://serverfault.com/q/587625</a>)，公司內的 DNS Server 經過好幾層的解析，已經超過 512 bytes，在 <a href="https://www.dnsflagday.net/2020/">DNS flag day 2020</a> 中，建議 size limit 為 <strong>1232</strong>:</p>
+<p><img src="/dns-issue/size.png" alt="issue"></p>
+<h3 id="調查過程">調查過程</h3>
+<p>以下是與 RedHat Support 調查所使用到的工具及命令，提供參考:</p>
+<ol>
+<li>使用 RedHat 提供的測試工具 <code>testdig</code></li>
+</ol>
+<pre tabindex="0"><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+name: ubi8
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubi8
+  template:
+    metadata:
+      labels:
+        app: ubi8
+    spec:
+      containers:
+      - command:
+        - /bin/bash
+        - -c
+        - sleep 360000000
+        image: quay.io/rhn_support_cchen/testdig:v1.0
+        imagePullPolicy: IfNotPresent
+        name: ubi8
+      serviceAccount: testsa
+      serviceAccountName: testsa
+      dnsConfig: # add this config if you needs
+      options:
+      - name: edns0
+</code></pre><ol start="2">
+<li>檢查 <code>dnssec</code></li>
+</ol>
+<pre tabindex="0"><code>date; dig +nodnssec console.redhat.com
+date; dig +dnssec console.redhat.com
+</code></pre><h3 id="解決方法">解決方法</h3>
+<p>由於 CoreDNS 是由 Openshift 託管，無法直接修改，與 RedHat Support 討論過後，得知此 Bug 將會於 <code>4.14</code> 版本修復：https://issues.redhat.com/browse/OCPBUGS-15605</p>
+<p>目前暫時的解決方案如下：</p>
+<ol>
+<li>解除託管</li>
+</ol>
+<p>執行 <code>oc edit clusterversion version</code>，並將 <code>dns-operator</code> 設為 <code>unmanaged</code>:</p>
+<pre tabindex="0"><code>spec:
+  overrides:
+  - group: apps
+    kind: Deployment
+    name: dns-operator
+    namespace: openshift-dns-operator unmanaged: true
+</code></pre><ol start="2">
+<li>更改 Corefile</li>
+</ol>
+<p>執行 <code>oc -n openshift-dns edit cm/dns-default</code>:</p>
+<pre tabindex="0"><code>apiVersion: v1
+data:
+  Corefile: |
+    .:5353 {
+      bufsize 512 # &lt;======== change to 1232
+      errors
+      log . {
+        class denial error
+      }
+      health {
+        lameduck 20s
+      }
+      ready
+      kubernetes cluster.local in-addr.arpa ip6.arpa {
+        pods insecure
+        fallthrough in-addr.arpa ip6.arpa
+      }
+      prometheus 127.0.0.1:9153
+      forward . /etc/resolv.conf {
+        policy sequential
+      }
+      cache 900 {
+        denial 9984 30
+      }
+      reload
+    }
+    hostname.bind:5353 {
+      chaos
+    }
+kind: ConfigMap
+</code></pre>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tip/" rel="tag">Tip</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2024 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

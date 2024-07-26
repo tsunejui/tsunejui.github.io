@@ -146,19 +146,19 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
-			<a href="/posts/node-clock-not-synchronising/" rel="bookmark">
-			NodeClockNotSynchronising alert troubleshooting in Openshift 4
+			<a href="/posts/coredns-udp-bufsize-restricted-to-512/" rel="bookmark">
+			CoreDNS UDP Bufsize Restricted to 512
 			</a>
 		</h2>
-		<p class="list__lead post__lead">NTP Server 不同步事件調查</p>
+		<p class="list__lead post__lead">CoreDNS 在 Openshift 上的 Bug</p>
 		<div class="list__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-26T01:51:06&#43;08:00">August 26, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-30T16:09:41&#43;08:00">August 30, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
 	</span>
 </div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		<p>這篇文章將探討 NTP (Network Time Protocol) 服務器在 Openshift 發生的同步問題的原因和解決方法。文章將提供故障診斷的內容。</p>
+		<p>這篇文章將分析在 Openshift 環境中遇到的一個 CoreDNS 相關 Bug。我們將討論 Bug 的成因、影響範圍以及解決方案。</p>
 	</div>
 </article>
 </main>
@@ -242,7 +242,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/openshift/">Openshift</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">4</span>
+				<span class="widget__counter widget__counter--bubble">5</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/prometheus/">Prometheus</a>&nbsp;
