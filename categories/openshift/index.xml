@@ -6,7 +6,16 @@
     <description>Recent content in Openshift on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 06 Mar 2024 14:56:30 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/openshift/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 Jul 2024 16:09:41 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/openshift/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CoreDNS UDP Bufsize Restricted to 512</title>
+      <link>https://tsunejui.github.io/posts/coredns-udp-bufsize-restricted-to-512/</link>
+      <pubDate>Sat, 20 Jul 2024 16:09:41 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/coredns-udp-bufsize-restricted-to-512/</guid>
+      <description>&lt;p&gt;這篇文章將分析在 Openshift 環境中遇到的一個 CoreDNS 相關 Bug。我們將討論 Bug 的成因、影響範圍以及解決方案。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Prometheus Remote Write Performance Issue</title>
       <link>https://tsunejui.github.io/posts/prometheus-remote-write-performance-issue/</link>
@@ -32,15 +41,6 @@
       
       <guid>https://tsunejui.github.io/posts/openshift-gitops-dex-expiration-time/</guid>
       <description>&lt;p&gt;本文介紹如何在 ArgoCD 中設置自動登出功能。這有助於提高安全性，避免未經授權的存取。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>CoreDNS UDP Bufsize Restricted to 512</title>
-      <link>https://tsunejui.github.io/posts/coredns-udp-bufsize-restricted-to-512/</link>
-      <pubDate>Wed, 30 Aug 2023 16:09:41 +0800</pubDate>
-      
-      <guid>https://tsunejui.github.io/posts/coredns-udp-bufsize-restricted-to-512/</guid>
-      <description>&lt;p&gt;這篇文章將分析在 Openshift 環境中遇到的一個 CoreDNS 相關 Bug。我們將討論 Bug 的成因、影響範圍以及解決方案。&lt;/p&gt;</description>
     </item>
     
     <item>

@@ -6,7 +6,16 @@
     <description>Recent content in Categories on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 Jul 2024 16:09:41 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Openshift</title>
+      <link>https://tsunejui.github.io/categories/openshift/</link>
+      <pubDate>Sat, 20 Jul 2024 16:09:41 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/categories/openshift/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Harbor</title>
       <link>https://tsunejui.github.io/categories/harbor/</link>
@@ -49,15 +58,6 @@
       <pubDate>Sat, 23 Mar 2024 09:29:59 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/categories/k8s/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Openshift</title>
-      <link>https://tsunejui.github.io/categories/openshift/</link>
-      <pubDate>Wed, 06 Mar 2024 14:56:30 +0800</pubDate>
-      
-      <guid>https://tsunejui.github.io/categories/openshift/</guid>
       <description></description>
     </item>
     

@@ -6,20 +6,11 @@
     <description>Recent content in Tags on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Tip</title>
-      <link>https://tsunejui.github.io/tags/tip/</link>
-      <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
-      
-      <guid>https://tsunejui.github.io/tags/tip/</guid>
-      <description></description>
-    </item>
-    
+    <lastBuildDate>Sat, 20 Jul 2024 16:09:41 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Debug</title>
       <link>https://tsunejui.github.io/tags/debug/</link>
-      <pubDate>Sat, 23 Mar 2024 09:29:59 +0800</pubDate>
+      <pubDate>Sat, 20 Jul 2024 16:09:41 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/tags/debug/</guid>
       <description></description>
@@ -28,9 +19,18 @@
     <item>
       <title>Note</title>
       <link>https://tsunejui.github.io/tags/note/</link>
-      <pubDate>Sat, 23 Mar 2024 09:29:59 +0800</pubDate>
+      <pubDate>Sat, 20 Jul 2024 16:09:41 +0800</pubDate>
       
       <guid>https://tsunejui.github.io/tags/note/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tip</title>
+      <link>https://tsunejui.github.io/tags/tip/</link>
+      <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/tags/tip/</guid>
       <description></description>
     </item>
     

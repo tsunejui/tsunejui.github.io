@@ -73,19 +73,19 @@
 			<p class="post__lead">CoreDNS 在 Openshift 上的 Bug</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-30T16:09:41&#43;08:00">August 30, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-07-20T16:09:41&#43;08:00">July 20, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
 	</span>
 </div></div>
 		</header>
 		<div class="content post__content clearfix">
 			<p>這篇文章將分析在 Openshift 環境中遇到的一個 CoreDNS 相關 Bug。我們將討論 Bug 的成因、影響範圍以及解決方案。</p>
-<h3 id="問題描述">問題描述</h3>
+<h2 id="問題描述">問題描述</h2>
 <p>公司的同事最近發現了一個詭異的問題，我們的 Openshift 4.12 常常發生服務中斷的現象，且時好時壞。</p>
 <p>經過調查，我們發現是 DNS 問題，當封包大小超過 512 bytes 時，預設的 CoreDNS 會回傳 <code>SERVFAIL</code>，而這個問題也被收錄於 RedHat 的 Known issues: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1949361">https://bugzilla.redhat.com/show_bug.cgi?id=1949361</a></p>
 <p><img src="/dns-issue/issue.png" alt="issue"></p>
 <p>而 <code>512 bytes size limit</code> 可能源自於過去的約定成俗 (可以參考: <a href="https://serverfault.com/q/587625">https://serverfault.com/q/587625</a>)，公司內的 DNS Server 經過好幾層的解析，已經超過 512 bytes，在 <a href="https://www.dnsflagday.net/2020/">DNS flag day 2020</a> 中，建議 size limit 為 <strong>1232</strong>:</p>
 <p><img src="/dns-issue/size.png" alt="issue"></p>
-<h3 id="調查過程">調查過程</h3>
+<h2 id="調查過程">調查過程</h2>
 <p>以下是與 RedHat Support 調查所使用到的工具及命令，提供參考:</p>
 <ol>
 <li>使用 RedHat 提供的測試工具 <code>testdig</code></li>
@@ -123,7 +123,7 @@ spec:
 </ol>
 <pre tabindex="0"><code>date; dig +nodnssec console.redhat.com
 date; dig +dnssec console.redhat.com
-</code></pre><h3 id="解決方法">解決方法</h3>
+</code></pre><h2 id="解決方法">解決方法</h2>
 <p>由於 CoreDNS 是由 Openshift 託管，無法直接修改，與 RedHat Support 討論過後，得知此 Bug 將會於 <code>4.14</code> 版本修復：https://issues.redhat.com/browse/OCPBUGS-15605</p>
 <p>目前暫時的解決方案如下：</p>
 <ol>
@@ -181,7 +181,7 @@ kind: ConfigMap
 			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/tip/" rel="tag">Tip</a>
+			<a class="tags__link btn" href="/tags/debug/" rel="tag">Debug</a>
 		</li>
 	</ul>
 </div>

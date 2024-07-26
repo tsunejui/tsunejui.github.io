@@ -74,6 +74,24 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/coredns-udp-bufsize-restricted-to-512/" rel="bookmark">
+			CoreDNS UDP Bufsize Restricted to 512
+			</a>
+		</h2>
+		<p class="list__lead post__lead">CoreDNS 在 Openshift 上的 Bug</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-07-20T16:09:41&#43;08:00">July 20, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
+	</span>
+</div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		<p>這篇文章將分析在 Openshift 環境中遇到的一個 CoreDNS 相關 Bug。我們將討論 Bug 的成因、影響範圍以及解決方案。</p>
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/hpa-to-not-scale-correctly/" rel="bookmark">
 			HPA to not scale correctly
 			</a>
@@ -142,24 +160,6 @@
 	<div class="content list__excerpt post__content clearfix">
 		<p>這篇文章將介紹客戶端 <code>Harbor</code> 啟動時有機率發生錯誤的紀錄，並說明調查步驟及結果。</p>
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/vxlan-lab/" rel="bookmark">
-			VXLAN Lab
-			</a>
-		</h2>
-		<p class="list__lead post__lead">VXLAN 教育訓練</p>
-		<div class="list__meta meta">
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-25T13:40:52&#43;08:00">December 25, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>, <a class="meta__link" href="/categories/network/" rel="category">Network</a>
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		<p>本文將進行在 Linux 系統上建立 <code>VXLAN Tunnel</code>，並且讓不同 Node 上的 Container 可以彼此溝通。</p>
-	</div>
 </article>
 </main>
 
@@ -183,11 +183,11 @@
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/coredns-udp-bufsize-restricted-to-512/">CoreDNS UDP Bufsize Restricted to 512</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/harbor-trivy-scan-severity/">Severity of container image from Trivy Scan on Harbor</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/google-cloud-storage-fuse-csi-driver/">Google Cloud Storage Fuse CSI Driver</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/hpa-to-not-scale-correctly/">HPA to not scale correctly</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/prometheus-remote-write-performance-issue/">Prometheus Remote Write Performance Issue</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/calico-multiple-network-interface/">Calico Multiple Network Interface</a></li>
 		</ul>
 	</div>
 </div>
