@@ -74,6 +74,24 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/calico-multiple-network-interface/" rel="bookmark">
+			Calico Multiple Network Interface
+			</a>
+		</h2>
+		<p class="list__lead post__lead">在使用 Calico CNI 的 k8s node 上加入多個 network interface</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-02-22T16:03:03&#43;08:00">February 22, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	</span>
+</div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		<p>這篇文章將介紹客戶端的 Kubernetes Cluster 上遇到的網路問題，調查後發現是 Calico CNI 在多個 network interface 的 node 上，需要進行特別的設定。</p>
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/harbor-containers-fail-to-start/" rel="bookmark">
 			Harbor Containers Fail to Start
 			</a>
@@ -142,24 +160,6 @@
 	<div class="content list__excerpt post__content clearfix">
 		<p>本文探討 Linux 的 Mount Namespace，這是一種隔離檔案系統的技術。文章將講解其原理、應用場景和如何有效地使用它來提高系統安全性。</p>
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/f5-vip-setting/" rel="bookmark">
-			F5 VIP Setting
-			</a>
-		</h2>
-		<p class="list__lead post__lead">F5 上 VIP 設定步驟</p>
-		<div class="list__meta meta">
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-02T15:20:48&#43;08:00">November 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/f5/" rel="category">F5</a>
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		<p>本文提供在 F5 Load Balancer 上配置虛擬 IP (VIP) 的步驟。利用 F5 提高應用的可用性。</p>
-	</div>
 </article>
 </main>
 
@@ -184,11 +184,11 @@
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/survey-k8s-kafka-memory-usage/">Survey K8s Kafka Memory Usage</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/missing-haproxy-metrics/">Missing HAProxy Metrics</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/coredns-udp-bufsize-restricted-to-512/">CoreDNS UDP Bufsize Restricted to 512</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/harbor-trivy-scan-severity/">Severity of container image from Trivy Scan on Harbor</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/google-cloud-storage-fuse-csi-driver/">Google Cloud Storage Fuse CSI Driver</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/hpa-to-not-scale-correctly/">HPA to not scale correctly</a></li>
 		</ul>
 	</div>
 </div>
@@ -226,7 +226,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/k8s/">K8S</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">8</span>
+				<span class="widget__counter widget__counter--bubble">9</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/kafka/">Kafka</a>&nbsp;

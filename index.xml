@@ -6,7 +6,16 @@
     <description>Recent content on Rex&#39;s Notes 技術筆記 </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 26 Jul 2024 15:41:22 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Aug 2024 11:19:46 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Survey K8s Kafka Memory Usage</title>
+      <link>https://tsunejui.github.io/posts/survey-k8s-kafka-memory-usage/</link>
+      <pubDate>Sun, 18 Aug 2024 11:19:46 +0800</pubDate>
+      
+      <guid>https://tsunejui.github.io/posts/survey-k8s-kafka-memory-usage/</guid>
+      <description>&lt;p&gt;此篇文章將探討將分享我在 Strimzi (Kafka in Kubernetes) 中，遇到 cluster 內某一 broker 的 memory usage 特別高的問題。&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Missing HAProxy Metrics</title>
       <link>https://tsunejui.github.io/posts/missing-haproxy-metrics/</link>

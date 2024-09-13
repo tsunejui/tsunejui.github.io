@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Survey K8s Kafka Memory Usage - Rex&#39;s Notes 技術筆記 </title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="Rex&#39;s Notes 技術筆記 " rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">Rex&#39;s Notes 技術筆記 </div>
+					
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">About Me</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/diagram/">
+				
+				<span class="menu__text">Diagram</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/slides/">
+				
+				<span class="menu__text">Slides Share</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Survey K8s Kafka Memory Usage</h1>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-08-18T11:19:46&#43;08:00">August 18, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	</span>
+</div></div>
+		</header>
+		<div class="content post__content clearfix">
+			<p>此篇文章將探討將分享我在 Strimzi (Kafka in Kubernetes) 中，遇到 cluster 內某一 broker 的 memory usage 特別高的問題。</p>
+<h3 id="環境描述">環境描述</h3>
+<p>Strimzi 是透過 <code>helm</code> 安裝於 GKE 上，而 CRD <code>KafkaNodePool</code> 設定為 <code>3</code>，意味著會有 3 個 broker。</p>
+<table>
+<thead>
+<tr>
+<th>environment</th>
+<th>version</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kubernetes</td>
+<td>v1.30.2</td>
+<td>Google Kubernetes Engine (GKE)</td>
+</tr>
+<tr>
+<td>Strimzi</td>
+<td>0.42.0</td>
+<td>chart version</td>
+</tr>
+<tr>
+<td>Kafka</td>
+<td>3.7.1</td>
+<td>metadataVersion: 3.7-IV4</td>
+</tr>
+</tbody>
+</table>
+<h3 id="問題原因">問題原因</h3>
+<p>在 Google Monitoring 上看到一個奇怪的現象，3 個 broker 中有一個 pod 的 memory usage 特別高。由於 Kafka 並未調整特別的參數，以下是已知的 resource 配置：</p>
+<table>
+<thead>
+<tr>
+<th>resource</th>
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pod CPU Request &amp; Limit</td>
+<td>500m</td>
+<td></td>
+</tr>
+<tr>
+<td>Pod Memory Request &amp; Limit</td>
+<td>2Gi</td>
+<td></td>
+</tr>
+<tr>
+<td>JVM</td>
+<td>-Xmx1G -Xms1G</td>
+<td>KAFKA_HEAP_OPTS</td>
+</tr>
+</tbody>
+</table>
+<p>memory usage 及 storage usage 如下：</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>memory usage</th>
+<th>storage usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>broker-1</td>
+<td><img src="/survey-k8s-kafka-memory-usage/m-broker-1.png" alt="m-broker-1"></td>
+<td><img src="/survey-k8s-kafka-memory-usage/d-broker-1.png" alt="d-broker-1"></td>
+</tr>
+<tr>
+<td>broker-2</td>
+<td><img src="/survey-k8s-kafka-memory-usage/m-broker-2.png" alt="m-broker-2"></td>
+<td><img src="/survey-k8s-kafka-memory-usage/d-broker-2.png" alt="d-broker-2"></td>
+</tr>
+<tr>
+<td>broker-3</td>
+<td><img src="/survey-k8s-kafka-memory-usage/m-broker-3.png" alt="m-broker-3"></td>
+<td><img src="/survey-k8s-kafka-memory-usage/d-broker-3.png" alt="d-broker-3"></td>
+</tr>
+</tbody>
+</table>
+<p>從上圖可以看到，在 storage usage 相同的情況下 (broker 內幾乎沒有資料，因為資料已經超過 retention time)，也沒有任何 networking traffic，但 broker-1 的 memory usage 就是比較高。</p>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Rex Wu avatar" src="/rex.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Rex Wu</span>
+	</div>
+	<div class="authorbox__description">
+		Hi, I&rsquo;m Rex, a software engineer. contact me if you require any further assistance
+	</div>
+</div>
+
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2024 Rex Wu.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
