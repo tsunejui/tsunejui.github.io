@@ -106,7 +106,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="問題原因">問題原因</h3>
+<h3 id="問題描述">問題描述</h3>
 <p>在 Google Monitoring 上看到一個奇怪的現象，3 個 broker 中有一個 pod 的 memory usage 特別高。由於 Kafka 並未調整特別的參數，以下是已知的 resource 配置：</p>
 <table>
 <thead>
@@ -162,6 +162,78 @@
 </tbody>
 </table>
 <p>從上圖可以看到，在 storage usage 相同的情況下 (broker 內幾乎沒有資料，因為資料已經超過 retention time)，也沒有任何 networking traffic，但 broker-1 的 memory usage 就是比較高。</p>
+<h3 id="調查過程">調查過程</h3>
+<p>在不同 container 內，分別使用以下指令進行調查：</p>
+<table>
+<thead>
+<tr>
+<th>command</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>du -sh /var/lib/kafka/data-0</code></td>
+<td>查看 kafka 內的 storage usage</td>
+</tr>
+<tr>
+<td>`cat /proc/694/status</td>
+<td>grep VmRSS`</td>
+</tr>
+<tr>
+<td>`cat /sys/fs/cgroup/memory.stat</td>
+<td>grep -E &lsquo;active_file&rsquo;`</td>
+</tr>
+<tr>
+<td><code>cat /sys/fs/cgroup/memory.stat</code></td>
+<td>查看 container 內 cgroup 紀錄的 memory 使用量</td>
+</tr>
+</tbody>
+</table>
+<p>以下是我執行指令後的截圖 （圖片非常不清晰，請見諒，但這不影響我最後的結論）：</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>details</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>broker-1</td>
+<td><img src="/survey-k8s-kafka-memory-usage/detail-1.png" alt="a-broker-1"></td>
+<td>active_file: 509644800 <!-- raw HTML omitted --> container_memory_rss: 1.2G <!-- raw HTML omitted --> container_memory_working_set_bytes: 1.7G</td>
+</tr>
+<tr>
+<td>broker-2</td>
+<td><img src="/survey-k8s-kafka-memory-usage/detail-2.png" alt="a-broker-2"></td>
+<td>active_file: 41866496 <!-- raw HTML omitted --> container_memory_rss: 1.2G <!-- raw HTML omitted --> container_memory_working_set_bytes: 1.3G</td>
+</tr>
+<tr>
+<td>broker-3</td>
+<td><img src="/survey-k8s-kafka-memory-usage/detail-3.png" alt="a-broker-3"></td>
+<td>active_file: 40853504 <!-- raw HTML omitted --> container_memory_rss: 1.2G <!-- raw HTML omitted --> container_memory_working_set_bytes: 1.3G</td>
+</tr>
+</tbody>
+</table>
+<p>從上表可以得知，<code>broker-1</code> 的 <code>active_file</code> 特別高，而 3 個 pod 的 <code>container_memory_rss</code> 是相同的。在 kubernetes 中，計算 Pod memory 的公式如下:</p>
+<blockquote>
+<p><a href="https://stackoverflow.com/q/65428558/9102278">https://stackoverflow.com/q/65428558/9102278</a></p>
+</blockquote>
+<pre tabindex="0"><code>container_memory_usage_bytes = container_memory_rss + container_memory_cache + kernel memory
+
+container_memory_working_set_bytes = container_memory_usage_bytes - total_inactive_file (unactivated anonymous cached pages)
+</code></pre><p>其中，container_memory_working_set_bytes 用於計算 Pod 是否會 OOM，而它包含 cache pages。這是 linux kernel 的一種機制，讀取硬碟資料時，會將一部分的資料存放於 memory 中，加速讀寫速度，並根據 memory 實際使用量，動態調整 cache page 的大小。</p>
+<h3 id="調查結果">調查結果</h3>
+<p>理論上，kernel 動態調整機制，不會造成 memory 不足的問題，但為了降低風險，根據 Linux Kernel 的說明文件，可以手動調整參數，關閉這個功能，不過這在 container 內不可用，原因是權限不足：</p>
+<blockquote>
+<p><a href="https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html#drop-caches">https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html#drop-caches</a></p>
+</blockquote>
+<p><img src="/survey-k8s-kafka-memory-usage/linux.png" alt="linux"></p>
+<p>雖然不可以避免 cache page 的產生，但也不需要太擔心，根據 Kafka 的文件，預設的 graceful shutdown 參數為 <code>true</code>，理論上該機制會在 process 關閉前，將資料寫進硬碟，不會造成服務重啟時的損壞。</p>
+<p><a href="https://github.com/orgs/strimzi/discussions/6837">https://github.com/orgs/strimzi/discussions/6837</a></p>
+<p>如果仍然擔心 memory 不足所帶來的影響，也可以提高記憶體，並修改 <code>KAFKA_HEAP_OPTS</code> 參數，增加 JVM 的記憶體，或者參考 Kafka 關於持久化資料的文章：https://kafka.apache.org/documentation/#persistence</p>
 		</div>
 		<footer class="post__footer">
 			
