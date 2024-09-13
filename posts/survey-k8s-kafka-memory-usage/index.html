@@ -177,12 +177,12 @@
 <td>查看 kafka 內的 storage usage</td>
 </tr>
 <tr>
-<td>`cat /proc/694/status</td>
-<td>grep VmRSS`</td>
+<td><code>cat /proc/694/status | grep VmRSS</code></td>
+<td>查看 process <code>694</code> 使用的記憶體，因 Strimzi 的 Kafka 原理是透過執行 shell script 啟動 <code>java</code> 運行 kafka，而 java 的 pid 是 <code>694</code></td>
 </tr>
 <tr>
-<td>`cat /sys/fs/cgroup/memory.stat</td>
-<td>grep -E &lsquo;active_file&rsquo;`</td>
+<td><code>cat /sys/fs/cgroup/memory.stat | grep -E 'active_file'</code></td>
+<td>查看 container 內 cgroup 紀錄的 memory 使用量 (特別篩選 active file，此為 memory 存放於 disk 的 cache)</td>
 </tr>
 <tr>
 <td><code>cat /sys/fs/cgroup/memory.stat</code></td>
