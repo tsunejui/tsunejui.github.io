@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Survey K8s Kafka Memory Usage - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -72,7 +72,7 @@
 			<h1 class="post__title">Survey K8s Kafka Memory Usage</h1>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-08-18T11:19:46&#43;08:00">August 18, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2024-08-18T11:19:46&#43;08:00">August 18, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>
 	</span>
 </div></div>
 		</header>
@@ -81,146 +81,145 @@
 <h3 id="環境描述">環境描述</h3>
 <p>Strimzi 是透過 <code>helm</code> 安裝於 GKE 上，而 CRD <code>KafkaNodePool</code> 設定為 <code>3</code>，意味著會有 3 個 broker。</p>
 <table>
-<thead>
-<tr>
-<th>environment</th>
-<th>version</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Kubernetes</td>
-<td>v1.30.2</td>
-<td>Google Kubernetes Engine (GKE)</td>
-</tr>
-<tr>
-<td>Strimzi</td>
-<td>0.42.0</td>
-<td>chart version</td>
-</tr>
-<tr>
-<td>Kafka</td>
-<td>3.7.1</td>
-<td>metadataVersion: 3.7-IV4</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>environment</th>
+          <th>version</th>
+          <th>description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Kubernetes</td>
+          <td>v1.30.2</td>
+          <td>Google Kubernetes Engine (GKE)</td>
+      </tr>
+      <tr>
+          <td>Strimzi</td>
+          <td>0.42.0</td>
+          <td>chart version</td>
+      </tr>
+      <tr>
+          <td>Kafka</td>
+          <td>3.7.1</td>
+          <td>metadataVersion: 3.7-IV4</td>
+      </tr>
+  </tbody>
 </table>
 <h3 id="問題描述">問題描述</h3>
 <p>在 Google Monitoring 上看到一個奇怪的現象，3 個 broker 中有一個 pod 的 memory usage 特別高。由於 Kafka 並未調整特別的參數，以下是已知的 resource 配置：</p>
 <table>
-<thead>
-<tr>
-<th>resource</th>
-<th>value</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pod CPU Request &amp; Limit</td>
-<td>500m</td>
-<td></td>
-</tr>
-<tr>
-<td>Pod Memory Request &amp; Limit</td>
-<td>2Gi</td>
-<td></td>
-</tr>
-<tr>
-<td>JVM</td>
-<td>-Xmx1G -Xms1G</td>
-<td>KAFKA_HEAP_OPTS</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>resource</th>
+          <th>value</th>
+          <th>description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Pod CPU Request &amp; Limit</td>
+          <td>500m</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>Pod Memory Request &amp; Limit</td>
+          <td>2Gi</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>JVM</td>
+          <td>-Xmx1G -Xms1G</td>
+          <td>KAFKA_HEAP_OPTS</td>
+      </tr>
+  </tbody>
 </table>
 <p>memory usage 及 storage usage 如下：</p>
 <table>
-<thead>
-<tr>
-<th>name</th>
-<th>memory usage</th>
-<th>storage usage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>broker-1</td>
-<td><img src="/survey-k8s-kafka-memory-usage/m-broker-1.png" alt="m-broker-1"></td>
-<td><img src="/survey-k8s-kafka-memory-usage/d-broker-1.png" alt="d-broker-1"></td>
-</tr>
-<tr>
-<td>broker-2</td>
-<td><img src="/survey-k8s-kafka-memory-usage/m-broker-2.png" alt="m-broker-2"></td>
-<td><img src="/survey-k8s-kafka-memory-usage/d-broker-2.png" alt="d-broker-2"></td>
-</tr>
-<tr>
-<td>broker-3</td>
-<td><img src="/survey-k8s-kafka-memory-usage/m-broker-3.png" alt="m-broker-3"></td>
-<td><img src="/survey-k8s-kafka-memory-usage/d-broker-3.png" alt="d-broker-3"></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>name</th>
+          <th>memory usage</th>
+          <th>storage usage</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>broker-1</td>
+          <td><img src="/survey-k8s-kafka-memory-usage/m-broker-1.png" alt="m-broker-1"></td>
+          <td><img src="/survey-k8s-kafka-memory-usage/d-broker-1.png" alt="d-broker-1"></td>
+      </tr>
+      <tr>
+          <td>broker-2</td>
+          <td><img src="/survey-k8s-kafka-memory-usage/m-broker-2.png" alt="m-broker-2"></td>
+          <td><img src="/survey-k8s-kafka-memory-usage/d-broker-2.png" alt="d-broker-2"></td>
+      </tr>
+      <tr>
+          <td>broker-3</td>
+          <td><img src="/survey-k8s-kafka-memory-usage/m-broker-3.png" alt="m-broker-3"></td>
+          <td><img src="/survey-k8s-kafka-memory-usage/d-broker-3.png" alt="d-broker-3"></td>
+      </tr>
+  </tbody>
 </table>
 <p>從上圖可以看到，在 storage usage 相同的情況下 (broker 內幾乎沒有資料，因為資料已經超過 retention time)，也沒有任何 networking traffic，但 broker-1 的 memory usage 就是比較高。</p>
 <h3 id="調查過程">調查過程</h3>
 <p>在不同 container 內，分別使用以下指令進行調查：</p>
 <table>
-<thead>
-<tr>
-<th>command</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>du -sh /var/lib/kafka/data-0</code></td>
-<td>查看 kafka 內的 storage usage</td>
-</tr>
-<tr>
-<td><code>cat /proc/694/status | grep VmRSS</code></td>
-<td>查看 process <code>694</code> 使用的記憶體，因 Strimzi 的 Kafka 原理是透過執行 shell script 啟動 <code>java</code> 運行 kafka，而 java 的 pid 是 <code>694</code></td>
-</tr>
-<tr>
-<td><code>cat /sys/fs/cgroup/memory.stat | grep -E 'active_file'</code></td>
-<td>查看 container 內 cgroup 紀錄的 memory 使用量 (特別篩選 active file，此為 memory 存放於 disk 的 cache)</td>
-</tr>
-<tr>
-<td><code>cat /sys/fs/cgroup/memory.stat</code></td>
-<td>查看 container 內 cgroup 紀錄的 memory 使用量</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>command</th>
+          <th>description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>du -sh /var/lib/kafka/data-0</code></td>
+          <td>查看 kafka 內的 storage usage</td>
+      </tr>
+      <tr>
+          <td><code>cat /proc/694/status | grep VmRSS</code></td>
+          <td>查看 process <code>694</code> 使用的記憶體，因 Strimzi 的 Kafka 原理是透過執行 shell script 啟動 <code>java</code> 運行 kafka，而 java 的 pid 是 <code>694</code></td>
+      </tr>
+      <tr>
+          <td><code>cat /sys/fs/cgroup/memory.stat | grep -E 'active_file'</code></td>
+          <td>查看 container 內 cgroup 紀錄的 memory 使用量 (特別篩選 active file，此為 memory 存放於 disk 的 cache)</td>
+      </tr>
+      <tr>
+          <td><code>cat /sys/fs/cgroup/memory.stat</code></td>
+          <td>查看 container 內 cgroup 紀錄的 memory 使用量</td>
+      </tr>
+  </tbody>
 </table>
 <p>以下是我執行指令後的截圖 （圖片非常不清晰，請見諒，但這不影響我最後的結論）：</p>
 <table>
-<thead>
-<tr>
-<th>name</th>
-<th>details</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>broker-1</td>
-<td><img src="/survey-k8s-kafka-memory-usage/detail-1.png" alt="a-broker-1"></td>
-<td>active_file: 509644800 <!-- raw HTML omitted --> container_memory_rss: 1.2G <!-- raw HTML omitted --> container_memory_working_set_bytes: 1.7G</td>
-</tr>
-<tr>
-<td>broker-2</td>
-<td><img src="/survey-k8s-kafka-memory-usage/detail-2.png" alt="a-broker-2"></td>
-<td>active_file: 41866496 <!-- raw HTML omitted --> container_memory_rss: 1.2G <!-- raw HTML omitted --> container_memory_working_set_bytes: 1.3G</td>
-</tr>
-<tr>
-<td>broker-3</td>
-<td><img src="/survey-k8s-kafka-memory-usage/detail-3.png" alt="a-broker-3"></td>
-<td>active_file: 40853504 <!-- raw HTML omitted --> container_memory_rss: 1.2G <!-- raw HTML omitted --> container_memory_working_set_bytes: 1.3G</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>name</th>
+          <th>details</th>
+          <th>description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>broker-1</td>
+          <td><img src="/survey-k8s-kafka-memory-usage/detail-1.png" alt="a-broker-1"></td>
+          <td>active_file: 509644800 <br /> container_memory_rss: 1.2G <br /> container_memory_working_set_bytes: 1.7G</td>
+      </tr>
+      <tr>
+          <td>broker-2</td>
+          <td><img src="/survey-k8s-kafka-memory-usage/detail-2.png" alt="a-broker-2"></td>
+          <td>active_file: 41866496 <br /> container_memory_rss: 1.2G <br /> container_memory_working_set_bytes: 1.3G</td>
+      </tr>
+      <tr>
+          <td>broker-3</td>
+          <td><img src="/survey-k8s-kafka-memory-usage/detail-3.png" alt="a-broker-3"></td>
+          <td>active_file: 40853504 <br /> container_memory_rss: 1.2G <br /> container_memory_working_set_bytes: 1.3G</td>
+      </tr>
+  </tbody>
 </table>
 <p>從上表可以得知，<code>broker-1</code> 的 <code>active_file</code> 特別高，而 3 個 pod 的 <code>container_memory_rss</code> 是相同的。在 kubernetes 中，計算 Pod memory 的公式如下:</p>
 <blockquote>
-<p><a href="https://stackoverflow.com/q/65428558/9102278">https://stackoverflow.com/q/65428558/9102278</a></p>
-</blockquote>
+<p><a href="https://stackoverflow.com/q/65428558/9102278">https://stackoverflow.com/q/65428558/9102278</a></p></blockquote>
 <pre tabindex="0"><code>container_memory_usage_bytes = container_memory_rss + container_memory_cache + kernel memory
 
 container_memory_working_set_bytes = container_memory_usage_bytes - total_inactive_file (unactivated anonymous cached pages)
@@ -228,8 +227,7 @@ container_memory_working_set_bytes = container_memory_usage_bytes - total_inacti
 <h3 id="調查結果">調查結果</h3>
 <p>理論上，kernel 動態調整機制，不會造成 memory 不足的問題，但為了降低風險，根據 Linux Kernel 的說明文件，可以手動調整參數，關閉這個功能，不過這在 container 內不可用，原因是權限不足：</p>
 <blockquote>
-<p><a href="https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html#drop-caches">https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html#drop-caches</a></p>
-</blockquote>
+<p><a href="https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html#drop-caches">https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html#drop-caches</a></p></blockquote>
 <p><img src="/survey-k8s-kafka-memory-usage/linux.png" alt="linux"></p>
 <p>雖然不可以避免 cache page 的產生，但也不需要太擔心，根據 Kafka 的文件，預設的 graceful shutdown 參數為 <code>true</code>，理論上該機制會在 process 關閉前，將資料寫進硬碟，不會造成服務重啟時的損壞。</p>
 <p><a href="https://github.com/orgs/strimzi/discussions/6837">https://github.com/orgs/strimzi/discussions/6837</a></p>
@@ -238,7 +236,7 @@ container_memory_working_set_bytes = container_memory_usage_bytes - total_inacti
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
@@ -270,7 +268,7 @@ container_memory_working_set_bytes = container_memory_usage_bytes - total_inacti
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

@@ -4,338 +4,261 @@
     <title>Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/</link>
     <description>Recent content on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 18 Aug 2024 11:19:46 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Aug 2024 11:19:46 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Survey K8s Kafka Memory Usage</title>
       <link>https://tsunejui.github.io/posts/survey-k8s-kafka-memory-usage/</link>
       <pubDate>Sun, 18 Aug 2024 11:19:46 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/survey-k8s-kafka-memory-usage/</guid>
       <description>&lt;p&gt;此篇文章將探討將分享我在 Strimzi (Kafka in Kubernetes) 中，遇到 cluster 內某一 broker 的 memory usage 特別高的問題。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Missing HAProxy Metrics</title>
       <link>https://tsunejui.github.io/posts/missing-haproxy-metrics/</link>
       <pubDate>Fri, 26 Jul 2024 15:41:22 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/missing-haproxy-metrics/</guid>
       <description>&lt;p&gt;這篇文章將分析在 Openshift 環境中遇到的一個 HAProxy 相關 Bug。我們將討論 Bug 的成因、影響範圍以及解決方案。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>CoreDNS UDP Bufsize Restricted to 512</title>
       <link>https://tsunejui.github.io/posts/coredns-udp-bufsize-restricted-to-512/</link>
       <pubDate>Sat, 20 Jul 2024 16:09:41 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/coredns-udp-bufsize-restricted-to-512/</guid>
       <description>&lt;p&gt;這篇文章將分析在 Openshift 環境中遇到的一個 CoreDNS 相關 Bug。我們將討論 Bug 的成因、影響範圍以及解決方案。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Diagram</title>
       <link>https://tsunejui.github.io/diagram/</link>
       <pubDate>Tue, 11 Jun 2024 14:00:00 +0000</pubDate>
-      
       <guid>https://tsunejui.github.io/diagram/</guid>
-      <description>以下是不錯的架構、教學圖，歡迎參考：
-Iptables http://xkr47.outerspace.dyndns.org/netfilter/packet_flow/
-Linux Performance https://www.brendangregg.com/linuxperf.html
-Group Diagram Tuning Performance BPF </description>
+      <description>&lt;p&gt;以下是不錯的架構、教學圖，歡迎參考：&lt;/p&gt;&#xA;&lt;h2 id=&#34;iptables&#34;&gt;Iptables&lt;/h2&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;a href=&#34;http://xkr47.outerspace.dyndns.org/netfilter/packet_flow/&#34;&gt;http://xkr47.outerspace.dyndns.org/netfilter/packet_flow/&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://tsunejui.github.io/iptables/flow.png&#34; alt=&#34;Iptables&#34;&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;linux-performance&#34;&gt;Linux Performance&lt;/h2&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.brendangregg.com/linuxperf.html&#34;&gt;https://www.brendangregg.com/linuxperf.html&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://tsunejui.github.io/linux-performance/linux_observability_tools.png&#34; alt=&#34;Linux Observability Tools&#34;&gt;&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;Group&lt;/th&gt;&#xA;          &lt;th&gt;Diagram&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Tuning&lt;/td&gt;&#xA;          &lt;td&gt;&lt;img src=&#34;https://tsunejui.github.io/linux-performance/linux_static_tools.png&#34; alt=&#34;Linux Static Tools&#34;&gt; &lt;br /&gt; &lt;img src=&#34;https://tsunejui.github.io/linux-performance/linux_benchmarking_tools.png&#34; alt=&#34;Linux Benchmarking Tools&#34;&gt; &lt;br /&gt; &lt;img src=&#34;https://tsunejui.github.io/linux-performance/linux_tuning_tools.png&#34; alt=&#34;Linux Tuning Tools&#34;&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Performance&lt;/td&gt;&#xA;          &lt;td&gt;&lt;img src=&#34;https://tsunejui.github.io/linux-performance/linux_observability_sar.png&#34; alt=&#34;Linux Observability SAR&#34;&gt; &lt;br /&gt; &lt;img src=&#34;https://tsunejui.github.io/linux-performance/perf-tools_2016.png&#34; alt=&#34;Perf Tools 2016&#34;&gt; &lt;br /&gt; &lt;img src=&#34;https://tsunejui.github.io/linux-performance/bcc_tracing_tools.png&#34; alt=&#34;BCC Tracing Tools&#34;&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;BPF&lt;/td&gt;&#xA;          &lt;td&gt;&lt;img src=&#34;https://tsunejui.github.io/linux-performance/bpf_book_tools.png&#34; alt=&#34;BPF Book Tools&#34;&gt; &lt;br /&gt; &lt;img src=&#34;https://tsunejui.github.io/linux-performance/linux_bpftrace_tools.png&#34; alt=&#34;Linux BPFtrace Tools&#34;&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;</description>
     </item>
-    
     <item>
       <title>Slides Share</title>
       <link>https://tsunejui.github.io/slides/</link>
       <pubDate>Tue, 11 Jun 2024 14:00:00 +0000</pubDate>
-      
       <guid>https://tsunejui.github.io/slides/</guid>
-      <description>Hi, 歡迎來到我的 Slides Share，歡迎各位下載：
-Name Description Link SRE Conference 2024 我參與 SRE Conference 2024 的心得 - Google Cloud Security Forum 2024 我參與 Google Cloud Security Forum 2024 的心得 - </description>
+      <description>&lt;p&gt;Hi, 歡迎來到我的 Slides Share，歡迎各位下載：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;Name&lt;/th&gt;&#xA;          &lt;th&gt;Description&lt;/th&gt;&#xA;          &lt;th&gt;Link&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;SRE Conference 2024&lt;/td&gt;&#xA;          &lt;td&gt;我參與 SRE Conference 2024 的心得&lt;/td&gt;&#xA;          &lt;td&gt;-&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Google Cloud Security Forum 2024&lt;/td&gt;&#xA;          &lt;td&gt;我參與 Google Cloud Security Forum 2024 的心得&lt;/td&gt;&#xA;          &lt;td&gt;-&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;</description>
     </item>
-    
     <item>
       <title>Severity of container image from Trivy Scan on Harbor</title>
       <link>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</link>
       <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</guid>
       <description>&lt;p&gt;這篇文章將紀錄 &lt;code&gt;Harbor&lt;/code&gt; 搭配 &lt;code&gt;vulnerabilities Scanning&lt;/code&gt; 功能後，在 UI 呈現 Image 的 Severity 與 Score 的關係。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Google Cloud Storage Fuse CSI Driver</title>
       <link>https://tsunejui.github.io/posts/google-cloud-storage-fuse-csi-driver/</link>
       <pubDate>Sun, 24 Mar 2024 12:01:35 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/google-cloud-storage-fuse-csi-driver/</guid>
       <description>&lt;p&gt;本文介紹 &lt;code&gt;GcsFuseCsiDriver&lt;/code&gt; 的使用方法和實驗。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>HPA to not scale correctly</title>
       <link>https://tsunejui.github.io/posts/hpa-to-not-scale-correctly/</link>
       <pubDate>Sat, 23 Mar 2024 09:29:59 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/hpa-to-not-scale-correctly/</guid>
       <description>&lt;p&gt;這篇文章將介紹我們在客戶端的 GKE 上使用 HPA 時遭遇到的 Bug。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Prometheus Remote Write Performance Issue</title>
       <link>https://tsunejui.github.io/posts/prometheus-remote-write-performance-issue/</link>
       <pubDate>Wed, 06 Mar 2024 14:56:30 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/prometheus-remote-write-performance-issue/</guid>
       <description>&lt;p&gt;這篇文章將作為 Prometheus 開啟 Remote Write 後會產生的 Memory 大幅上升的 Issue 調查紀錄。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Calico Multiple Network Interface</title>
       <link>https://tsunejui.github.io/posts/calico-multiple-network-interface/</link>
       <pubDate>Thu, 22 Feb 2024 16:03:03 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/calico-multiple-network-interface/</guid>
       <description>&lt;p&gt;這篇文章將介紹客戶端的 Kubernetes Cluster 上遇到的網路問題，調查後發現是 Calico CNI 在多個 network interface 的 node 上，需要進行特別的設定。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Harbor Containers Fail to Start</title>
       <link>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</link>
       <pubDate>Sat, 27 Jan 2024 14:04:45 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</guid>
       <description>&lt;p&gt;這篇文章將介紹客戶端 &lt;code&gt;Harbor&lt;/code&gt; 啟動時有機率發生錯誤的紀錄，並說明調查步驟及結果。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>VXLAN Lab</title>
       <link>https://tsunejui.github.io/posts/vxlan-lab/</link>
       <pubDate>Mon, 25 Dec 2023 13:40:52 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/vxlan-lab/</guid>
       <description>&lt;p&gt;本文將進行在 Linux 系統上建立 &lt;code&gt;VXLAN Tunnel&lt;/code&gt;，並且讓不同 Node 上的 Container 可以彼此溝通。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Podman DNS</title>
       <link>https://tsunejui.github.io/posts/podman-dns/</link>
       <pubDate>Tue, 05 Dec 2023 00:29:01 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/podman-dns/</guid>
       <description>&lt;p&gt;本文將解析在使用 Podman Compose 時遇到的 DNS 服務器問題，並提供解決方案。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Container Note - Mount Namespace</title>
       <link>https://tsunejui.github.io/posts/container-mnt/</link>
       <pubDate>Sun, 19 Nov 2023 03:12:13 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/container-mnt/</guid>
       <description>&lt;p&gt;本文探討 Linux 的 Mount Namespace，這是一種隔離檔案系統的技術。文章將講解其原理、應用場景和如何有效地使用它來提高系統安全性。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWS Security Token Service (STS) Example</title>
       <link>https://tsunejui.github.io/posts/aws-security-token-service-example/</link>
       <pubDate>Sun, 12 Nov 2023 21:33:35 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/aws-security-token-service-example/</guid>
       <description>&lt;p&gt;本文介紹 AWS Security Token Service (STS) 的使用方法和實驗。STS 提供短期憑證來訪問 AWS 資源，增強安全性和管理方便性。我們將逐步探索 STS 的功能，實現身份驗證和授權。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Scale Down the Prometheus on Openshift Monitoring</title>
       <link>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</link>
       <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</guid>
       <description>&lt;p&gt;這篇文章將探討在 Openshift 上如何有效地對 Prometheus 進行縮減。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>F5 VIP Setting</title>
       <link>https://tsunejui.github.io/posts/f5-vip-setting/</link>
       <pubDate>Thu, 02 Nov 2023 15:20:48 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/f5-vip-setting/</guid>
       <description>&lt;p&gt;本文提供在 F5 Load Balancer 上配置虛擬 IP (VIP) 的步驟。利用 F5 提高應用的可用性。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Dex Expiration Time on Openshift Gitops</title>
       <link>https://tsunejui.github.io/posts/openshift-gitops-dex-expiration-time/</link>
       <pubDate>Thu, 02 Nov 2023 00:13:03 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/openshift-gitops-dex-expiration-time/</guid>
       <description>&lt;p&gt;本文介紹如何在 ArgoCD 中設置自動登出功能。這有助於提高安全性，避免未經授權的存取。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>NodeClockNotSynchronising alert troubleshooting in Openshift 4</title>
       <link>https://tsunejui.github.io/posts/node-clock-not-synchronising/</link>
       <pubDate>Sat, 26 Aug 2023 01:51:06 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/node-clock-not-synchronising/</guid>
       <description>&lt;p&gt;這篇文章將探討 NTP (Network Time Protocol) 服務器在 Openshift 發生的同步問題的原因和解決方法。文章將提供故障診斷的內容。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>RHEL Ansible Automation Platform (AAP) Installation</title>
       <link>https://tsunejui.github.io/posts/rhel-automation-platform-install/</link>
       <pubDate>Thu, 24 Aug 2023 10:24:53 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/rhel-automation-platform-install/</guid>
       <description>&lt;p&gt;這篇文章將提供 Ansible Automation Platform (AAP) 的安裝指南。從前置條件到安裝過程，文章將幫助讀者順利完成安裝。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWX Installation (Container)</title>
       <link>https://tsunejui.github.io/posts/awx-install/</link>
       <pubDate>Mon, 17 Jul 2023 13:36:31 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/awx-install/</guid>
       <description>&lt;p&gt;這篇文章將指導讀者如何在容器環境中安裝和設置 AWX (Ansible 的 Web) 版本。從環境準備到配置設置，本文涵蓋整個安裝過程。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Samba 安裝</title>
       <link>https://tsunejui.github.io/posts/samba-install/</link>
       <pubDate>Sat, 01 Jul 2023 17:23:23 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/samba-install/</guid>
       <description>&lt;p&gt;本文將指導如何在 Linux 系統上安裝和配置 Samba。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kafka 安裝 - Kraft Mode</title>
       <link>https://tsunejui.github.io/posts/kafka-kraft-install/</link>
       <pubDate>Wed, 28 Jun 2023 10:43:24 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/kafka-kraft-install/</guid>
       <description>&lt;p&gt;這篇文章將介紹如何在 Kraft Mode 下安裝和配置 Apache Kafka，這是一種不依賴 Zookeeper 的模式。文章將提供從開始到結束的教學。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Node Exporter</title>
       <link>https://tsunejui.github.io/posts/node-exporter/</link>
       <pubDate>Fri, 16 Jun 2023 09:42:09 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/node-exporter/</guid>
       <description>&lt;p&gt;本文介紹如何安裝和配置 Prometheus 的 Node Exporter。文章將涵蓋安裝過程、配置文件設置和數據監控方法。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>SSH Tunneling</title>
       <link>https://tsunejui.github.io/posts/ssh-tunnel/</link>
       <pubDate>Sat, 20 May 2023 12:34:03 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/ssh-tunnel/</guid>
       <description>&lt;p&gt;在這部分，我們將探討如何在Linux系統中設定SSH Tunnel。SSH Tunnel是一種通過加密的SSH協議來傳輸資料的方法，能有效保護資料免受中間人攻擊，以及測試網路流量。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>RHEL 9 在 Proxmox 上 Kernel Panic</title>
       <link>https://tsunejui.github.io/posts/rhel-9-panic/</link>
       <pubDate>Tue, 16 May 2023 09:43:12 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/rhel-9-panic/</guid>
       <description>&lt;p&gt;文將探討在 Proxmox 虛擬環境中運行 RHEL 9 時遇到的 Kernel Panic 問題。文章將提供解決步驟。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>NFS on Kubernetes</title>
       <link>https://tsunejui.github.io/posts/nfs-k8s/</link>
       <pubDate>Sun, 14 May 2023 23:32:13 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/nfs-k8s/</guid>
       <description>&lt;p&gt;這篇文章將探討如何在 Kubernetes 環境中使用 NFS (Network File System)。文章將提供一個基本的指南。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>NFS on Rocky Linux 8</title>
       <link>https://tsunejui.github.io/posts/nfs/</link>
       <pubDate>Sat, 13 May 2023 17:36:21 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/nfs/</guid>
       <description>&lt;p&gt;本文將指導讀者如何在 Linux 系統上安裝和配置 NFS。從安裝到設置共享目錄。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Proxmox 增加 Linux 硬碟空間</title>
       <link>https://tsunejui.github.io/posts/proxmox-extend-linux-space/</link>
       <pubDate>Tue, 02 May 2023 02:02:22 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/proxmox-extend-linux-space/</guid>
       <description>&lt;p&gt;這篇文章將指導如何在 Proxmox 虛擬化環境中為 Linux 虛擬機器增加額外的硬碟空間。從硬碟分配到操作系統配置，文章將提供完整的流程。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Rocky Linux 使用 XRDP</title>
       <link>https://tsunejui.github.io/posts/rocky-xrdp/</link>
       <pubDate>Sun, 30 Apr 2023 20:53:09 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/rocky-xrdp/</guid>
       <description>&lt;p&gt;這篇文章將介紹如何在 Rocky Linux 上安裝和配置 XRDP，一種遠程桌面協議。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Install GUI on Rocky Linux 8.7</title>
       <link>https://tsunejui.github.io/posts/rocky-install-gui/</link>
       <pubDate>Sun, 30 Apr 2023 20:14:50 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/rocky-install-gui/</guid>
       <description>&lt;p&gt;本文將指導如何在 Rocky Linux 上安裝圖形用戶界面 (GUI)。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kafka 學習筆記</title>
       <link>https://tsunejui.github.io/posts/kafka/</link>
       <pubDate>Sun, 12 Mar 2023 17:52:27 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/kafka/</guid>
       <description>&lt;p&gt;本文將介紹在傳統的 Zookeeper Mode 下安裝 Kafka 的步驟。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Istio Tip</title>
       <link>https://tsunejui.github.io/posts/istio-tip/</link>
       <pubDate>Wed, 08 Mar 2023 12:52:25 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/istio-tip/</guid>
       <description>&lt;p&gt;在本文中，我們將討論在安裝 Istio 服務常見的錯誤，並提供故障排除技巧和解決方案。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kubernetes Tips</title>
       <link>https://tsunejui.github.io/posts/kubernetes-tips/</link>
       <pubDate>Wed, 08 Mar 2023 12:50:23 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/kubernetes-tips/</guid>
       <description>&lt;p&gt;本文將紀錄在 Kubernetes 上常見的 &lt;code&gt;kubectl&lt;/code&gt; 指令，並且取得 cluster 的各項資訊。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kubernetes 安裝筆記</title>
       <link>https://tsunejui.github.io/posts/kubernetes-install/</link>
       <pubDate>Wed, 08 Mar 2023 10:19:24 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/kubernetes-install/</guid>
       <description>&lt;p&gt;這篇文章將詳細介紹 Kubernetes 的安裝流程。從環境準備到集群配置，本文將為初學者提供一個清晰的安裝指南。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>About Me</title>
       <link>https://tsunejui.github.io/about/</link>
       <pubDate>Tue, 25 Jan 2022 14:00:00 +0000</pubDate>
-      
       <guid>https://tsunejui.github.io/about/</guid>
-      <description>Hi, welcome to my first Blog Post. YAY!
-I&amp;rsquo;m so ready to have a place to share all my coding travels on, and share my life. Let me introduce myself first:
-I&amp;rsquo;m Rex, a software engineer. I am passionate about technology and keep continually focusing the solutions of SRE、DevOps and Data Visualization. I am looking forward to applying my skill set into any challenge in the work. contact me if you need assistance!</description>
+      <description>&lt;p&gt;Hi, welcome to my first Blog Post. YAY!&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://tsunejui.github.io/rex.png&#34; alt=&#34;rex&#34;&gt;&#xA;&lt;img src=&#34;https://tsunejui.github.io/rex-computer.png&#34; alt=&#34;rex2&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;I&amp;rsquo;m so ready to have a place to share all my coding travels on, and share my life. Let me introduce myself first:&lt;/p&gt;&#xA;&lt;p&gt;I&amp;rsquo;m Rex, a software engineer. I am passionate about technology and keep continually focusing the solutions of SRE、DevOps and Data Visualization. I am looking forward to applying my skill set into any challenge in the work. contact me if you need assistance!&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

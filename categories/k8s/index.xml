@@ -4,89 +4,72 @@
     <title>K8S on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/categories/k8s/</link>
     <description>Recent content in K8S on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 18 Aug 2024 11:19:46 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/k8s/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Aug 2024 11:19:46 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/categories/k8s/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Survey K8s Kafka Memory Usage</title>
       <link>https://tsunejui.github.io/posts/survey-k8s-kafka-memory-usage/</link>
       <pubDate>Sun, 18 Aug 2024 11:19:46 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/survey-k8s-kafka-memory-usage/</guid>
       <description>&lt;p&gt;此篇文章將探討將分享我在 Strimzi (Kafka in Kubernetes) 中，遇到 cluster 內某一 broker 的 memory usage 特別高的問題。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>HPA to not scale correctly</title>
       <link>https://tsunejui.github.io/posts/hpa-to-not-scale-correctly/</link>
       <pubDate>Sat, 23 Mar 2024 09:29:59 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/hpa-to-not-scale-correctly/</guid>
       <description>&lt;p&gt;這篇文章將介紹我們在客戶端的 GKE 上使用 HPA 時遭遇到的 Bug。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Prometheus Remote Write Performance Issue</title>
       <link>https://tsunejui.github.io/posts/prometheus-remote-write-performance-issue/</link>
       <pubDate>Wed, 06 Mar 2024 14:56:30 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/prometheus-remote-write-performance-issue/</guid>
       <description>&lt;p&gt;這篇文章將作為 Prometheus 開啟 Remote Write 後會產生的 Memory 大幅上升的 Issue 調查紀錄。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Calico Multiple Network Interface</title>
       <link>https://tsunejui.github.io/posts/calico-multiple-network-interface/</link>
       <pubDate>Thu, 22 Feb 2024 16:03:03 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/calico-multiple-network-interface/</guid>
       <description>&lt;p&gt;這篇文章將介紹客戶端的 Kubernetes Cluster 上遇到的網路問題，調查後發現是 Calico CNI 在多個 network interface 的 node 上，需要進行特別的設定。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>NodeClockNotSynchronising alert troubleshooting in Openshift 4</title>
       <link>https://tsunejui.github.io/posts/node-clock-not-synchronising/</link>
       <pubDate>Sat, 26 Aug 2023 01:51:06 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/node-clock-not-synchronising/</guid>
       <description>&lt;p&gt;這篇文章將探討 NTP (Network Time Protocol) 服務器在 Openshift 發生的同步問題的原因和解決方法。文章將提供故障診斷的內容。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>NFS on Kubernetes</title>
       <link>https://tsunejui.github.io/posts/nfs-k8s/</link>
       <pubDate>Sun, 14 May 2023 23:32:13 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/nfs-k8s/</guid>
       <description>&lt;p&gt;這篇文章將探討如何在 Kubernetes 環境中使用 NFS (Network File System)。文章將提供一個基本的指南。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Istio Tip</title>
       <link>https://tsunejui.github.io/posts/istio-tip/</link>
       <pubDate>Wed, 08 Mar 2023 12:52:25 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/istio-tip/</guid>
       <description>&lt;p&gt;在本文中，我們將討論在安裝 Istio 服務常見的錯誤，並提供故障排除技巧和解決方案。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kubernetes Tips</title>
       <link>https://tsunejui.github.io/posts/kubernetes-tips/</link>
       <pubDate>Wed, 08 Mar 2023 12:50:23 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/kubernetes-tips/</guid>
       <description>&lt;p&gt;本文將紀錄在 Kubernetes 上常見的 &lt;code&gt;kubectl&lt;/code&gt; 指令，並且取得 cluster 的各項資訊。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kubernetes 安裝筆記</title>
       <link>https://tsunejui.github.io/posts/kubernetes-install/</link>
       <pubDate>Wed, 08 Mar 2023 10:19:24 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/kubernetes-install/</guid>
       <description>&lt;p&gt;這篇文章將詳細介紹 Kubernetes 的安裝流程。從環境準備到集群配置，本文將為初學者提供一個清晰的安裝指南。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

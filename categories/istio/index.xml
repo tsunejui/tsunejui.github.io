@@ -4,17 +4,16 @@
     <title>Istio on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/categories/istio/</link>
     <description>Recent content in Istio on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 08 Mar 2023 12:52:25 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/istio/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 08 Mar 2023 12:52:25 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/categories/istio/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Istio Tip</title>
       <link>https://tsunejui.github.io/posts/istio-tip/</link>
       <pubDate>Wed, 08 Mar 2023 12:52:25 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/istio-tip/</guid>
       <description>&lt;p&gt;在本文中，我們將討論在安裝 Istio 服務常見的錯誤，並提供故障排除技巧和解決方案。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

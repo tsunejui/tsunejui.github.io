@@ -4,35 +4,30 @@
     <title>SRE on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/categories/sre/</link>
     <description>Recent content in SRE on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 06 Mar 2024 14:56:30 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/sre/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Mar 2024 14:56:30 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/categories/sre/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Prometheus Remote Write Performance Issue</title>
       <link>https://tsunejui.github.io/posts/prometheus-remote-write-performance-issue/</link>
       <pubDate>Wed, 06 Mar 2024 14:56:30 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/prometheus-remote-write-performance-issue/</guid>
       <description>&lt;p&gt;這篇文章將作為 Prometheus 開啟 Remote Write 後會產生的 Memory 大幅上升的 Issue 調查紀錄。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Scale Down the Prometheus on Openshift Monitoring</title>
       <link>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</link>
       <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</guid>
       <description>&lt;p&gt;這篇文章將探討在 Openshift 上如何有效地對 Prometheus 進行縮減。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Node Exporter</title>
       <link>https://tsunejui.github.io/posts/node-exporter/</link>
       <pubDate>Fri, 16 Jun 2023 09:42:09 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/node-exporter/</guid>
       <description>&lt;p&gt;本文介紹如何安裝和配置 Prometheus 的 Node Exporter。文章將涵蓋安裝過程、配置文件設置和數據監控方法。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

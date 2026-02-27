@@ -4,17 +4,16 @@
     <title>Prometheus on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/categories/prometheus/</link>
     <description>Recent content in Prometheus on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 07 Nov 2023 22:29:20 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/prometheus/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 07 Nov 2023 22:29:20 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/categories/prometheus/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Scale Down the Prometheus on Openshift Monitoring</title>
       <link>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</link>
       <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</guid>
       <description>&lt;p&gt;這篇文章將探討在 Openshift 上如何有效地對 Prometheus 進行縮減。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

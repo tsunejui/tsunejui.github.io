@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>AWX Installation (Container) - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">AWX - Container 安裝步驟</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-07-17T13:36:31&#43;08:00">July 17, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/devops/" rel="category">Devops</a>, <a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2023-07-17T13:36:31&#43;08:00">July 17, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/devops/" rel="category">Devops</a>, <a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
 	</span>
 </div></div>
 		</header>
@@ -89,8 +89,7 @@
 <pre tabindex="0"><code>setenforce 0
 </code></pre><h3 id="安裝-docker">安裝 <code>docker</code></h3>
 <blockquote>
-<p><a href="https://docs.docker.com/engine/install/centos/">https://docs.docker.com/engine/install/centos/</a></p>
-</blockquote>
+<p><a href="https://docs.docker.com/engine/install/centos/">https://docs.docker.com/engine/install/centos/</a></p></blockquote>
 <p>安裝 <code>yum-utils</code>:</p>
 <pre tabindex="0"><code>yum install -y yum-utils
 </code></pre><p>加入 repository:</p>
@@ -99,19 +98,17 @@
 <pre tabindex="0"><code>yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 </code></pre><p>啟動 <code>docker</code></p>
 <pre tabindex="0"><code>systemctl start docker
-</code></pre><h3 id="下載-awx-1710httpsgithubcomansibleawxreleasestag1710">下載 <a href="https://github.com/ansible/awx/releases/tag/17.1.0">AWX 17.1.0</a></h3>
+</code></pre><h3 id="下載-awx-1710">下載 <a href="https://github.com/ansible/awx/releases/tag/17.1.0">AWX 17.1.0</a></h3>
 <p>安裝 <code>git</code>:</p>
 <pre tabindex="0"><code>dnf install -y git
 </code></pre><blockquote>
 <p>Starting in version 18.0, the AWX Operator is the preferred way to install AWX.</p>
-<p><a href="https://github.com/ansible/awx/blob/devel/INSTALL.md">https://github.com/ansible/awx/blob/devel/INSTALL.md</a></p>
-</blockquote>
+<p><a href="https://github.com/ansible/awx/blob/devel/INSTALL.md">https://github.com/ansible/awx/blob/devel/INSTALL.md</a></p></blockquote>
 <pre tabindex="0"><code>git clone -b 17.1.0 https://github.com/ansible/awx.git
 </code></pre><h3 id="產生-awx-密鑰">產生 AWX 密鑰</h3>
 <p>安裝 <code>pwgen</code>:</p>
 <blockquote>
-<p><a href="https://pwgen.io/en/">https://pwgen.io/en/</a></p>
-</blockquote>
+<p><a href="https://pwgen.io/en/">https://pwgen.io/en/</a></p></blockquote>
 <pre tabindex="0"><code>dnf install -y pwgen
 </code></pre><p>到 <code>awx/installer/</code> 內並執行:</p>
 <pre tabindex="0"><code>pwgen -N 1 -s 40
@@ -135,8 +132,7 @@ secret_key=941hpENajUpsNPf8nptcbk4qoAyeyI1MscF7A84g
 </code></pre><p>安裝 <code>ansible</code> 所需的 <code>python</code> 套件:</p>
 <blockquote>
 <p>如果出現 <code>Command &quot;python setup.py egg_info&quot; failed with error code 1 in /tmp/pip-build-irb44omu/pynacl/</code> 則更新 <code>setuptools</code>:</p>
-<p><code>pip3 install --upgrade setuptools</code></p>
-</blockquote>
+<p><code>pip3 install --upgrade setuptools</code></p></blockquote>
 <pre tabindex="0"><code>pip3 install setuptools-rust wheel docker-compose
 </code></pre><p>安裝 <code>ansible</code>:</p>
 <pre tabindex="0"><code>pip3 install ansible
@@ -144,8 +140,7 @@ secret_key=941hpENajUpsNPf8nptcbk4qoAyeyI1MscF7A84g
 <pre tabindex="0"><code>ansible-playbook --version
 </code></pre><p>到 <code>awx/installer</code> 路徑並使用 <code>ansible-playbook</code> 安裝 <code>awx</code>:</p>
 <blockquote>
-<p>這個過程會非常久，因為要下載許多 image，其中 <code>ansible/awx</code> 最大，約 1.41G，執行 migration 也需要不少時間。</p>
-</blockquote>
+<p>這個過程會非常久，因為要下載許多 image，其中 <code>ansible/awx</code> 最大，約 1.41G，執行 migration 也需要不少時間。</p></blockquote>
 <pre tabindex="0"><code>ansible-playbook -i inventory install.yml
 </code></pre><p><img src="/awx-install/cmd.png" alt="awx-install-cli"></p>
 <h2 id="完成畫面">完成畫面</h2>
@@ -159,7 +154,7 @@ secret_key=941hpENajUpsNPf8nptcbk4qoAyeyI1MscF7A84g
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
@@ -191,7 +186,7 @@ secret_key=941hpENajUpsNPf8nptcbk4qoAyeyI1MscF7A84g
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

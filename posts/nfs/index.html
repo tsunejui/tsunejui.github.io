@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>NFS on Rocky Linux 8 - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">Linux NFS 安裝步驟</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-13T17:36:21&#43;08:00">May 13, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2023-05-13T17:36:21&#43;08:00">May 13, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
 	</span>
 </div></div>
 		</header>
@@ -83,25 +83,25 @@
 <p>NFS (Network File System) 是一種分散式檔案系統協議，用於在網路上共享檔案和資源。</p>
 <h3 id="環境設定">環境設定</h3>
 <table>
-<thead>
-<tr>
-<th>id</th>
-<th>name</th>
-<th>ip</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>nfs-server</td>
-<td>10.250.75.111</td>
-</tr>
-<tr>
-<td>2</td>
-<td>nfs-client</td>
-<td>10.250.75.103</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>id</th>
+          <th>name</th>
+          <th>ip</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td>nfs-server</td>
+          <td>10.250.75.111</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>nfs-client</td>
+          <td>10.250.75.103</td>
+      </tr>
+  </tbody>
 </table>
 <h3 id="在-nfs-server-上">在 NFS Server 上</h3>
 <ol>
@@ -120,8 +120,7 @@
 <li>更改 owner 及設定權限</li>
 </ol>
 <blockquote>
-<p>nobody 使用者是一個系統使用者，不擁有任何特殊權限，且通常用於運行低權限的服務或進程。</p>
-</blockquote>
+<p>nobody 使用者是一個系統使用者，不擁有任何特殊權限，且通常用於運行低權限的服務或進程。</p></blockquote>
 <pre tabindex="0"><code>chown -R nobody:nobody /mnt/nfs_shares &amp;&amp; chmod -R 777 /mnt/nfs_shares
 </code></pre><ol start="5">
 <li>vim /etc/exports</li>
@@ -131,8 +130,7 @@
 <p>rw: 可讀可寫</p>
 <p>sync: 寫入後同步</p>
 <p>no_all_squash: 禁用 <a href="https://linux.die.net/man/5/exports"><code>all_squash</code></a></p>
-<p>root_squash: 被啟用時，NFS 伺服器會將 root 使用者的操作映射為匿名使用者（通常是 nobody 或 nfsnobody）</p>
-</blockquote>
+<p>root_squash: 被啟用時，NFS 伺服器會將 root 使用者的操作映射為匿名使用者（通常是 nobody 或 nfsnobody）</p></blockquote>
 <pre tabindex="0"><code>/mnt/nfs_shares 10.250.75.103(rw,sync,no_all_squash,root_squash)
 </code></pre><ol start="6">
 <li>重啟 nfs-server</li>
@@ -145,8 +143,7 @@
 <p>service 檔案如下:</p>
 <p>/usr/lib/firewalld/services/nfs.xml</p>
 <p>/usr/lib/firewalld/services/rpc-bind.xml</p>
-<p>/usr/lib/firewalld/services/mountd.xml</p>
-</blockquote>
+<p>/usr/lib/firewalld/services/mountd.xml</p></blockquote>
 <pre tabindex="0"><code>firewall-cmd --permanent --add-service=nfs --add-service=rpc-bind --add-service=mountd &amp;&amp; firewall-cmd --reload
 </code></pre><ol>
 <li>查看 export directories</li>
@@ -154,15 +151,13 @@
 <blockquote>
 <p>-a: Export or unexport all directories.</p>
 <p>-r: Reexport  all directories</p>
-<p>When exporting or unexporting, show what&rsquo;s going on</p>
-</blockquote>
+<p>When exporting or unexporting, show what&rsquo;s going on</p></blockquote>
 <pre tabindex="0"><code>exportfs -arv
 </code></pre><ol start="10">
 <li>查看 export list</li>
 </ol>
 <blockquote>
-<p>-s: Display the current export list suitable for <code>/etc/exports</code>.</p>
-</blockquote>
+<p>-s: Display the current export list suitable for <code>/etc/exports</code>.</p></blockquote>
 <pre tabindex="0"><code>exportfs -s
 </code></pre><h3 id="在-nfs-client-上">在 NFS Client 上</h3>
 <ol>
@@ -196,7 +191,7 @@
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
@@ -228,7 +223,7 @@
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

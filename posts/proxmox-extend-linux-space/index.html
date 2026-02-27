@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Proxmox 增加 Linux 硬碟空間 - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">Proxmox 上針對 Linux VM 增加硬碟的方法</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-02T02:02:22&#43;08:00">May 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2023-05-02T02:02:22&#43;08:00">May 02, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
 	</span>
 </div></div>
 		</header>
@@ -94,27 +94,23 @@
 <h2 id="調整-lvm">調整 LVM</h2>
 <p>我們要調整 <code>rl-root</code> 的容量, 也就是 LV 的大小, 而調整 LV 需要先建立 PV, 再將 PV 加入與 LV 相同的 VG, 如下圖所示:</p>
 <blockquote>
-<p><a href="https://networklessons.com/uncategorized/extend-lvm-partition">https://networklessons.com/uncategorized/extend-lvm-partition</a></p>
-</blockquote>
+<p><a href="https://networklessons.com/uncategorized/extend-lvm-partition">https://networklessons.com/uncategorized/extend-lvm-partition</a></p></blockquote>
 <p><img src="/proxmox-extend-space/volume.jpeg" alt="volume"></p>
 <p>在建立 PV 之前, 我們需要建立 partition, 透過 <code>parted</code> 指令可以輕鬆的達成:</p>
 <blockquote>
-<p>如果要操作的硬碟不是 <code>/dev/sda</code>, 你需要下 <code>select /dev/sdb</code>, 請將 <code>/dev/sdb</code> 改成你希望操作的硬碟</p>
-</blockquote>
+<p>如果要操作的硬碟不是 <code>/dev/sda</code>, 你需要下 <code>select /dev/sdb</code>, 請將 <code>/dev/sdb</code> 改成你希望操作的硬碟</p></blockquote>
 <pre tabindex="0"><code>parted
 </code></pre><p>進入 <code>parted</code> 畫面後, 查看可用空間, 及 Start 和 End:</p>
 <blockquote>
 <p>如果遇到 <code>unrecognised disk label</code> 的問題, 很有可能是因為硬碟裡面沒有任何資料, 無法辨識出他的label, 因此需要新增label給硬碟：</p>
 <p>使用 <code>mklabel msdos</code> 新增 label, <code>msdos</code> 是最常見的格式, 大於 2TB 的硬碟, 可以使用 <code>gpt</code></p>
-<p>格式可以參考: <a href="https://www.gnu.org/software/parted/manual/html_node/mklabel.html">https://www.gnu.org/software/parted/manual/html_node/mklabel.html</a></p>
-</blockquote>
+<p>格式可以參考: <a href="https://www.gnu.org/software/parted/manual/html_node/mklabel.html">https://www.gnu.org/software/parted/manual/html_node/mklabel.html</a></p></blockquote>
 <pre tabindex="0"><code>unit MB p free
 </code></pre><p><img src="/proxmox-extend-space/parted-0.png" alt="parted-0"></p>
 <p>建立 partition, 填入 Start 和 End:</p>
 <blockquote>
 <p>如果出現 <code>Warning: The resulting partition is not properly aligned for best performance: 1s % 2048s != 0s</code> 等訊息，使用 % 來讓 parted 自動對齊磁區以獲得最佳性能</p>
-<p>如: <code>mkpart primary 0% 100%</code></p>
-</blockquote>
+<p>如: <code>mkpart primary 0% 100%</code></p></blockquote>
 <pre tabindex="0"><code>mkpart primary [start] [end]
 </code></pre><p>在執行 <code>p</code> 查看是否成功建立 partition:</p>
 <pre tabindex="0"><code>p
@@ -137,8 +133,7 @@
 </code></pre><p><img src="/proxmox-extend-space/vgextend.png" alt="vgextend"></p>
 <p>透過 <code>lvdisplay</code> 查看 LV:</p>
 <blockquote>
-<p>或是 <code>lvscan</code></p>
-</blockquote>
+<p>或是 <code>lvscan</code></p></blockquote>
 <pre tabindex="0"><code>lvdisplay
 </code></pre><p><img src="/proxmox-extend-space/lvdisplay.png" alt="lvdisplay"></p>
 <p>使用 <code>lvextend</code> 增加 LV 容量:</p>
@@ -157,7 +152,7 @@
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
@@ -192,7 +187,7 @@
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

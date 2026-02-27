@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>RHEL Ansible Automation Platform (AAP) Installation - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">AAP 安裝步驟</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-24T10:24:53&#43;08:00">August 24, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/devops/" rel="category">Devops</a>, <a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2023-08-24T10:24:53&#43;08:00">August 24, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/devops/" rel="category">Devops</a>, <a class="meta__link" href="/categories/linux/" rel="category">Linux</a>
 	</span>
 </div></div>
 		</header>
@@ -87,8 +87,7 @@
 <li>下載 <code>Red Hat Ansible Automation Platform (v. 2.4 for RHEL 9 for x86_64)</code>:</li>
 </ol>
 <blockquote>
-<p>至 <a href="https://access.redhat.com/downloads/content/480">https://access.redhat.com/downloads/content/480</a> 下載 <code>Ansible Automation Platform 2.4 Setup Bundle</code></p>
-</blockquote>
+<p>至 <a href="https://access.redhat.com/downloads/content/480">https://access.redhat.com/downloads/content/480</a> 下載 <code>Ansible Automation Platform 2.4 Setup Bundle</code></p></blockquote>
 <p><img src="/automation-install/download.png" alt="download"></p>
 <ol start="2">
 <li>解壓縮</li>
@@ -100,15 +99,13 @@
 <li>取得token</li>
 </ol>
 <blockquote>
-<p>至 <a href="https://access.redhat.com/management/api">https://access.redhat.com/management/api</a> 產生 Token</p>
-</blockquote>
+<p>至 <a href="https://access.redhat.com/management/api">https://access.redhat.com/management/api</a> 產生 Token</p></blockquote>
 <p><img src="/automation-install/register.png" alt="register"></p>
 <ol start="2">
 <li>在 Redhat 上使用 <code>subscription-manager register</code> 註冊機器</li>
 </ol>
 <blockquote>
-<p>你也可以透過 <code>subscription-manager register --username &lt;username&gt; --password &lt;password&gt; --auto-attach</code> 註冊機器</p>
-</blockquote>
+<p>你也可以透過 <code>subscription-manager register --username &lt;username&gt; --password &lt;password&gt; --auto-attach</code> 註冊機器</p></blockquote>
 <pre tabindex="0"><code>subscription-manager register --token &lt;token&gt; --insecure 
 </code></pre><ol start="3">
 <li>獲得 Subscription 的 <code>pool_id</code></li>
@@ -129,8 +126,7 @@
 </ol>
 <blockquote>
 <p>請至 <a href="https://www.postgresql.org/download/">https://www.postgresql.org/download/</a> 安裝資料庫，注意 <code>Red Hat Ansible Automation Platform uses PostgreSQL 12.</code></p>
-<p><a href="https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.0-ea/html/red_hat_ansible_automation_platform_installation_guide/planning-installation">https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.0-ea/html/red_hat_ansible_automation_platform_installation_guide/planning-installation</a></p>
-</blockquote>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.0-ea/html/red_hat_ansible_automation_platform_installation_guide/planning-installation">https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.0-ea/html/red_hat_ansible_automation_platform_installation_guide/planning-installation</a></p></blockquote>
 <p><img src="/automation-install/postgresql-required.png" alt="postgresql"></p>
 <ol start="2">
 <li>建立資料庫</li>
@@ -171,8 +167,7 @@ pg_password=&#39;postgres&#39;
 <li>如果要透過匯入 Subscription Manifest 的方式啟動 Subscription，則需要先到 Redhat Subscription Allocations 上新增一個 Allocation:</li>
 </ol>
 <blockquote>
-<p>Redhat Subscription Allocations: <a href="https://access.redhat.com/management/subscription_allocations">https://access.redhat.com/management/subscription_allocations</a></p>
-</blockquote>
+<p>Redhat Subscription Allocations: <a href="https://access.redhat.com/management/subscription_allocations">https://access.redhat.com/management/subscription_allocations</a></p></blockquote>
 <p><img src="/automation-install/allocation.png" alt="allocation"></p>
 <ol start="3">
 <li>進入剛剛新增的 Allocation 頁面，並且查看 Subscriptions，將擁有 AAP 的 Subscription 加入:</li>
@@ -182,8 +177,7 @@ pg_password=&#39;postgres&#39;
 <li>加入後可到 <code>console.redhat.com</code> 頁面將 Manifest 匯出:</li>
 </ol>
 <blockquote>
-<p>Redhat Console: <a href="https://console.redhat.com/insights/subscriptions/manifests">https://console.redhat.com/insights/subscriptions/manifests</a></p>
-</blockquote>
+<p>Redhat Console: <a href="https://console.redhat.com/insights/subscriptions/manifests">https://console.redhat.com/insights/subscriptions/manifests</a></p></blockquote>
 <p><img src="/automation-install/download-manifest.png" alt="download-manifest"></p>
 <ol start="5">
 <li>回到 AAP 畫面，匯入 Manifest 後按下一步，進入自動分析頁面 (全部勾消)，進行下一步</li>
@@ -205,7 +199,7 @@ pg_password=&#39;postgres&#39;
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
@@ -237,7 +231,7 @@ pg_password=&#39;postgres&#39;
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>NodeClockNotSynchronising alert troubleshooting in Openshift 4 - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">NTP Server 不同步事件調查</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-08-26T01:51:06&#43;08:00">August 26, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2023-08-26T01:51:06&#43;08:00">August 26, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>
 	</span>
 </div></div>
 		</header>
@@ -84,8 +84,7 @@
 <h2 id="告警訊息">告警訊息</h2>
 <p>首先調查告警意義，至 <code>openshoft-monitoring</code> Project 下尋找名為 <code>prometheus-k8s-rulefiles-0</code> 的 ConfigMap，便可看到以下內容</p>
 <blockquote>
-<p><a href="https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md">https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md</a></p>
-</blockquote>
+<p><a href="https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md">https://github.com/openshift/runbooks/blob/master/alerts/cluster-monitoring-operator/NodeClockNotSynchronising.md</a></p></blockquote>
 <pre tabindex="0"><code>- alert: NodeClockNotSynchronising
 annotations:
     description: Clock on {{ $labels.instance }} is not synchronising. Ensure NTP
@@ -116,8 +115,7 @@ labels:
 <h2 id="調查-metrics-原理">調查 Metrics 原理</h2>
 <p>上述發生在所有node中，由此判斷可能是 NTP 的問題，為了進一步瞭解 metrics 的實際意義，便查看 node_exporter 的源碼:</p>
 <blockquote>
-<p><a href="https://github.com/prometheus/node_exporter/blob/master/collector/timex.go#L176">https://github.com/prometheus/node_exporter/blob/master/collector/timex.go#L176</a></p>
-</blockquote>
+<p><a href="https://github.com/prometheus/node_exporter/blob/master/collector/timex.go#L176">https://github.com/prometheus/node_exporter/blob/master/collector/timex.go#L176</a></p></blockquote>
 <pre tabindex="0"><code>const (
 	// The system clock is not synchronized to a reliable
 	// server (TIME_ERROR).
@@ -182,8 +180,7 @@ func (c *timexCollector) Update(ch chan&lt;- prometheus.Metric) error {
 }
 </code></pre><p>從 source code 得知是 <code>unix.Adjtimex(timex)</code> 得到的值，沒有 error，而取得的 <code>status</code> 為 <code>5</code>，</p>
 <blockquote>
-<p><a href="https://github.com/golang/sys/blob/master/unix/zsyscall_linux.go#L489">https://github.com/golang/sys/blob/master/unix/zsyscall_linux.go#L489</a></p>
-</blockquote>
+<p><a href="https://github.com/golang/sys/blob/master/unix/zsyscall_linux.go#L489">https://github.com/golang/sys/blob/master/unix/zsyscall_linux.go#L489</a></p></blockquote>
 <pre tabindex="0"><code>func Adjtimex(buf *Timex) (state int, err error) {
 	r0, _, e1 := Syscall(SYS_ADJTIMEX, uintptr(unsafe.Pointer(buf)), 0, 0)
 	state = int(r0)
@@ -194,8 +191,7 @@ func (c *timexCollector) Update(ch chan&lt;- prometheus.Metric) error {
 }
 </code></pre><p><code>syscall</code> 是一個指向底層操作的 interface，而我在 man7.org 上查到 <code>adjtimex</code> 是可以訪問 kernel time 的 program，而如果回傳 5 則是 <code>TIME_ERROR</code>:</p>
 <blockquote>
-<p><a href="https://man7.org/linux/man-pages/man2/adjtimex.2.html">https://man7.org/linux/man-pages/man2/adjtimex.2.html</a></p>
-</blockquote>
+<p><a href="https://man7.org/linux/man-pages/man2/adjtimex.2.html">https://man7.org/linux/man-pages/man2/adjtimex.2.html</a></p></blockquote>
 <pre tabindex="0"><code>...
 TIME_ERROR
     The system clock is not synchronized to a reliable server.
@@ -230,8 +226,7 @@ modified by the kernel, but is otherwise not used by the kernel.
 </code></pre><h2 id="可能的原因">可能的原因</h2>
 <p>其實如果直接 Google 搜尋 <code>NodeClockNotSynchronising</code> 錯誤，在第一個網頁就可以看到 Redhat 官方 Issue。</p>
 <blockquote>
-<p><a href="https://access.redhat.com/solutions/6257001">https://access.redhat.com/solutions/6257001</a></p>
-</blockquote>
+<p><a href="https://access.redhat.com/solutions/6257001">https://access.redhat.com/solutions/6257001</a></p></blockquote>
 <p><img src="/node-clock-not-synchronising/issue.png" alt="issue"></p>
 <p>透過 <code>chronyc</code> 指令可以查詢 <code>chronyd</code> 的每個來源的訊息:</p>
 <pre tabindex="0"><code>chronyc sourcestats -v
@@ -261,7 +256,7 @@ With at least four upstream servers, one (or more) can be a &#34;falseticker&#34
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
@@ -296,7 +291,7 @@ With at least four upstream servers, one (or more) can be a &#34;falseticker&#34
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

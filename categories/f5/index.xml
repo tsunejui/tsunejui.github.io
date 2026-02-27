@@ -4,17 +4,16 @@
     <title>F5 on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/categories/f5/</link>
     <description>Recent content in F5 on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 02 Nov 2023 15:20:48 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/f5/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 02 Nov 2023 15:20:48 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/categories/f5/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>F5 VIP Setting</title>
       <link>https://tsunejui.github.io/posts/f5-vip-setting/</link>
       <pubDate>Thu, 02 Nov 2023 15:20:48 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/f5-vip-setting/</guid>
       <description>&lt;p&gt;本文提供在 F5 Load Balancer 上配置虛擬 IP (VIP) 的步驟。利用 F5 提高應用的可用性。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

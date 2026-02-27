@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Google Cloud Storage Fuse CSI Driver - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">gcsFuse 實驗</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-03-24T12:01:35&#43;08:00">March 24, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/gcp/" rel="category">GCP</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2024-03-24T12:01:35&#43;08:00">March 24, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/gcp/" rel="category">GCP</a>
 	</span>
 </div></div>
 		</header>
@@ -86,16 +86,14 @@
 <h2 id="前置作業">前置作業</h2>
 <p>需要先安裝 K6 Operator 在 Kubernetes 內:</p>
 <blockquote>
-<p><a href="https://github.com/grafana/k6-operator">https://github.com/grafana/k6-operator</a></p>
-</blockquote>
+<p><a href="https://github.com/grafana/k6-operator">https://github.com/grafana/k6-operator</a></p></blockquote>
 <h2 id="測試步驟">測試步驟</h2>
 <ol>
 <li>啟動 <code>GcsFuseCsiDriver</code></li>
 </ol>
 <blockquote>
 <p>此步驟會等非常久，超過 20 分鐘</p>
-<p>請替換 <code>&lt;cluster-name&gt;</code></p>
-</blockquote>
+<p>請替換 <code>&lt;cluster-name&gt;</code></p></blockquote>
 <pre tabindex="0"><code>gcloud beta container clusters update &lt;cluster-name&gt; \
     --update-addons GcsFuseCsiDriver=ENABLED \
     --region=&lt;cluster-name&gt;
@@ -104,8 +102,7 @@
 </ol>
 <blockquote>
 <p>locations: <a href="https://cloud.google.com/storage/docs/locations#location-r">https://cloud.google.com/storage/docs/locations#location-r</a></p>
-<p>請替換 <code>&lt;bucket-name&gt;</code> 及 <code>&lt;region&gt;</code></p>
-</blockquote>
+<p>請替換 <code>&lt;bucket-name&gt;</code> 及 <code>&lt;region&gt;</code></p></blockquote>
 <pre tabindex="0"><code>gcloud storage buckets create gs://&lt;bucket-name&gt; --location=&lt;region&gt;
 </code></pre><ol start="3">
 <li>確認是否開啟 <code>gke-metadata-server</code> 功能</li>
@@ -115,8 +112,7 @@
 <li>建立 IAM &amp; Kubernetes 的 service account，並且 assign role，可以使用以下腳本:</li>
 </ol>
 <blockquote>
-<p>請替換 <code>&lt;bucket-name&gt;</code> 及 <code>&lt;project-id&gt;</code></p>
-</blockquote>
+<p>請替換 <code>&lt;bucket-name&gt;</code> 及 <code>&lt;project-id&gt;</code></p></blockquote>
 <p><img src="/google-cloud-storage-fuse-csi-driver/gcs-fuse-csi-driver-account.png" alt="account"></p>
 <pre tabindex="0"><code>#!/bin/bash
 # export GCS_BUCKET=&#34;&lt;bucket-name&gt;&#34; \
@@ -153,14 +149,12 @@ kubectl annotate serviceaccount ${K8S_SA_NAME} \
 <li>(Option) 按造 <a href="https://github.com/GoogleCloudPlatform/gcs-fuse-csi-driver/blob/main/docs/authentication.md#validate-the-service-account-setup-optional">Configure access to Cloud Storage buckets using GKE Workload Identity Federation</a> 步驟進行權限測試:</li>
 </ol>
 <blockquote>
-<p><a href="https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/cloud-storage-fuse-csi-driver#authentication">https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/cloud-storage-fuse-csi-driver#authentication</a></p>
-</blockquote>
+<p><a href="https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/cloud-storage-fuse-csi-driver#authentication">https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/cloud-storage-fuse-csi-driver#authentication</a></p></blockquote>
 <ol start="7">
 <li>參考以下範例，建立測試用 k6 程式 <code>k6.js</code>:</li>
 </ol>
 <blockquote>
-<p>以下範例程式將在 <code>60s</code> 內使用 100 個 virtual users 對 <code>http://${__ENV.SERVICE_NAME}/heathly</code> 進行壓力測試</p>
-</blockquote>
+<p>以下範例程式將在 <code>60s</code> 內使用 100 個 virtual users 對 <code>http://${__ENV.SERVICE_NAME}/heathly</code> 進行壓力測試</p></blockquote>
 <pre tabindex="0"><code>import http from &#34;k6/http&#34;;
 import { check } from &#34;k6&#34;;
 
@@ -187,8 +181,7 @@ export default function () {
 <p>以下設定將建立 <code>4</code> 個 Testing Job 進行壓力測試，產生報告時，以 <code>name</code> 欄位命名</p>
 <p>撰寫本教學文章時，K6 Operator 在 TestRun 預設的 Image 尚未支援 <a href="https://github.com/grafana/k6/releases/tag/v0.49.0">Dashboard Report</a> 的功能，因此需要指定 image: <code>0.49.0</code></p>
 <p>請替換 <code>&lt;bucket-name&gt;</code>, <code>&lt;service-account&gt;</code> 及 <code>&lt;end-point&gt;</code></p>
-<p><code>12345</code> 是 k6 Dockerfile 使用的 UID: <a href="https://github.com/grafana/k6/blob/master/Dockerfile#L11">https://github.com/grafana/k6/blob/master/Dockerfile#L11</a></p>
-</blockquote>
+<p><code>12345</code> 是 k6 Dockerfile 使用的 UID: <a href="https://github.com/grafana/k6/blob/master/Dockerfile#L11">https://github.com/grafana/k6/blob/master/Dockerfile#L11</a></p></blockquote>
 <p><img src="/google-cloud-storage-fuse-csi-driver/gcs-fuse-csi-driver-k6.png" alt="k6"></p>
 <pre tabindex="0"><code>cat &lt;&lt;EOF | kubectl create -n k6 -f -
 apiVersion: k6.io/v1alpha1
@@ -259,7 +252,7 @@ spec:
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/tip/" rel="tag">Tip</a>
@@ -291,7 +284,7 @@ spec:
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

@@ -4,26 +4,23 @@
     <title>Kafka on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/categories/kafka/</link>
     <description>Recent content in Kafka on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 28 Jun 2023 10:43:24 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/kafka/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 28 Jun 2023 10:43:24 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/categories/kafka/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kafka 安裝 - Kraft Mode</title>
       <link>https://tsunejui.github.io/posts/kafka-kraft-install/</link>
       <pubDate>Wed, 28 Jun 2023 10:43:24 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/kafka-kraft-install/</guid>
       <description>&lt;p&gt;這篇文章將介紹如何在 Kraft Mode 下安裝和配置 Apache Kafka，這是一種不依賴 Zookeeper 的模式。文章將提供從開始到結束的教學。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kafka 學習筆記</title>
       <link>https://tsunejui.github.io/posts/kafka/</link>
       <pubDate>Sun, 12 Mar 2023 17:52:27 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/kafka/</guid>
       <description>&lt;p&gt;本文將介紹在傳統的 Zookeeper Mode 下安裝 Kafka 的步驟。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

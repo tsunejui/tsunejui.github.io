@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Severity of container image from Trivy Scan on Harbor - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">調查 trivy image severity</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-04-16T15:17:56&#43;08:00">April 16, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/harbor/" rel="category">Harbor</a>, <a class="meta__link" href="/categories/trivy/" rel="category">Trivy</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2024-04-16T15:17:56&#43;08:00">April 16, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/harbor/" rel="category">Harbor</a>, <a class="meta__link" href="/categories/trivy/" rel="category">Trivy</a>
 	</span>
 </div></div>
 		</header>
@@ -84,28 +84,27 @@
 <p><img src="/harbor-trivy-scan-severity/harbor.png" alt="harbor"></p>
 <p>由於 UI 可以看到 <code>CVSS3</code> 及 <code>Severity</code>，但是常常發生分數和 <code>Severity</code> 無法匹配的情況，例如上圖：</p>
 <blockquote>
-<p>CVSS3: <a href="https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator">https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator</a></p>
-</blockquote>
+<p>CVSS3: <a href="https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator">https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator</a></p></blockquote>
 <table>
-<thead>
-<tr>
-<th>CVE</th>
-<th>CVSS3</th>
-<th>Severity</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CVE-2024-20945</td>
-<td>redhat: 4.7</td>
-<td>Medium</td>
-</tr>
-<tr>
-<td>CVE-2022-43552</td>
-<td>nvd: 5.9 <!-- raw HTML omitted --> redhat: 5.9</td>
-<td>Low</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>CVE</th>
+          <th>CVSS3</th>
+          <th>Severity</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>CVE-2024-20945</td>
+          <td>redhat: 4.7</td>
+          <td>Medium</td>
+      </tr>
+      <tr>
+          <td>CVE-2022-43552</td>
+          <td>nvd: 5.9 <br /> redhat: 5.9</td>
+          <td>Low</td>
+      </tr>
+  </tbody>
 </table>
 <p>客戶希望我們能向他們說明，上面的嚴重等級，是如何計算的，</p>
 <h2 id="調查經過">調查經過</h2>
@@ -161,8 +160,7 @@
 }
 </code></pre><p>我從 <code>Harbor</code> 的 source code 找到以下內容，<code>job.go</code> 會將 vulnerability data 寫入 db，並且將:</p>
 <blockquote>
-<p><a href="https://github.com/goharbor/harbor/blob/main/src/pkg/scan/job.go#L301C30-L301C38">https://github.com/goharbor/harbor/blob/main/src/pkg/scan/job.go#L301C30-L301C38</a></p>
-</blockquote>
+<p><a href="https://github.com/goharbor/harbor/blob/main/src/pkg/scan/job.go#L301C30-L301C38">https://github.com/goharbor/harbor/blob/main/src/pkg/scan/job.go#L301C30-L301C38</a></p></blockquote>
 <pre tabindex="0"><code>...
 reportData, err := handler.PostScan(ctx, req, rp, rawReports[i], startTime, robotAccount)
 if err != nil {
@@ -172,8 +170,7 @@ if err != nil {
 ...
 </code></pre><p>而 API <code>/additions/vulnerabilities</code> 則會讀取 db 的內容，並且直接回傳，其中就包含 Severity:</p>
 <blockquote>
-<p><a href="https://github.com/goharbor/harbor/blob/main/src/pkg/securityhub/dao/security.go#L310">https://github.com/goharbor/harbor/blob/main/src/pkg/securityhub/dao/security.go#L310</a></p>
-</blockquote>
+<p><a href="https://github.com/goharbor/harbor/blob/main/src/pkg/securityhub/dao/security.go#L310">https://github.com/goharbor/harbor/blob/main/src/pkg/securityhub/dao/security.go#L310</a></p></blockquote>
 <pre tabindex="0"><code>...
 func (d *dao) ListVulnerabilities(ctx context.Context, registrationUUID string, _ int64, query *q.Query) ([]*model.VulnerabilityItem, error) {
 	o, err := orm.FromContext(ctx)
@@ -194,8 +191,7 @@ func (d *dao) ListVulnerabilities(ctx context.Context, registrationUUID string, 
 ...
 </code></pre><p>查看 vulnerability data 的來源，也就是 <code>Trivy</code> 的 source code，在<code>FillInfo()</code> 的內容上，一開始會透過 <code>getVendorSeverity()</code> 取得 severity，接下來判斷 <a href="https://aquasecurity.github.io/trivy/v0.19.2/vulnerability/detection/data-source/">datasource</a> 是否有提供自己的 severity，如果有，則覆蓋 <code>severity</code> 並直接回傳:</p>
 <blockquote>
-<p><a href="https://github.com/aquasecurity/trivy/blob/main/pkg/vulnerability/vulnerability.go#L86">https://github.com/aquasecurity/trivy/blob/main/pkg/vulnerability/vulnerability.go#L86</a></p>
-</blockquote>
+<p><a href="https://github.com/aquasecurity/trivy/blob/main/pkg/vulnerability/vulnerability.go#L86">https://github.com/aquasecurity/trivy/blob/main/pkg/vulnerability/vulnerability.go#L86</a></p></blockquote>
 <pre tabindex="0"><code>...
 // Select the severity according to the detected source.
 severity, severitySource := c.getVendorSeverity(vulnID, &amp;vuln, source)
@@ -228,14 +224,13 @@ vulns[i].PrimaryURL = c.getPrimaryURL(vulnID, vuln.References, source)
 <p><img src="/harbor-trivy-scan-severity/result.png" alt="result"></p>
 <p>在 <code>Trivy</code> 的官方文件上有寫描述 Severity 的邏輯，會優先選擇 vendor 所提供的資訊，如果沒有提供，則根據 CVSS Score 計算:</p>
 <blockquote>
-<p><a href="https://aquasecurity.github.io/trivy/v0.50/docs/scanner/vulnerability/">https://aquasecurity.github.io/trivy/v0.50/docs/scanner/vulnerability/</a></p>
-</blockquote>
+<p><a href="https://aquasecurity.github.io/trivy/v0.50/docs/scanner/vulnerability/">https://aquasecurity.github.io/trivy/v0.50/docs/scanner/vulnerability/</a></p></blockquote>
 <p><img src="/harbor-trivy-scan-severity/score.png" alt="score"></p>
 		</div>
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/tip/" rel="tag">Tip</a>
@@ -267,7 +262,7 @@ vulns[i].PrimaryURL = c.getPrimaryURL(vulnID, vuln.References, source)
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

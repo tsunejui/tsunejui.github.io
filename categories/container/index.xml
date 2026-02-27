@@ -4,44 +4,37 @@
     <title>Container on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/categories/container/</link>
     <description>Recent content in Container on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Jan 2024 14:04:45 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/container/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 27 Jan 2024 14:04:45 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/categories/container/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Harbor Containers Fail to Start</title>
       <link>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</link>
       <pubDate>Sat, 27 Jan 2024 14:04:45 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</guid>
       <description>&lt;p&gt;這篇文章將介紹客戶端 &lt;code&gt;Harbor&lt;/code&gt; 啟動時有機率發生錯誤的紀錄，並說明調查步驟及結果。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>VXLAN Lab</title>
       <link>https://tsunejui.github.io/posts/vxlan-lab/</link>
       <pubDate>Mon, 25 Dec 2023 13:40:52 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/vxlan-lab/</guid>
       <description>&lt;p&gt;本文將進行在 Linux 系統上建立 &lt;code&gt;VXLAN Tunnel&lt;/code&gt;，並且讓不同 Node 上的 Container 可以彼此溝通。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Podman DNS</title>
       <link>https://tsunejui.github.io/posts/podman-dns/</link>
       <pubDate>Tue, 05 Dec 2023 00:29:01 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/podman-dns/</guid>
       <description>&lt;p&gt;本文將解析在使用 Podman Compose 時遇到的 DNS 服務器問題，並提供解決方案。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Container Note - Mount Namespace</title>
       <link>https://tsunejui.github.io/posts/container-mnt/</link>
       <pubDate>Sun, 19 Nov 2023 03:12:13 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/container-mnt/</guid>
       <description>&lt;p&gt;本文探討 Linux 的 Mount Namespace，這是一種隔離檔案系統的技術。文章將講解其原理、應用場景和如何有效地使用它來提高系統安全性。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

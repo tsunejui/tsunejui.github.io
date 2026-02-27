@@ -4,98 +4,79 @@
     <title>Tip on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/tags/tip/</link>
     <description>Recent content in Tip on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/tags/tip/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/tags/tip/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Severity of container image from Trivy Scan on Harbor</title>
       <link>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</link>
       <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</guid>
       <description>&lt;p&gt;這篇文章將紀錄 &lt;code&gt;Harbor&lt;/code&gt; 搭配 &lt;code&gt;vulnerabilities Scanning&lt;/code&gt; 功能後，在 UI 呈現 Image 的 Severity 與 Score 的關係。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Google Cloud Storage Fuse CSI Driver</title>
       <link>https://tsunejui.github.io/posts/google-cloud-storage-fuse-csi-driver/</link>
       <pubDate>Sun, 24 Mar 2024 12:01:35 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/google-cloud-storage-fuse-csi-driver/</guid>
       <description>&lt;p&gt;本文介紹 &lt;code&gt;GcsFuseCsiDriver&lt;/code&gt; 的使用方法和實驗。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWS Security Token Service (STS) Example</title>
       <link>https://tsunejui.github.io/posts/aws-security-token-service-example/</link>
       <pubDate>Sun, 12 Nov 2023 21:33:35 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/aws-security-token-service-example/</guid>
       <description>&lt;p&gt;本文介紹 AWS Security Token Service (STS) 的使用方法和實驗。STS 提供短期憑證來訪問 AWS 資源，增強安全性和管理方便性。我們將逐步探索 STS 的功能，實現身份驗證和授權。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Scale Down the Prometheus on Openshift Monitoring</title>
       <link>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</link>
       <pubDate>Tue, 07 Nov 2023 22:29:20 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/openshift-monitoring-prometheus-scale-down/</guid>
       <description>&lt;p&gt;這篇文章將探討在 Openshift 上如何有效地對 Prometheus 進行縮減。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Samba 安裝</title>
       <link>https://tsunejui.github.io/posts/samba-install/</link>
       <pubDate>Sat, 01 Jul 2023 17:23:23 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/samba-install/</guid>
       <description>&lt;p&gt;本文將指導如何在 Linux 系統上安裝和配置 Samba。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Node Exporter</title>
       <link>https://tsunejui.github.io/posts/node-exporter/</link>
       <pubDate>Fri, 16 Jun 2023 09:42:09 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/node-exporter/</guid>
       <description>&lt;p&gt;本文介紹如何安裝和配置 Prometheus 的 Node Exporter。文章將涵蓋安裝過程、配置文件設置和數據監控方法。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>RHEL 9 在 Proxmox 上 Kernel Panic</title>
       <link>https://tsunejui.github.io/posts/rhel-9-panic/</link>
       <pubDate>Tue, 16 May 2023 09:43:12 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/rhel-9-panic/</guid>
       <description>&lt;p&gt;文將探討在 Proxmox 虛擬環境中運行 RHEL 9 時遇到的 Kernel Panic 問題。文章將提供解決步驟。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Proxmox 增加 Linux 硬碟空間</title>
       <link>https://tsunejui.github.io/posts/proxmox-extend-linux-space/</link>
       <pubDate>Tue, 02 May 2023 02:02:22 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/proxmox-extend-linux-space/</guid>
       <description>&lt;p&gt;這篇文章將指導如何在 Proxmox 虛擬化環境中為 Linux 虛擬機器增加額外的硬碟空間。從硬碟分配到操作系統配置，文章將提供完整的流程。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Istio Tip</title>
       <link>https://tsunejui.github.io/posts/istio-tip/</link>
       <pubDate>Wed, 08 Mar 2023 12:52:25 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/istio-tip/</guid>
       <description>&lt;p&gt;在本文中，我們將討論在安裝 Istio 服務常見的錯誤，並提供故障排除技巧和解決方案。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kubernetes Tips</title>
       <link>https://tsunejui.github.io/posts/kubernetes-tips/</link>
       <pubDate>Wed, 08 Mar 2023 12:50:23 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/kubernetes-tips/</guid>
       <description>&lt;p&gt;本文將紀錄在 Kubernetes 上常見的 &lt;code&gt;kubectl&lt;/code&gt; 指令，並且取得 cluster 的各項資訊。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

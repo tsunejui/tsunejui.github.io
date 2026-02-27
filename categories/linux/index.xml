@@ -4,143 +4,114 @@
     <title>Linux on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/categories/linux/</link>
     <description>Recent content in Linux on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Apr 2024 15:17:56 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Severity of container image from Trivy Scan on Harbor</title>
       <link>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</link>
       <pubDate>Tue, 16 Apr 2024 15:17:56 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/harbor-trivy-scan-severity/</guid>
       <description>&lt;p&gt;這篇文章將紀錄 &lt;code&gt;Harbor&lt;/code&gt; 搭配 &lt;code&gt;vulnerabilities Scanning&lt;/code&gt; 功能後，在 UI 呈現 Image 的 Severity 與 Score 的關係。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Harbor Containers Fail to Start</title>
       <link>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</link>
       <pubDate>Sat, 27 Jan 2024 14:04:45 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/harbor-containers-fail-to-start/</guid>
       <description>&lt;p&gt;這篇文章將介紹客戶端 &lt;code&gt;Harbor&lt;/code&gt; 啟動時有機率發生錯誤的紀錄，並說明調查步驟及結果。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>VXLAN Lab</title>
       <link>https://tsunejui.github.io/posts/vxlan-lab/</link>
       <pubDate>Mon, 25 Dec 2023 13:40:52 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/vxlan-lab/</guid>
       <description>&lt;p&gt;本文將進行在 Linux 系統上建立 &lt;code&gt;VXLAN Tunnel&lt;/code&gt;，並且讓不同 Node 上的 Container 可以彼此溝通。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Podman DNS</title>
       <link>https://tsunejui.github.io/posts/podman-dns/</link>
       <pubDate>Tue, 05 Dec 2023 00:29:01 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/podman-dns/</guid>
       <description>&lt;p&gt;本文將解析在使用 Podman Compose 時遇到的 DNS 服務器問題，並提供解決方案。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Container Note - Mount Namespace</title>
       <link>https://tsunejui.github.io/posts/container-mnt/</link>
       <pubDate>Sun, 19 Nov 2023 03:12:13 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/container-mnt/</guid>
       <description>&lt;p&gt;本文探討 Linux 的 Mount Namespace，這是一種隔離檔案系統的技術。文章將講解其原理、應用場景和如何有效地使用它來提高系統安全性。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>RHEL Ansible Automation Platform (AAP) Installation</title>
       <link>https://tsunejui.github.io/posts/rhel-automation-platform-install/</link>
       <pubDate>Thu, 24 Aug 2023 10:24:53 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/rhel-automation-platform-install/</guid>
       <description>&lt;p&gt;這篇文章將提供 Ansible Automation Platform (AAP) 的安裝指南。從前置條件到安裝過程，文章將幫助讀者順利完成安裝。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWX Installation (Container)</title>
       <link>https://tsunejui.github.io/posts/awx-install/</link>
       <pubDate>Mon, 17 Jul 2023 13:36:31 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/awx-install/</guid>
       <description>&lt;p&gt;這篇文章將指導讀者如何在容器環境中安裝和設置 AWX (Ansible 的 Web) 版本。從環境準備到配置設置，本文涵蓋整個安裝過程。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Samba 安裝</title>
       <link>https://tsunejui.github.io/posts/samba-install/</link>
       <pubDate>Sat, 01 Jul 2023 17:23:23 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/samba-install/</guid>
       <description>&lt;p&gt;本文將指導如何在 Linux 系統上安裝和配置 Samba。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Node Exporter</title>
       <link>https://tsunejui.github.io/posts/node-exporter/</link>
       <pubDate>Fri, 16 Jun 2023 09:42:09 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/node-exporter/</guid>
       <description>&lt;p&gt;本文介紹如何安裝和配置 Prometheus 的 Node Exporter。文章將涵蓋安裝過程、配置文件設置和數據監控方法。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>SSH Tunneling</title>
       <link>https://tsunejui.github.io/posts/ssh-tunnel/</link>
       <pubDate>Sat, 20 May 2023 12:34:03 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/ssh-tunnel/</guid>
       <description>&lt;p&gt;在這部分，我們將探討如何在Linux系統中設定SSH Tunnel。SSH Tunnel是一種通過加密的SSH協議來傳輸資料的方法，能有效保護資料免受中間人攻擊，以及測試網路流量。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>RHEL 9 在 Proxmox 上 Kernel Panic</title>
       <link>https://tsunejui.github.io/posts/rhel-9-panic/</link>
       <pubDate>Tue, 16 May 2023 09:43:12 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/rhel-9-panic/</guid>
       <description>&lt;p&gt;文將探討在 Proxmox 虛擬環境中運行 RHEL 9 時遇到的 Kernel Panic 問題。文章將提供解決步驟。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>NFS on Rocky Linux 8</title>
       <link>https://tsunejui.github.io/posts/nfs/</link>
       <pubDate>Sat, 13 May 2023 17:36:21 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/nfs/</guid>
       <description>&lt;p&gt;本文將指導讀者如何在 Linux 系統上安裝和配置 NFS。從安裝到設置共享目錄。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Proxmox 增加 Linux 硬碟空間</title>
       <link>https://tsunejui.github.io/posts/proxmox-extend-linux-space/</link>
       <pubDate>Tue, 02 May 2023 02:02:22 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/proxmox-extend-linux-space/</guid>
       <description>&lt;p&gt;這篇文章將指導如何在 Proxmox 虛擬化環境中為 Linux 虛擬機器增加額外的硬碟空間。從硬碟分配到操作系統配置，文章將提供完整的流程。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Rocky Linux 使用 XRDP</title>
       <link>https://tsunejui.github.io/posts/rocky-xrdp/</link>
       <pubDate>Sun, 30 Apr 2023 20:53:09 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/rocky-xrdp/</guid>
       <description>&lt;p&gt;這篇文章將介紹如何在 Rocky Linux 上安裝和配置 XRDP，一種遠程桌面協議。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Install GUI on Rocky Linux 8.7</title>
       <link>https://tsunejui.github.io/posts/rocky-install-gui/</link>
       <pubDate>Sun, 30 Apr 2023 20:14:50 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/rocky-install-gui/</guid>
       <description>&lt;p&gt;本文將指導如何在 Rocky Linux 上安裝圖形用戶界面 (GUI)。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

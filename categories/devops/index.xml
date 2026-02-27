@@ -4,35 +4,30 @@
     <title>Devops on Rex&#39;s Notes 技術筆記 </title>
     <link>https://tsunejui.github.io/categories/devops/</link>
     <description>Recent content in Devops on Rex&#39;s Notes 技術筆記 </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 02 Nov 2023 00:13:03 +0800</lastBuildDate><atom:link href="https://tsunejui.github.io/categories/devops/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 02 Nov 2023 00:13:03 +0800</lastBuildDate>
+    <atom:link href="https://tsunejui.github.io/categories/devops/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Dex Expiration Time on Openshift Gitops</title>
       <link>https://tsunejui.github.io/posts/openshift-gitops-dex-expiration-time/</link>
       <pubDate>Thu, 02 Nov 2023 00:13:03 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/openshift-gitops-dex-expiration-time/</guid>
       <description>&lt;p&gt;本文介紹如何在 ArgoCD 中設置自動登出功能。這有助於提高安全性，避免未經授權的存取。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>RHEL Ansible Automation Platform (AAP) Installation</title>
       <link>https://tsunejui.github.io/posts/rhel-automation-platform-install/</link>
       <pubDate>Thu, 24 Aug 2023 10:24:53 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/rhel-automation-platform-install/</guid>
       <description>&lt;p&gt;這篇文章將提供 Ansible Automation Platform (AAP) 的安裝指南。從前置條件到安裝過程，文章將幫助讀者順利完成安裝。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWX Installation (Container)</title>
       <link>https://tsunejui.github.io/posts/awx-install/</link>
       <pubDate>Mon, 17 Jul 2023 13:36:31 +0800</pubDate>
-      
       <guid>https://tsunejui.github.io/posts/awx-install/</guid>
       <description>&lt;p&gt;這篇文章將指導讀者如何在容器環境中安裝和設置 AWX (Ansible 的 Web) 版本。從環境準備到配置設置，本文涵蓋整個安裝過程。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

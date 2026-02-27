@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Podman DNS - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">解決在 Podman Compose 上 DNS Server 無法使用的問題</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-05T00:29:01&#43;08:00">December 05, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2023-12-05T00:29:01&#43;08:00">December 05, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/linux/" rel="category">Linux</a>, <a class="meta__link" href="/categories/container/" rel="category">Container</a>
 	</span>
 </div></div>
 		</header>
@@ -90,8 +90,7 @@ podman version: 4.4.1
 <p>由於部門都是在 LINE 上討論公事，常常造成公私不分，因此想架設一個 <a href="https://www.rocket.chat">Rocket Chat</a> 作為辦公的溝通平台，而 <code>Rocket Chat</code> 也有提供 <code>docker-compose.yaml</code> 讓用戶方便部署：</p>
 <blockquote>
 <p>13個你不應該用Line辦公的理由: <a href="https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html">https://blog.teampel.com/2020/07/13-reasons-not-to-use-line.html</a></p>
-<p>Rocket Chat: <a href="https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose">https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose</a></p>
-</blockquote>
+<p>Rocket Chat: <a href="https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose">https://docs.rocket.chat/deploy/deploy-rocket.chat/deploy-with-docker-and-docker-compose</a></p></blockquote>
 <pre tabindex="0"><code># src: https://github.com/RocketChat/Docker.Official.Image/blob/master/compose.yml
 volumes:
   mongodb_data: { driver: local }
@@ -121,8 +120,7 @@ services:
     ...
 </code></pre><p>若使用 <code>docker-compose</code> 部署時沒有問題，但使用 <code>podman-compose</code> 部署時，便會發生 DNS 無法解析的問題，使得 <code>rocketchat</code> 無法連上 <code>mongodb</code>。</p>
 <blockquote>
-<p>podman-compose: <a href="https://github.com/containers/podman-compose">https://github.com/containers/podman-compose</a></p>
-</blockquote>
+<p>podman-compose: <a href="https://github.com/containers/podman-compose">https://github.com/containers/podman-compose</a></p></blockquote>
 <h2 id="調查結果">調查結果</h2>
 <ol>
 <li>Docker 內建 DNS Server</li>
@@ -130,8 +128,7 @@ services:
 <p>經過調查，在 <code>Docker</code> 官方文件中可以得知在 <code>docker-compose</code> 中，DNS Server 是由 <code>Docker daemon</code> 所提供，而他的運作原理剛好在 <strong>COSCUP 2023</strong> 活動中，講者 <a href="https://www.hwchiu.com/public_sharing">hwchiu</a> 有提到，有興趣的話可以參考他的演講:</p>
 <blockquote>
 <p>Docker Network: <a href="https://docs.docker.com/network/">https://docs.docker.com/network/</a></p>
-<p>剖析 KIND(Kubernetes IN Docker) 的實作原理: <a href="https://www.slideshare.net/hongweiqiu/learned-from-kind">https://www.slideshare.net/hongweiqiu/learned-from-kind</a></p>
-</blockquote>
+<p>剖析 KIND(Kubernetes IN Docker) 的實作原理: <a href="https://www.slideshare.net/hongweiqiu/learned-from-kind">https://www.slideshare.net/hongweiqiu/learned-from-kind</a></p></blockquote>
 <pre tabindex="0"><code>Containers that attach to a custom network use Docker&#39;s embedded DNS server. The embedded DNS server forwards external DNS lookups to the DNS servers configured on the host.
 </code></pre><p><img src="/podman-dns/docker-dns.png" alt="version"></p>
 <ol start="2">
@@ -150,8 +147,7 @@ services:
 <p><img src="/podman-dns/error.png" alt="error"></p>
 <p>可以透過 <code>dnf</code> 直接安裝 <code>netavark</code>，並重新設定 podman 環境:</p>
 <blockquote>
-<p>過去可以透過 <code>dnf install -y podman-dnsname</code> 安裝 <code>dnsname</code> Plugin，但此專案已經停止維護: <a href="https://github.com/containers/dnsname">https://github.com/containers/dnsname</a></p>
-</blockquote>
+<p>過去可以透過 <code>dnf install -y podman-dnsname</code> 安裝 <code>dnsname</code> Plugin，但此專案已經停止維護: <a href="https://github.com/containers/dnsname">https://github.com/containers/dnsname</a></p></blockquote>
 <pre tabindex="0"><code>dnf install -y netavark
 </code></pre><p><img src="/podman-dns/netavark.png" alt="netavark"></p>
 <ol>
@@ -159,8 +155,7 @@ services:
 </ol>
 <p>以下步驟參考 Oracle Linux 的 <a href="https://docs.oracle.com/en/operating-systems/oracle-linux/podman/podman-ConfiguringNetworkingforPodman.html#topic_owf_d4t_t5b">Podman User&rsquo;s Guide</a>，內容詳細介紹如何切換 network backend。根據 GitHub 上關於 Container 的 Common Library 的描述，Container Engine 預設使用 <code>containers.conf</code> 作為設定檔案，因此第一步先建立設定檔:</p>
 <blockquote>
-<p>Podman Common: <a href="https://github.com/containers/common/blob/main/docs/containers.conf.5.md">https://github.com/containers/common/blob/main/docs/containers.conf.5.md</a></p>
-</blockquote>
+<p>Podman Common: <a href="https://github.com/containers/common/blob/main/docs/containers.conf.5.md">https://github.com/containers/common/blob/main/docs/containers.conf.5.md</a></p></blockquote>
 <pre tabindex="0"><code>cp /usr/share/containers/containers.conf /etc/containers/
 </code></pre><p>修改 <code>/etc/containers/containers.conf</code>，將 <code>network_backend</code> 改為 <code>netavark</code>:</p>
 <pre tabindex="0"><code>network_backend = &#34;netavark&#34;
@@ -189,7 +184,7 @@ ps -ef | grep aardvark-dns
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
@@ -221,7 +216,7 @@ ps -ef | grep aardvark-dns
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

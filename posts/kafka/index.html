@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Kafka 學習筆記 - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">Kafka - Zookeeper Mode 安裝步驟</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-03-12T17:52:27&#43;08:00">March 12, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/kafka/" rel="category">Kafka</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2023-03-12T17:52:27&#43;08:00">March 12, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/kafka/" rel="category">Kafka</a>
 	</span>
 </div></div>
 		</header>
@@ -81,14 +81,12 @@
 			<p>本文將介紹在傳統的 Zookeeper Mode 下安裝 Kafka 的步驟。</p>
 <h3 id="kafka-installation">Kafka Installation</h3>
 <blockquote>
-<p>Kafka official site: <a href="https://kafka.apache.org/downloads">https://kafka.apache.org/downloads</a></p>
-</blockquote>
+<p>Kafka official site: <a href="https://kafka.apache.org/downloads">https://kafka.apache.org/downloads</a></p></blockquote>
 <p>Kafka provides two types of downloads on its official website, namely <strong>Source downloads</strong> and <strong>Binary downloads</strong>. The difference between the two is that Source download means Kafka&rsquo;s source code, and users need to compile it themselves after downloading, while Binary Download means pre-compiled binaries that users can download and use directly. Additionally, different versions of Kafka written in different Scala versions are available for download in Binary Download.</p>
 <p>以下步驟需要在每個 node 上操作。</p>
 <p><strong>下載 Kafka (以 3.4.0 為例)</strong></p>
 <blockquote>
-<p><code>2.13</code> 為 scala 的版本</p>
-</blockquote>
+<p><code>2.13</code> 為 scala 的版本</p></blockquote>
 <pre tabindex="0"><code>curl -OL https://downloads.apache.org/kafka/3.4.0/kafka_2.13-3.4.0.tgz
 </code></pre><p><strong>解壓縮</strong></p>
 <pre tabindex="0"><code>tar -zxvf kafka_2.13-3.4.0.tgz -C /opt/module
@@ -107,8 +105,7 @@ mv /opt/module/kafka_2.13-3.4.0 /opt/module/kafka
 </ul>
 <p>那就應該配置為：</p>
 <blockquote>
-<p><code>/kafka</code> 的意思為, 在 zookeeper 內建立一個名為 <code>kafka</code> 的目錄, 未來如不需要此 cluster , 直接刪除 <code>kafka</code> 即可。</p>
-</blockquote>
+<p><code>/kafka</code> 的意思為, 在 zookeeper 內建立一個名為 <code>kafka</code> 的目錄, 未來如不需要此 cluster , 直接刪除 <code>kafka</code> 即可。</p></blockquote>
 <pre tabindex="0"><code>zookeeper.connect: 192.168.1.100:2181,192.168.1.101:2181,192.168.1.102:2181/kafka
 </code></pre><p><strong>environment variable</strong></p>
 <p>修改 <code>/etc/profile.d/my_env.sh</code></p>
@@ -126,7 +123,7 @@ source /etc/profile
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
@@ -158,7 +155,7 @@ source /etc/profile
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

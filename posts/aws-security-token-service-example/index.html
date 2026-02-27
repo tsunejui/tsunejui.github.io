@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>AWS Security Token Service (STS) Example - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">AWS STS 實驗</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-11-12T21:33:35&#43;08:00">November 12, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/aws/" rel="category">AWS</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2023-11-12T21:33:35&#43;08:00">November 12, 2023</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/aws/" rel="category">AWS</a>
 	</span>
 </div></div>
 		</header>
@@ -123,10 +123,9 @@
 </ol>
 <p>編輯 iam role policy 檔案: <code>vi example-role-trust-policy.json</code></p>
 <blockquote>
-<p>請替換 <!-- raw HTML omitted --></p>
+<p>請替換 <account-id></p>
 <p>關於 Principal 的說明可以參考 <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html</a></p>
-<p>以下內容將允許 Alice 帳號使用 <code>sts:AssumeRole</code> 的功能</p>
-</blockquote>
+<p>以下內容將允許 Alice 帳號使用 <code>sts:AssumeRole</code> 的功能</p></blockquote>
 <pre tabindex="0"><code>{
   &#34;Version&#34;: &#34;2012-10-17&#34;,
   &#34;Statement&#34;: {
@@ -143,8 +142,7 @@
 <li>Attach Role Policy</li>
 </ol>
 <blockquote>
-<p>請替換 <!-- raw HTML omitted --></p>
-</blockquote>
+<p>請替換 <account-id></p></blockquote>
 <pre tabindex="0"><code>aws iam attach-role-policy --role-name example-role --policy-arn arn:aws:iam::&lt;account-id&gt;:policy/example-policy
 </code></pre><p>可以透過以下指令進行驗證:</p>
 <pre tabindex="0"><code>aws iam list-attached-role-policies --role-name example-role
@@ -154,8 +152,7 @@
 <pre tabindex="0"><code>aws iam create-access-key --user-name Alice
 </code></pre><p>設定 credentials: <code>vi ~/.aws/credentials</code></p>
 <blockquote>
-<p>請替換掉 <code>xxx</code></p>
-</blockquote>
+<p>請替換掉 <code>xxx</code></p></blockquote>
 <pre tabindex="0"><code>[Alice]
 aws_access_key_id = xxx
 aws_secret_access_key = xxx
@@ -167,13 +164,11 @@ aws_secret_access_key = xxx
 <li>使用 Alice 的 Profile 呼叫 STS API，並且取得臨時的 Token</li>
 </ol>
 <blockquote>
-<p>請替換 <!-- raw HTML omitted --></p>
-</blockquote>
+<p>請替換 <account-id></p></blockquote>
 <pre tabindex="0"><code>aws sts assume-role --role-arn arn:aws:iam::&lt;account-id&gt;:role/example-role --role-session-name Alice-Session --profile Alice
 </code></pre><p>設定 credentials: <code>vi ~/.aws/credentials</code>設定</p>
 <blockquote>
-<p>請替換掉 <code>xxx</code></p>
-</blockquote>
+<p>請替換掉 <code>xxx</code></p></blockquote>
 <pre tabindex="0"><code>[Alice-STS]
 aws_access_key_id = xxx
 aws_secret_access_key = xxx
@@ -200,7 +195,7 @@ aws_session_token = xxx
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/tip/" rel="tag">Tip</a>
@@ -232,7 +227,7 @@ aws_session_token = xxx
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>

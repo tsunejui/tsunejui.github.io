@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Prometheus Remote Write Performance Issue - Rex&#39;s Notes 技術筆記 </title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
@@ -16,6 +15,7 @@
 	
 
 	<link rel="shortcut icon" href="/favicon.ico">
+		
 		
 </head>
 <body class="body">
@@ -73,7 +73,7 @@
 			<p class="post__lead">Prometheus 開啟 Remote Write 後會造成整體 Memory 上升</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-03-06T14:56:30&#43;08:00">March 06, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0a14 14 0 1 1 0 28 1 1 0 0 1 0-28m0 3a3 3 0 1 0 0 22 3 3 0 0 0 0-22m1 4h-2v8.4l6.8 4.4L22 18l-6-3.8z"/></svg><time class="meta__text" datetime="2024-03-06T14:56:30&#43;08:00">March 06, 2024</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2 1 2h8v11H0V2z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/k8s/" rel="category">K8S</a>, <a class="meta__link" href="/categories/openshift/" rel="category">Openshift</a>, <a class="meta__link" href="/categories/sre/" rel="category">SRE</a>
 	</span>
 </div></div>
 		</header>
@@ -84,15 +84,13 @@
 <p><img src="/prometheus-remote-write-performance-issue/arch.png" alt="arch"></p>
 <p>一開始，我希望透過設定 <code>Thanos Sidecar</code> 的 configuration，將資料上傳到 <code>S3 buckets</code>，因為 Openshift monitoring stack 與 Prometheus Operator 上有相似的的設定，而 <a href="https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#monitoring.coreos.com/v1.ThanosSpec">Prometheus Operator</a> 可以透過調整 <code>configmap</code> 來改變 thanos 的設定，但調查後發現，直到撰寫本文的今天，Openshift 尚未開放 Thanos 的設定:</p>
 <blockquote>
-<p><a href="https://access.redhat.com/solutions/7000054">https://access.redhat.com/solutions/7000054</a></p>
-</blockquote>
+<p><a href="https://access.redhat.com/solutions/7000054">https://access.redhat.com/solutions/7000054</a></p></blockquote>
 <p><img src="/prometheus-remote-write-performance-issue/issue.png" alt="issue"></p>
 <p>在與客戶討論後，決定採用 Prometheus 的 <a href="https://prometheus.io/docs/concepts/remote_write_spec/">remote write</a> 功能，在外部架設 Thanos 服務，使 metrics 送往 <code>Thanos Receiver</code>，再上傳至 <code>S3 Bucket</code>:</p>
 <p><img src="/prometheus-remote-write-performance-issue/ocp-monitoring-remote-write.png" alt="c-arch"></p>
 <p>remote write 功能可以透過修改 <code>cluster-monitoring-operator</code> 來開啟:</p>
 <blockquote>
-<p><a href="https://docs.openshift.com/container-platform/4.10/monitoring/configuring-the-monitoring-stack.html#configuring_remote_write_storage_configuring-the-monitoring-stack">https://docs.openshift.com/container-platform/4.10/monitoring/configuring-the-monitoring-stack.html#configuring_remote_write_storage_configuring-the-monitoring-stack</a></p>
-</blockquote>
+<p><a href="https://docs.openshift.com/container-platform/4.10/monitoring/configuring-the-monitoring-stack.html#configuring_remote_write_storage_configuring-the-monitoring-stack">https://docs.openshift.com/container-platform/4.10/monitoring/configuring-the-monitoring-stack.html#configuring_remote_write_storage_configuring-the-monitoring-stack</a></p></blockquote>
 <p><img src="/prometheus-remote-write-performance-issue/remote-write.png" alt="issue"></p>
 <p>沒想到，完成 remote write 的設定後，每一座 Prometheus 的 memory usage 馬上升高 30% 左右，觸發 node 設定的 resource threshold 的告警，顯示記憶體不足，緊急移除設定。</p>
 <p>因此，客戶希望我們調查，remote write 功能開啟後，<strong>會使 node 的 memory usage 升高多少</strong>，在完成調查以前，功能無法上線。</p>
@@ -141,8 +139,7 @@ debug all &lt;server&gt;
 <p><img src="/prometheus-remote-write-performance-issue/watcher.png" alt="watcher"></p>
 <p>透過分析 Prometheus 的 Source 以後，我發現，<code>Watcher</code> 會讀取 Prometheus 的 <code>wal</code> 目錄下的資料，暫存於 memory 中:</p>
 <blockquote>
-<p><a href="https://github.com/prometheus/prometheus/blob/main/tsdb/wlog/watcher.go#L245">https://github.com/prometheus/prometheus/blob/main/tsdb/wlog/watcher.go#L245</a></p>
-</blockquote>
+<p><a href="https://github.com/prometheus/prometheus/blob/main/tsdb/wlog/watcher.go#L245">https://github.com/prometheus/prometheus/blob/main/tsdb/wlog/watcher.go#L245</a></p></blockquote>
 <pre tabindex="0"><code>func (w *Watcher) loop() {
 	defer close(w.done)
 
@@ -167,7 +164,7 @@ debug all &lt;server&gt;
 		<footer class="post__footer">
 			
 <div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M4 0h8s2 0 4 2l15 15s2 2 0 4L21 31s-2 2-4 0L2 16s-2-2-2-4V3s0-3 4-3m3 10a3 3 0 0 0 0-6 3 3 0 0 0 0 6"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="/tags/note/" rel="tag">Note</a>
@@ -199,7 +196,7 @@ debug all &lt;server&gt;
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2025 Rex Wu.
+			&copy; 2026 Rex Wu.
 			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
 		</div>
 	</div>
